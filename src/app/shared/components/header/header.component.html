@@ -1,0 +1,14 @@
+<div id="header" class="vh-space-between">
+    <a id="menu_toggle"><i class="fa fa-bars" (click)="displaySidebar()"></i></a>
+
+    <div class="user_information vh-space-between">
+        <img src="assets/images/sadjo.jpg" alt="..." class="img-circle profile_img">
+
+        <div class="vh-space-between">
+            <span (click)="menu.toggle($event)" class="user">
+                Sadjo Mohammadou <i class="fa fa-chevron-down"></i>
+            </span>
+            <p-menu [model]="items" #menu [popup]="true"></p-menu>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<div id="sidebar-container" class="main_menu_side hidden-print main_menu"
+    [ngClass]="{extended: isExtended, collapse: !isExtended}">
+    <div class="navbar vh-center nav_title" style="border: 0;">
+        <a href="index.html" class="site_title"> <span>App Inscription</span></a>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <!-- menu profile quick info -->
+    <div class="profile clearfix">
+        <div class="profile_pic">
+            <img src="assets/images/sadjo.jpg" alt="..." class="img-circle profile_img">
+        </div>
+        <div class="profile_info">
+            <span>Bienvenue,</span>
+            <h2>SADJO Mohammadou</h2>
+        </div>
+    </div>
+    <!-- /menu profile quick info -->
+    <div class="menu_section">
+
+        <ul class="nav side-menu">
+            <li>
+                <a class="link" href="index.html"><i class="fa fa-home"></i> Accueil </a>
+            </li>
+
+            <li>
+                <a class="link" href="zone.html"><i class="fa fa-map"></i> Zones </a>
+            </li>
+
+            <li>
+                <a class="link" href="site.html"><i class="fa fa-map-marker"></i> Sites </a>
+            </li>
+
+            <li>
+                <a class="link" href="centre_examen.html"><i class="fa fa-map-signs"></i> Centres d'examen </a>
+            </li>
+
+            <li>
+                <a class="link" href="session_examen.html"><i class="fa fa-calendar"></i> Sessions d'examen </a>
+            </li>
+
+            <li #candidacy (click)="showMenuChild(candidacy)">
+                <a class="link"><i class="fa fa-envelope"></i>
+                    Candidatures <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_one_line">
+                    <li><a class="sub-link" href="liste_candidatures.html">Liste des candidatures</a></li>
+                    <li><a class="sub-link" href="gestion_admissibilité.html">Gestion d'admissibilité</a></li>
+                    <li><a class="sub-link" href="gestion_admis.html">Gestion des admis</a></li>
+                </ul>
+            </li>
+
+            <li #interviews (click)="showMenuChild(interviews)">
+                <a class="link"><i class="fa fa-microphone"></i> Entretiens <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_one_line">
+                    <li><a class="sub-link" href="calendrier_entretiens.html">Calendrier des entretiens</a></li>
+                    <li><a class="sub-link" href="calendrier_disponibilités.html">Calendrier des disponibilités</a></li>
+                    <li><a class="sub-link" href="periode_entretiens.html">Définition période entretiens</a></li>
+                    <li><a class="sub-link" href="notes_entretiens.html">Notes entretiens</a></li>
+                </ul>
+            </li>
+
+            <li #list (click)="showMenuChild(list)">
+                <a class="link"><i class="fa fa-list"></i> Listes <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_one_line">
+                    <li><a class="sub-link" href="liste_admissibilité.html">Liste d'admissibilité</a></li>
+                    <li><a class="sub-link" href="liste_admis.html">Liste des admis</a></li>
+                </ul>
+            </li>
+
+            <li #rules (click)="showMenuChild(rules)"><a class="link"><i class="fa fa-users"></i> Rôles utilisateurs
+                    <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_two_line">
+                    <li><a class="sub-link" href="administrateur.html">Administrateur</a></li>
+                    <li><a class="sub-link" href="membre_jury.html">Memebre du jury</a></li>
+                </ul>
+            </li>
+
+        </ul>
+
+    </div>
+</div>

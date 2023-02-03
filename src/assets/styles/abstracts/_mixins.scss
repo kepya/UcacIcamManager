@@ -1,0 +1,156 @@
+$grid-breakpoints: (
+    // X-Small devices (portrait phones, less than 576px)
+    xs: 0,
+    // Small devices (landscape phones, 576px and up)
+    sm: 576px,
+    // Medium devices (tablets, 768px and up)
+    md: 768px,
+    // Large devices (desktops, 992px and up)
+    lg: 992px,
+    // X-Large devices (large desktops, 1200px and up)
+    xl: 1200px,
+    // XX-Large devices (larger desktops, 1400px and up)
+    xxl: 1400px
+);
+
+@mixin v-center {
+    display: flex !important;
+    align-items: center;
+}
+
+@mixin vh-center {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin vh-end {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@mixin vh-start {
+    display: flex !important;
+    align-items: flex-start;
+}
+
+@mixin v-start {
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+@mixin v-start-between {
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+@mixin flex-column {
+    display: flex !important;
+    flex-direction: column;
+}
+
+@mixin vh-space-between {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin vh-space-around {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@mixin v-space-around {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@mixin v-space-between {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin border-gradient($raduis: 50px, $borderSize: 10px, $firstColor: red, $secondColor: blue) {
+    border-radius: $raduis;
+    border: $borderSize solid transparent;
+    background: linear-gradient(45deg, $firstColor, $secondColor) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+@mixin text-linear-gradient($firstColor: #eee, $secondColor: #333) {
+    background: -webkit-linear-gradient($firstColor, $secondColor);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@mixin multiline-text-overflow($lineNumber: 4) {
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: $lineNumber;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 619px) {
+    :root {
+        --padding: 20px;
+    }
+}
+
+@media only screen and (min-width: 1320px) {
+    :root {
+        --container: 1300px;
+    }
+}
+
+@mixin xxl-only {
+    @media screen and (min-width: 1700px) {
+        @content;
+    }
+}
+
+@mixin xl-only {
+    @media screen and (max-width: map-get($grid-breakpoints, xxl)) {
+        @content;
+    }
+}
+
+@mixin lg-only {
+    @media screen and (max-width: map-get($grid-breakpoints, xl)) {
+        @content;
+    }
+}
+
+@mixin md-only {
+    @media screen and (max-width: map-get($grid-breakpoints, lg)) {
+        @content;
+    }
+}
+
+@mixin sm-only {
+    @media screen and (max-width: map-get($grid-breakpoints, md)) {
+        @content;
+    }
+}
+
+@mixin xs-only {
+    @media screen and (max-width: map-get($grid-breakpoints, sm)) {
+        @content;
+    }
+}
+
+@mixin other-screen($size) {
+    @media screen and (max-width: $size) {
+        @content;
+    }
+}

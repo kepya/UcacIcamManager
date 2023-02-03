@@ -1,0 +1,52 @@
+@use "../abstracts/index" as *;
+
+.zone-page {
+    .page-title {
+        color: var(--clr-primary-500);
+        font-family: var(--Poppins-medium);
+        font-size: var(--fs-medium);
+        margin-block: 10px;
+    }
+
+    .card {
+        background-color: white;
+        position: relative;
+        width: auto;
+        margin-bottom: 10px;
+        padding: 10px 17px;
+        border: 1px solid #e6e9ed;
+        -webkit-column-break-inside: avoid;
+        -moz-column-break-inside: avoid;
+        opacity: 1;
+        -webkit-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+
+        .header {
+            @include vh-space-between;
+
+            .title {
+                color: var(--clr-primary-500);
+                margin-block: 10px;
+                font-family: var(--Poppins-regular);
+                font-weight: 400;
+            }
+
+            .btn {
+                color: #fff;
+                border: 1px solid #c0262d;
+                background: #c0262d;
+                margin-block: 5px;
+
+                &:hover {
+                    background-color: var(--clr-primary-500);
+                    border-color: var(--clr-primary-500);
+                }
+            }
+        }
+
+        .line {
+            height: 2px;
+            background-color: #e6e9ed;
+        }
+    }
+}

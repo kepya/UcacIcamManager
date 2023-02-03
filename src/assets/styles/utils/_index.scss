@@ -1,0 +1,49 @@
+@use "../abstracts/index" as *;
+
+.v-start {
+    @include v-start;
+}
+
+.vh-end {
+    @include vh-end;
+}
+
+.vh-start {
+    @include vh-start;
+}
+
+.vh-center {
+    @include vh-center;
+}
+
+.border-gradient {
+    @include border-gradient;
+}
+
+.v-center {
+    @include v-center;
+}
+
+.v-start-between {
+    @include v-start-between;
+}
+
+.v-space-around {
+    @include v-space-around;
+}
+
+.v-space-between {
+    @include v-space-between;
+}
+
+.vh-space-between {
+    @include vh-space-between;
+}
+
+.vh-space-around {
+    @include vh-space-around;
+}
+
+.flex-column {
+    @include flex-column;
+}
