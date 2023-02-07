@@ -10,7 +10,12 @@ body {
     background: #f7f7f7;
 }
 
+* {
+    font-family: var(--Poppins-regular);
+}
+
 #app {
+    overflow: hidden;
     // display: grid;
     // grid-template-areas: "sidebar header" "sidebar main" "sidebar  footer";
     // grid-template-columns: auto 1fr;

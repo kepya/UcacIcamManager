@@ -1,3 +1,8 @@
 export const environment = {
-  production: true
+  production: true,
+  secretKey: 'securesecuresecuresecure',
+  basePath: 'api/v1/',
+  port: '8080',
+  apiUrl: 'http://localhost:8080/',
+  sessionTTL: 15,
 };

@@ -4,6 +4,10 @@ import { CommonModule } from '@angular/common';
 import { ZonePageRoutingModule } from './zone-page-routing.module';
 import { ZonePageComponent } from './zone-page.component';
 import { SharedModule } from '../shared/shared.module';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -13,6 +17,10 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     ZonePageRoutingModule,
     SharedModule,
+    TableModule,
+    ButtonModule,
+    FormsModule,
+    HttpClientModule,
   ]
 })
 export class ZonePageModule { }

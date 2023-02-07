@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from "rxjs";
 
 @Component({
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit {
   title = 'admin-ucac-dashboard';
   isExtend: boolean = true;
 
-  constructor(private router: Router, private titleService: Title) {
+  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
 
   }
 
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       map(() => {

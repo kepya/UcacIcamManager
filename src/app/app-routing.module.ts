@@ -11,6 +11,11 @@ const routes: Routes = [
     path: 'zones',
     data: { title: 'Zones' },
     loadChildren: () => import('./zone-page/zone-page.module').then(z => z.ZonePageModule)
+  },
+  {
+    path: 'sites',
+    data: { title: 'Sites' },
+    loadChildren: () => import('./site-page/site-page.module').then(s => s.SitePageModule)
   }
 ];
 
