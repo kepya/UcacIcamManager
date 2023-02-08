@@ -6,7 +6,7 @@ import { ZonePageComponent } from './zone-page.component';
 import { SharedModule } from '../shared/shared.module';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
     ButtonModule,
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule
   ]
 })
 export class ZonePageModule { }

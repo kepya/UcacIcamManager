@@ -20,55 +20,58 @@
     <div class="menu_section">
 
         <ul class="nav side-menu">
-            <li>
-                <a class="link" href="index.html"><i class="fa fa-home"></i> Accueil </a>
+            <li [ngClass]="{'active-page': url.indexOf('home') > -1}" (click)="goToUrl('home')">
+                <a class="link"><i class="fa fa-home"></i> Accueil </a>
             </li>
 
-            <li>
-                <a class="link" href="zone.html"><i class="fa fa-map"></i> Zones </a>
+            <li [ngClass]="{'active-page': url.indexOf('zone') > -1}" (click)="goToUrl('zones')">
+                <a class="link"><i class="fa fa-map"></i> Zones </a>
             </li>
 
-            <li>
-                <a class="link" href="site.html"><i class="fa fa-map-marker"></i> Sites </a>
+            <li [ngClass]="{'active-page': url.indexOf('site') > -1}" (click)="goToUrl('sites')">
+                <a class="link"><i class="fa fa-map-marker"></i> Sites </a>
             </li>
 
-            <li>
-                <a class="link" href="centre_examen.html"><i class="fa fa-map-signs"></i> Centres d'examen </a>
+            <li [ngClass]="{'active-page': url.indexOf('centre') > -1}" (click)="goToUrl('centre_examen')">
+                <a class="link"><i class="fa fa-map-signs"></i> Centres d'examen </a>
             </li>
 
-            <li>
-                <a class="link" href="session_examen.html"><i class="fa fa-calendar"></i> Sessions d'examen </a>
+            <li [ngClass]="{'active-page': url.indexOf('session') > -1}" (click)="goToUrl('session_examen')">
+                <a class="link"><i class="fa fa-calendar"></i> Sessions d'examen </a>
             </li>
 
-            <li #candidacy (click)="showMenuChild(candidacy)">
+            <li [ngClass]="{'active-link': url.indexOf('candidature') > -1}" #candidacy
+                (click)="showMenuChild(candidacy)">
                 <a class="link"><i class="fa fa-envelope"></i>
                     Candidatures <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
-                    <li><a class="sub-link" href="liste_candidatures.html">Liste des candidatures</a></li>
-                    <li><a class="sub-link" href="gestion_admissibilité.html">Gestion d'admissibilité</a></li>
-                    <li><a class="sub-link" href="gestion_admis.html">Gestion des admis</a></li>
+                    <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Liste des candidatures</a></li>
+                    <li><a class="sub-link">Gestion d'admissibilité</a></li>
+                    <li><a class="sub-link">Gestion des admis</a></li>
                 </ul>
             </li>
 
-            <li #interviews (click)="showMenuChild(interviews)">
+            <li [ngClass]="{'active-link': url.indexOf('interview') > -1}" #interviews
+                (click)="showMenuChild(interviews)">
                 <a class="link"><i class="fa fa-microphone"></i> Entretiens <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
-                    <li><a class="sub-link" href="calendrier_entretiens.html">Calendrier des entretiens</a></li>
-                    <li><a class="sub-link" href="calendrier_disponibilités.html">Calendrier des disponibilités</a></li>
-                    <li><a class="sub-link" href="periode_entretiens.html">Définition période entretiens</a></li>
-                    <li><a class="sub-link" href="notes_entretiens.html">Notes entretiens</a></li>
+                    <li><a class="sub-link">Calendrier des entretiens</a></li>
+                    <li><a class="sub-link">Calendrier des disponibilités</a></li>
+                    <li><a class="sub-link">Définition période entretiens</a></li>
+                    <li><a class="sub-link">Notes entretiens</a></li>
                 </ul>
             </li>
 
-            <li #list (click)="showMenuChild(list)">
+            <li [ngClass]="{'active-link': url.indexOf('admis') > -1}" #list (click)="showMenuChild(list)">
                 <a class="link"><i class="fa fa-list"></i> Listes <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
-                    <li><a class="sub-link" href="liste_admissibilité.html">Liste d'admissibilité</a></li>
-                    <li><a class="sub-link" href="liste_admis.html">Liste des admis</a></li>
+                    <li><a class="sub-link">Liste d'admissibilité</a></li>
+                    <li><a class="sub-link">Liste des admis</a></li>
                 </ul>
             </li>
 
-            <li #rules (click)="showMenuChild(rules)"><a class="link"><i class="fa fa-users"></i> Rôles utilisateurs
+            <li [ngClass]="{'active-link': url.indexOf('role') > -1}" #rules (click)="showMenuChild(rules)"><a
+                    class="link"><i class="fa fa-users"></i> Rôles utilisateurs
                     <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_two_line">
                     <li><a class="sub-link" href="administrateur.html">Administrateur</a></li>

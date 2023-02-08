@@ -1,11 +1,11 @@
-<section class="site-page page-content" *ngIf="!isFormSite else addSite">
-    <h1 class="page-title">Sites</h1>
+<section class="Centre-page page-content" *ngIf="!isFormCentre else addCentre">
+    <h1 class="page-title">Centres d'examen</h1>
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Liste des sites Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewSite('form')">
-                Ajouter un site
+            <h3 class="title">Liste des centres d'examen Ucac-Icam</h3>
+            <button class="btn btn-danger" (click)="viewCentre('form')">
+                Ajouter un centre
             </button>
         </div>
         <div class="line"></div>
@@ -36,9 +36,9 @@
                     <tr>
                         <th>
                             <div>
-                                Zone d'appartenance <i
-                                    class="icon-sort {{this.sortProperty == 'zone' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'zone'}" (click)="sort('zone')"></i>
+                                Site d'appartenance <i
+                                    class="icon-sort {{this.sortProperty == 'site' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'site'}" (click)="sort('site')"></i>
                             </div>
                         </th>
                         <th>
@@ -49,16 +49,15 @@
                         </th>
                         <th>
                             <div>
-                                Description <i
-                                    class="icon-sort {{this.sortProperty == 'description' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'description'}"
-                                    (click)="sort('description')"></i>
+                                Contacts <i
+                                    class="icon-sort {{this.sortProperty == 'contacts' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'contacts'}" (click)="sort('contacts')"></i>
                             </div>
                         </th>
                         <th>
                             <div>
-                                Pays <i class="icon-sort {{this.sortProperty == 'pays' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'pays'}" (click)="sort('pays')"></i>
+                                Villes <i class="icon-sort {{this.sortProperty == 'ville' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'ville'}" (click)="sort('ville')"></i>
                             </div>
                         </th>
                         <th>
@@ -67,13 +66,13 @@
                             </div>
                         </th>
                     </tr>
-                    <tr *ngFor="let site of sites">
-                        <td>{{site.zone}}</td>
-                        <td>{{site.nom}}</td>
-                        <td>{{site.description}}</td>
-                        <td>{{site.pays}}</td>
+                    <tr *ngFor="let centre of centres">
+                        <td>{{centre.site.nom}}</td>
+                        <td>{{centre.nom}}</td>
+                        <td>{{centre.contacts}}</td>
+                        <td>{{centre.ville}}</td>
                         <td>
-                            <button class="btn" (click)="updateSite(site)">
+                            <button class="btn" (click)="updateCentre(centre)">
                                 <div>
                                     <i class="fa-solid fa-pencil"></i>
                                 </div>
@@ -83,20 +82,20 @@
                             </button>
                         </td>
                     </tr>
-                    <tr *ngIf="searchValue && sites.length === 0">
+                    <tr *ngIf="searchValue && centres.length === 0">
                         <td colspan="5"><span class="vh-center">
-                                Aucun sites trouvés avec ces lettres dans son nom
+                                Aucune centres trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
-                    <tr *ngIf="!searchValue && sites.length === 0">
+                    <tr *ngIf="!searchValue && centres.length === 0">
                         <td colspan="5"><span class="vh-center">
-                                Aucun sites present dans la base
+                                Aucune centres presents dans la base
                             </span></td>
                     </tr>
                 </table>
             </div>
             <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{sites.length}} entrées affichées</span>
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{centres.length}} entrées affichées</span>
                 <ul class="pagination">
                     <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
                         <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
@@ -116,19 +115,17 @@
 
 </section>
 
-<ng-template #addSite>
-    <section class="site-page page-content">
-        <h1 class="page-title"><img (click)="viewSite()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> sites <i class="pi pi-angle-right"></i> Ajouter une site</h1>
+<ng-template #addCentre>
+    <section class="Centre-page page-content">
+        <h1 class="page-title"><img (click)="viewCentre()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
+                srcset=""> centres d'examen <i class="pi pi-angle-right"></i> Ajouter un centre d'examen</h1>
         <div class="card">
             <div class="header">
-                <h3 class="title">Liste des sites Ucac-Icam</h3>
-                <button class="btn btn-danger" (click)="viewSite('form')">
-                    Ajouter une site
-                </button>
+                <h3 class="title">Ajouter un centre d'examen
+                </h3>
             </div>
             <div class="line"></div>
-            <form class="form" [formGroup]="formSite" (ngSubmit)="createOrUpdateSite()">
+            <form class="form" [formGroup]="formCentre" (ngSubmit)="createOrUpdateCentre()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
@@ -136,13 +133,14 @@
                 <div class="main">
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Zone d'appartenance *</label>
-                            <select formControlName="zone_id" [ngClass]="{required: formSite.get('zone_id')!.invalid}">
-                                <option [value]="zone.id" *ngFor="let zone of zones"></option>
+                            <label for="">Site d'appartenance *</label>
+                            <select formControlName="site_id"
+                                [ngClass]="{required: formCentre.get('site_id')!.invalid}">
+                                <option [value]="site.id" *ngFor="let site of sites"></option>
                             </select>
                         </div>
-                        <div class="alert" *ngIf="formSiteControl['zone_id'].errors">
-                            <div *ngIf="formSiteControl['zone_id'].errors['required']">
+                        <div class="alert" *ngIf="formCentreControl['site_id'].errors">
+                            <div *ngIf="formCentreControl['site_id'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
@@ -152,47 +150,47 @@
                         <div class="form-group">
                             <label for="">Nom *</label>
                             <input type="text" formControlName="nom"
-                                [ngClass]="{required: formSite.get('nom')!.invalid}">
+                                [ngClass]="{required: formCentre.get('nom')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="formSiteControl['nom'].errors">
-                            <div *ngIf="formSiteControl['nom'].errors['required']">
+                        <div class="alert" *ngIf="formCentreControl['nom'].errors">
+                            <div *ngIf="formCentreControl['nom'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
-                            <div *ngIf="formSiteControl['nom'].errors['minlength']">
+                            <div *ngIf="formCentreControl['nom'].errors['minlength']">
                                 Nom doit avoir au minimun 4 charactères
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Description *</label>
-                            <textarea formControlName="description" id="" rows="4"
-                                [ngClass]="{required: formSite.get('description')!.invalid}"></textarea>
+                            <label for="">Contacts *</label>
+                            <input type="text" formControlName="contacts"
+                                [ngClass]="{required: formCentre.get('contacts')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="formSiteControl['description'].errors">
-                            <div *ngIf="formSiteControl['description'].errors['required']">
+                        <div class="alert" *ngIf="formCentreControl['contacts'].errors">
+                            <div *ngIf="formCentreControl['contacts'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
-                            <div *ngIf="formSiteControl['description'].errors['minlength']">
-                                Description doit avoir au minimun 4 charactères
+                            <div *ngIf="formCentreControl['contacts'].errors['minlength']">
+                                Votre contact doit avoir au minimun 4 charactères
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Pays *</label>
-                            <input type="text" formControlName="pays"
-                                [ngClass]="{required: formSite.get('pays')!.invalid}">
+                            <label for="">Email *</label>
+                            <input type="text" formControlName="email"
+                                [ngClass]="{required: formCentre.get('email')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="formSiteControl['pays'].errors">
-                            <div *ngIf="formSiteControl['pays'].errors['required']">
+                        <div class="alert" *ngIf="formCentreControl['email'].errors">
+                            <div *ngIf="formCentreControl['email'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
-                            <div *ngIf="formSiteControl['pays'].errors['minlength']">
-                                Pays doit avoir au minimun 4 charactères
+                            <div *ngIf="formCentreControl['email'].errors['email']">
+                                Votre Email doit respecter le format des emails
                             </div>
                         </div>
                     </div>
@@ -201,11 +199,11 @@
                 <div class="footer">
                     <div class="line"></div>
                     <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formSite.invalid" type="submit">
+                        <button class="btn btn-info" [disabled]="formCentre.invalid" type="submit">
                             Soumettre
                         </button>
 
-                        <button class="btn btn-danger" (click)="formSite.reset()">
+                        <button class="btn btn-danger" (click)="formCentre.reset()">
                             Renitialiser
                         </button>
                     </div>

@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
-import { ZoneService } from '../zone-page/zone.service';
-import { SiteService } from './site.service';
-import { Zone } from "../shared/models/zone";
+import { SiteService } from '../site-page/site.service';
+import { CentreExamenService } from './centre-examen.service';
 
 @Component({
-  selector: 'app-site-page',
-  templateUrl: './site-page.component.html',
+  selector: 'app-centre-examen-page',
+  templateUrl: './centre-examen-page.component.html',
   styles: [
   ]
 })
-export class SitePageComponent implements OnInit {
+export class CentreExamenPageComponent implements OnInit {
 
+  centres: Centre[] = [];
+  centre!: Centre;
   sites: Site[] = [];
-  site!: Site;
-  zones: Zone[] = [];
-  searchSites: Site[] = [];
+  searchCentres: Centre[] = [];
   loading: boolean = true;
   sortIcon!: string;
   sortProperty!: string;
@@ -27,16 +27,17 @@ export class SitePageComponent implements OnInit {
   pageSize!: number;
   collectionSize!: number;
   nbrOfPage!: number;
-  isFormSite!: boolean;
+  isFormCentre!: boolean;
 
-  formSite: FormGroup = new FormGroup({
+  formCentre: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    pays: new FormControl('', [Validators.required]),
-    zone_id: new FormControl('', [Validators.required]),
+    contacts: new FormControl('', [Validators.required]),
+    siteid: new FormControl('', [Validators.required]),
+    ville: new FormControl('', []),
+    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private siteSrv: SiteService, private zoneSrv: ZoneService) { }
+  constructor(private centreSrv: CentreExamenService, private siteSrv: SiteService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -44,11 +45,11 @@ export class SitePageComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
-    this.getSites();
+    this.getCentres();
   }
 
-  sort(property: string, sites: Site[] = this.sites) {
-    console.log("site", sites);
+  sort(property: string, centres: Centre[] = this.centres) {
+    console.log("centre", centres);
 
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
@@ -56,7 +57,7 @@ export class SitePageComponent implements OnInit {
 
     if (property === 'nom') {
       if (this.isAsc) {
-        sites.sort((a, b) => {
+        centres.sort((a, b) => {
           if (a.nom > b.nom) {
             return 1;
           }
@@ -66,7 +67,7 @@ export class SitePageComponent implements OnInit {
           return 0;
         });
       } else {
-        sites.sort((a, b) => {
+        centres.sort((a, b) => {
           if (a.nom > b.nom) {
             return -1;
           }
@@ -78,23 +79,23 @@ export class SitePageComponent implements OnInit {
       }
     }
 
-    if (property === 'pays') {
+    if (property === 'site') {
       if (this.isAsc) {
-        sites.sort((a, b) => {
-          if (a.pays > b.pays) {
+        centres.sort((a, b) => {
+          if (a.site.nom > b.site.nom) {
             return 1;
           }
-          if (b.pays > a.pays) {
+          if (b.site.nom > a.site.nom) {
             return -1;
           }
           return 0;
         });
       } else {
-        sites.sort((a, b) => {
-          if (a.pays > b.pays) {
+        centres.sort((a, b) => {
+          if (a.site.nom > b.site.nom) {
             return -1;
           }
-          if (b.pays > a.pays) {
+          if (b.site.nom > a.site.nom) {
             return 1;
           }
           return 0;
@@ -102,23 +103,23 @@ export class SitePageComponent implements OnInit {
       }
     }
 
-    if (property === 'zone') {
+    if (property === 'contacts') {
       if (this.isAsc) {
-        sites.sort((a, b) => {
-          if (a.zone?.nom > b.zone?.nom) {
+        centres.sort((a, b) => {
+          if (a.contacts > b.contacts) {
             return 1;
           }
-          if (b.zone?.nom > a.zone?.nom) {
+          if (b.contacts > a.contacts) {
             return -1;
           }
           return 0;
         });
       } else {
-        sites.sort((a, b) => {
-          if (a.zone?.nom > b.zone?.nom) {
+        centres.sort((a, b) => {
+          if (a.contacts > b.contacts) {
             return -1;
           }
-          if (b.zone?.nom > a.zone?.nom) {
+          if (b.contacts > a.contacts) {
             return 1;
           }
           return 0;
@@ -126,23 +127,23 @@ export class SitePageComponent implements OnInit {
       }
     }
 
-    if (property === 'description') {
+    if (property === 'ville') {
       if (this.isAsc) {
-        sites.sort((a, b) => {
-          if (a.description > b.description) {
+        centres.sort((a, b) => {
+          if (a.ville > b.ville) {
             return 1;
           }
-          if (b.description > a.description) {
+          if (b.ville > a.ville) {
             return -1;
           }
           return 0;
         });
       } else {
-        sites.sort((a, b) => {
-          if (a.description > b.description) {
+        centres.sort((a, b) => {
+          if (a.ville > b.ville) {
             return -1;
           }
-          if (b.description > a.description) {
+          if (b.ville > a.ville) {
             return 1;
           }
           return 0;
@@ -150,53 +151,53 @@ export class SitePageComponent implements OnInit {
       }
     }
 
-    return sites;
+    return centres;
   }
 
-  get formSiteControl(): { [key: string]: AbstractControl } {
-    return this.formSite.controls;
+  get formCentreControl(): { [key: string]: AbstractControl } {
+    return this.formCentre.controls;
   }
 
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
 
     if (this.searchValue !== '') {
-      let names = this.searchSites.map(site => site.nom);
+      let names = this.searchCentres.map(centre => centre.nom);
       let name = names.filter(name => name.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
 
       if (name.length === 0) {
-        this.sites = [];
+        this.centres = [];
       } else {
-        let sites: Site[] = [];
+        let centres: Centre[] = [];
         for (let index = 0; index < name.length; index++) {
           const element = name[index];
-          let z = this.searchSites.filter(site => site.nom.indexOf('' + element) > -1);
-          sites.push(...z);
+          let z = this.searchCentres.filter(centre => centre.nom.indexOf('' + element) > -1);
+          centres.push(...z);
         }
-        this.sites = sites;
+        this.centres = centres;
       }
     } else {
-      this.sites = this.searchSites;
+      this.centres = this.searchCentres;
     }
   }
 
   next() {
     this.page++;
-    this.getSites();
+    this.getCentres();
   }
 
   previous() {
     this.page--;
-    this.getSites();
+    this.getCentres();
   }
 
-  getSites() {
-    this.siteSrv.liste().subscribe({
-      next: (value: Site[]) => {
+  getCentres() {
+    this.centreSrv.liste().subscribe({
+      next: (value: Centre[]) => {
         value = this.sort('nom', value);
-        this.searchSites = [];
-        this.searchSites = value;
-        this.sites = value
+        this.searchCentres = [];
+        this.searchCentres = value;
+        this.centres = value
           .map((mis, i) => ({ id: i + 1, ...mis }))
           .slice(
             (this.page - 1) * this.pageSize,
@@ -211,19 +212,19 @@ export class SitePageComponent implements OnInit {
     });
   }
 
-  viewSite(view: string = 'data') {
+  viewCentre(view: string = 'data') {
     if (view === 'data') {
-      this.isFormSite = false;
+      this.isFormCentre = false;
     } else {
-      this.isFormSite = true;
-      this.getZones();
+      this.isFormCentre = true;
+      this.getSites();
     }
   }
 
-  getZones() {
-    this.zoneSrv.liste().subscribe({
-      next: (value: Zone[]) => {
-        this.zones = value;
+  getSites() {
+    this.siteSrv.liste().subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
       },
       error: (err) => {
         console.log('error: ', err);
@@ -231,38 +232,38 @@ export class SitePageComponent implements OnInit {
     });
   }
 
-  updateSite(site: Site) {
-    this.isFormSite = true;
-    this.site = site;
-    this.formSite.setValue({
-      nom: site.nom,
-      description: site.description,
-      zone_id: site.zone?.id,
-      pays: site.pays
+  updateCentre(centre: Centre) {
+    this.isFormCentre = true;
+    this.centre = centre;
+    this.formCentre.setValue({
+      nom: centre.nom,
+      contacts: centre.contacts,
+      ville: centre.ville,
+      siteid: centre.siteid
     });
   }
 
-  createOrUpdateSite() {
-    let zone: Zone = new Zone();
-    if (this.site?.id || 0 > 0) {
-      this.siteSrv.update({ ...this.formSite.value, image: this.site.image, zone }).subscribe({
+  createOrUpdateCentre() {
+    let site: Site = new Site();
+    if (this.centre?.id || 0 > 0) {
+      this.centreSrv.update({ ...this.formCentre.value, site }).subscribe({
         next: (value) => {
-          this.getSites();
-          this.site = new Site();
-          this.formSite.reset();
-          this.isFormSite = false;
+          this.getCentres();
+          this.centre = new Centre();
+          this.formCentre.reset();
+          this.isFormCentre = false;
         },
         error: (err) => {
           console.log("Error: ", err);
         }
       })
     } else {
-      this.siteSrv.create({ ...this.formSite.value, zone }).subscribe({
+      this.centreSrv.create({ ...this.formCentre.value, Site }).subscribe({
         next: (value) => {
-          this.getSites();
-          this.site = new Site();
-          this.formSite.reset();
-          this.isFormSite = false;
+          this.getCentres();
+          this.centre = new Centre();
+          this.formCentre.reset();
+          this.isFormCentre = false;
         },
         error: (err) => {
           console.log("Error: ", err);

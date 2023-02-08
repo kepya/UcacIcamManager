@@ -1,6 +1,6 @@
 <div id="app">
     <app-header class="item1" (extendEvent)="checkSidebarMode($event)"></app-header>
-    <app-sidebar class="item2" [isExtended]="isExtend"></app-sidebar>
+    <app-sidebar class="item2" [url]="url.toLowerCase()" [isExtended]="isExtend"></app-sidebar>
     <div class="item3">
         <router-outlet></router-outlet>
     </div>

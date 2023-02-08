@@ -1,0 +1,102 @@
+@use "../abstracts/index" as *;
+
+.form {
+    & > .header {
+        .line {
+            height: 1px;
+        }
+    }
+
+    & > .main {
+        height: 20em;
+        overflow: auto;
+
+        @media only screen and (min-width: 1700px) {
+            height: 35em;
+        }
+
+        @include xl-only {
+            height: 53em;
+        }
+
+        @include lg-only {
+            height: 53em;
+        }
+
+        @include sm-only {
+            height: 20em;
+        }
+
+        .row {
+            width: 70%;
+            margin-inline: auto;
+            @include v-start-between;
+            margin-bottom: 1rem;
+
+            .form-group {
+                @include v-start-between;
+                width: 70%;
+
+                .required {
+                    border: 1px solid #c0262d;
+                }
+
+                label {
+                    color: var(--clr-primary-500);
+                    width: 20%;
+                    margin-right: 1rem;
+                }
+                & > input:first-child,
+                & > select:first-child {
+                    height: 3rem;
+                }
+                textarea,
+                select,
+                input {
+                    outline: none;
+                    width: 80%;
+                    padding: 0.625rem;
+                }
+            }
+            .justify-start {
+                justify-content: flex-start;
+            }
+            .alert {
+                width: 25%;
+                float: left;
+                padding: 0.625rem;
+                color: #fff;
+                border-radius: 3px 4px 4px 3px;
+                background-color: #ce5454;
+                position: relative;
+                left: -15px;
+                z-index: 1;
+                -webkit-transition: all 200ms ease-out;
+                transition: all 200ms ease-out;
+                &::after {
+                    content: "";
+                    display: block;
+                    height: 0;
+                    width: 0;
+                    border-color: transparent #ce5454 transparent transparent;
+                    border-style: solid;
+                    border-width: 11px 7px;
+                    position: absolute;
+                    left: -13px;
+                    top: 1px;
+                }
+            }
+        }
+    }
+
+    & > .footer {
+        text-align: right;
+        .btn-group {
+            .btn {
+                &:last-child {
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+}

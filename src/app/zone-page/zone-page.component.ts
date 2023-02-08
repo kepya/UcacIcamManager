@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { zones } from '../shared/mocks/mock';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from './zone.service';
@@ -12,6 +13,7 @@ import { ZoneService } from './zone.service';
 export class ZonePageComponent implements OnInit {
 
   zones: Zone[] = [];
+  zone!: Zone;
   searchZones: Zone[] = [];
   loading: boolean = true;
   sortIcon!: string;
@@ -24,6 +26,11 @@ export class ZonePageComponent implements OnInit {
   collectionSize!: number;
   nbrOfPage!: number;
   isFormZone!: boolean;
+
+  formZone: FormGroup = new FormGroup({
+    nom: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required])
+  });
 
   constructor(private zoneSrv: ZoneService) { }
 
@@ -118,7 +125,9 @@ export class ZonePageComponent implements OnInit {
     return zones;
   }
 
-
+  get formZoneControl(): { [key: string]: AbstractControl } {
+    return this.formZone.controls;
+  }
 
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
@@ -179,6 +188,43 @@ export class ZonePageComponent implements OnInit {
       this.isFormZone = false;
     } else {
       this.isFormZone = true;
+    }
+  }
+
+  updateZone(zone: Zone) {
+    this.isFormZone = true;
+    this.zone = zone;
+    this.formZone.setValue({
+      nom: zone.nom,
+      description: zone.description
+    })
+  }
+
+  createOrUpdateZone() {
+    if (this.zone?.id || 0 > 0) {
+      this.zoneSrv.update({ ...this.formZone.value }).subscribe({
+        next: (value) => {
+          this.getZones();
+          this.zone = new Zone();
+          this.formZone.reset();
+          this.isFormZone = false;
+        },
+        error: (err) => {
+          console.log("Error: ", err);
+        }
+      })
+    } else {
+      this.zoneSrv.create({ ...this.formZone.value }).subscribe({
+        next: (value) => {
+          this.getZones();
+          this.zone = new Zone();
+          this.formZone.reset();
+          this.isFormZone = false;
+        },
+        error: (err) => {
+          console.log("Error: ", err);
+        }
+      })
     }
   }
 }

@@ -4,7 +4,7 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des zones Ucac-Icam</h3>
-            <button class="btn" (click)="viewZone('form')">
+            <button class="btn btn-danger" (click)="viewZone('form')">
                 Ajouter une zone
             </button>
         </div>
@@ -66,7 +66,7 @@
                         <td>{{zone.description}}</td>
                         <td>{{zone.nbreSite}}</td>
                         <td>
-                            <button class="btn">
+                            <button class="btn" (click)="updateZone(zone)">
                                 <div>
                                     <i class="fa-solid fa-pencil"></i>
                                 </div>
@@ -114,6 +114,68 @@
         <h1 class="page-title"><img (click)="viewZone()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
                 srcset=""> Zones <i class="pi pi-angle-right"></i> Ajouter une zone</h1>
         <div class="card">
+            <div class="header">
+                <h3 class="title">Liste des zones Ucac-Icam</h3>
+                <button class="btn btn-danger" (click)="viewZone('form')">
+                    Ajouter une zone
+                </button>
+            </div>
+            <div class="line"></div>
+            <form class="form" [formGroup]="formZone" (ngSubmit)="createOrUpdateZone()">
+                <div class="header">
+                    Veullez remplir les champs suivants
+                    <div class="line"></div>
+                </div>
+                <div class="main">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Nom *</label>
+                            <input type="text" formControlName="nom"
+                                [ngClass]="{required: formZone.get('nom')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formZoneControl['nom'].errors">
+                            <div *ngIf="formZoneControl['nom'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formZoneControl['nom'].errors['minlength']">
+                                Nom doit avoir au minimun 4 charactères
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Description *</label>
+                            <textarea formControlName="description" id="" rows="4"
+                                [ngClass]="{required: formZone.get('description')!.invalid}"></textarea>
+                        </div>
+                        <div class="alert" *ngIf="formZoneControl['description'].errors">
+                            <div *ngIf="formZoneControl['description'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formZoneControl['description'].errors['minlength']">
+                                Description doit avoir au minimun 4 charactères
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="line"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-info" [disabled]="formZone.invalid" type="submit">
+                            Soumettre
+                        </button>
+
+                        <button class="btn btn-danger" (click)="formZone.reset()">
+                            Renitialiser
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
         </div>
     </section>
 </ng-template>

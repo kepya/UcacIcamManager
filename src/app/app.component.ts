@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
 
   title = 'admin-ucac-dashboard';
   isExtend: boolean = true;
+  url: string = '';
 
   constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
 
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
     ).subscribe((title: string) => {
       if (title) {
         this.titleService.setTitle(`My App - ${title}`);
+        this.url = title;
       }
     });
   }

@@ -5,6 +5,9 @@ import { CommonModule } from '@angular/common';
 
 import { SitePageRoutingModule } from './site-page-routing.module';
 import { SitePageComponent } from './site-page.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'primeng/api';
 
 
 @NgModule({
@@ -15,7 +18,11 @@ import { SitePageComponent } from './site-page.component';
     CommonModule,
     SitePageRoutingModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    SharedModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ]
 })
 export class SitePageModule { }

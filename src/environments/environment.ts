@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   secretKey: 'securesecuresecuresecure',
-  basePath: 'api/v1/',
+  basePath: '/api/v1/admin/',
   port: '8080',
   apiUrl: 'http://localhost:8080/',
   sessionTTL: 15,

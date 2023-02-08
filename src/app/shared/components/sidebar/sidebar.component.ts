@@ -9,16 +9,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class SidebarComponent implements OnInit {
 
-  url!: string;
+  @Input() url!: string;
   @Input() isExtended!: boolean;
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.url = this.router.url;
+    console.log('url: ', this.url);
+
   }
 
   showMenuChild(content: any) {
     content.classList.toggle("active-link");
+  }
+
+  goToUrl(url: string) {
+    this.router.navigate(['/' + url]);
   }
 
 }

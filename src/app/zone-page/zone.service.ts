@@ -17,7 +17,7 @@ export class ZoneService {
   }
 
   public liste(): Observable<Zone[]> {
-    return this.http.get<Zone[]>(this.url);
+    return this.http.get<Zone[]>(this.url + "all");
   }
 
   public getOne(id: number): Observable<Zone> {
@@ -25,11 +25,11 @@ export class ZoneService {
   }
 
   public create(zone: Zone): Observable<Zone> {
-    return this.http.post<Zone>(this.url, zone);
+    return this.http.post<Zone>(this.url + "create", zone);
   }
 
   public update(zone: Zone): Observable<Zone> {
-    return this.http.put<Zone>(this.url, zone);
+    return this.http.patch<Zone>(this.url + zone?.id, zone);
   }
 
   public delete(idZone: number): Observable<void> {
