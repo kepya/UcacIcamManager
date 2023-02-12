@@ -14,7 +14,7 @@
             <div class="search-content">
                 <div class="select-page-size">
                     <span>Voir</span>
-                    <select name="page-size" [(ngModel)]="pageSize" id="page-size">
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -136,7 +136,8 @@
                             <label for="">Site d'appartenance *</label>
                             <select formControlName="site_id"
                                 [ngClass]="{required: formCentre.get('site_id')!.invalid}">
-                                <option [value]="site.id" *ngFor="let site of sites"></option>
+                                <option value="">Site d'appartenance</option>
+                                <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
                             </select>
                         </div>
                         <div class="alert" *ngIf="formCentreControl['site_id'].errors">

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Zone } from '../shared/models/zone';
-import { BaseUrlService } from '../shared/services/base-url.service';
+import { BaseUrlService } from './base-url.service';
+import { Zone } from "../models/zone";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class ZoneService {
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.basePath}`;
-    this.url += 'zones/';
+    this.url += 'zone/';
   }
 
   public liste(): Observable<Zone[]> {

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { parse } from 'path';
 import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
-import { SiteService } from '../site-page/site.service';
 import { CentreExamenService } from './centre-examen.service';
+import { SiteService } from 'src/app/shared/services/site.service';
 
 @Component({
   selector: 'app-centre-examen-page',
@@ -32,7 +33,7 @@ export class CentreExamenPageComponent implements OnInit {
   formCentre: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     contacts: new FormControl('', [Validators.required]),
-    siteid: new FormControl('', [Validators.required]),
+    site_id: new FormControl('', [Validators.required]),
     ville: new FormControl('', []),
     email: new FormControl('', [Validators.required, Validators.email]),
   });
@@ -46,6 +47,7 @@ export class CentreExamenPageComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getCentres();
+    this.getSites();
   }
 
   sort(property: string, centres: Centre[] = this.centres) {
@@ -158,6 +160,18 @@ export class CentreExamenPageComponent implements OnInit {
     return this.formCentre.controls;
   }
 
+  checkSite(event: any) {
+    console.log('value: ', event.target.value);
+    if (event.target.value == "") {
+      alert(this.formCentre.get('site_id')?.value);;
+    }
+  }
+
+  handlePageSize(event: any) {
+    console.log('value: ', event.target.value);
+    this.getCentres();
+  }
+
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
 
@@ -239,14 +253,19 @@ export class CentreExamenPageComponent implements OnInit {
       nom: centre.nom,
       contacts: centre.contacts,
       ville: centre.ville,
-      siteid: centre.siteid
+      siteid: centre.site_id
     });
   }
 
   createOrUpdateCentre() {
+
     let site: Site = new Site();
     if (this.centre?.id || 0 > 0) {
-      this.centreSrv.update({ ...this.formCentre.value, site }).subscribe({
+      let d = { ...this.formCentre.value };
+      delete d.site_id;
+      d = { ...d, site_id: parseInt(this.formCentre.value.site_id, 10) };
+
+      this.centreSrv.update({ ...d, site, id: this.centre.id }).subscribe({
         next: (value) => {
           this.getCentres();
           this.centre = new Centre();
@@ -258,7 +277,11 @@ export class CentreExamenPageComponent implements OnInit {
         }
       })
     } else {
-      this.centreSrv.create({ ...this.formCentre.value, Site }).subscribe({
+      let d = { ...this.formCentre.value };
+      delete d.site_id;
+      d = { ...d, site_id: parseInt(this.formCentre.value.site_id, 10) };
+
+      this.centreSrv.create(d).subscribe({
         next: (value) => {
           this.getCentres();
           this.centre = new Centre();

@@ -46,8 +46,8 @@
                     Candidatures <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
                     <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Liste des candidatures</a></li>
-                    <li><a class="sub-link">Gestion d'admissibilité</a></li>
-                    <li><a class="sub-link">Gestion des admis</a></li>
+                    <li (click)="goToUrl('gestion_admissibilite')"><a class="sub-link">Gestion d'admissibilité</a></li>
+                    <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Gestion des admis</a></li>
                 </ul>
             </li>
 
@@ -65,8 +65,8 @@
             <li [ngClass]="{'active-link': url.indexOf('admis') > -1}" #list (click)="showMenuChild(list)">
                 <a class="link"><i class="fa fa-list"></i> Listes <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
-                    <li><a class="sub-link">Liste d'admissibilité</a></li>
-                    <li><a class="sub-link">Liste des admis</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('liste_admissibilite')">Liste d'admissibilité</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('liste_admis')">Liste des admis</a></li>
                 </ul>
             </li>
 
@@ -74,8 +74,8 @@
                     class="link"><i class="fa fa-users"></i> Rôles utilisateurs
                     <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_two_line">
-                    <li><a class="sub-link" href="administrateur.html">Administrateur</a></li>
-                    <li><a class="sub-link" href="membre_jury.html">Memebre du jury</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('role_admin')">Administrateur</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('role_jury')">Membre du jury</a></li>
                 </ul>
             </li>
 

@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Candidature } from 'src/app/shared/models/compte';
+import { Cycle } from 'src/app/shared/enums/cycle.enum';
+import { Genre } from 'src/app/shared/enums/genre.enum';
+import { Langue } from 'src/app/shared/enums/langue.enum';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { Statut } from 'src/app/shared/enums/statut.enum';
+import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Site } from 'src/app/shared/models/site';
 import { SiteService } from 'src/app/shared/services/site.service';
 import { CandidatureService } from '../candidature.service';
 
 @Component({
-  selector: 'app-liste-candidature',
-  templateUrl: './liste-candidature.component.html',
+  selector: 'app-gestion-admissibilite',
+  templateUrl: './gestion-admissibilite.component.html',
   styles: [
   ]
 })
-export class ListeCandidatureComponent implements OnInit {
+export class GestionAdmissibiliteComponent implements OnInit {
 
   candidatures: Candidature[] = [];
   candidature!: Candidature;
@@ -36,6 +41,41 @@ export class ListeCandidatureComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getCandidatures();
+    this.candidatures = [{
+      Lieu_de_naissance: "",
+      Date_naissance: "",
+      Nationalite: "",
+      Dernier_Etablissement: "",
+      Tel_pere: "",
+      Tel_mere: "",
+      email_pere: "",
+      email_mere: "",
+      Formation1: "",
+      Formation2: "",
+      Formation3: "",
+      centre: "",
+      Paiement: "",
+      Reference_paiement: "",
+      Image: "",
+      telephone_paiement: "",
+      ville: "",
+      code_examen: 0,
+      nombre_choix: 0,
+      CompteID: 0,
+      cycle: Cycle.premier,
+      statut: Statut.En_Attente,
+      Genre: Genre.M,
+      langue: Langue.Francais,
+      compte: {
+        name: "Christian",
+        prenom: "kepya",
+        password: "",
+        email: "",
+        telephone: "",
+        role: Role.CANDIDAT,
+        id_disponibilite: 0,
+      }
+    }]
   }
 
   sort(property: string, candidatures: Candidature[] = this.candidatures) {

@@ -57,6 +57,19 @@
                     width: 80%;
                     padding: 0.625rem;
                 }
+
+                .statut {
+                    .row {
+                        display: flex;
+                        margin: 0;
+                        padding: 0;
+                        padding-bottom: 0.5rem;
+                        align-items: center;
+                        input {
+                            margin-right: 0.5rem;
+                        }
+                    }
+                }
             }
             .justify-start {
                 justify-content: flex-start;

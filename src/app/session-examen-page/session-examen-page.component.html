@@ -14,7 +14,7 @@
             <div class="search-content">
                 <div class="select-page-size">
                     <span>Voir</span>
-                    <select name="page-size" [(ngModel)]="pageSize" id="page-size">
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -78,10 +78,10 @@
                     </tr>
                     <tr *ngFor="let session of sessions">
                         <td>{{session.nom}}</td>
-                        <td>{{session.date_debut | date: ''}}</td>
-                        <td>{{session.date_limite | date: ''}}</td>
-                        <td>{{session.date_examen | date: ''}}</td>
-                        <td>{{session.statut}}</td>
+                        <td>{{session.date_debut | date}}</td>
+                        <td>{{session.date_limite | date}}</td>
+                        <td>{{session.date_examen | date}}</td>
+                        <td>{{session.statut ? 'Active':'Inactive'}}</td>
                         <td>
                             <button class="btn" (click)="updateSession(session)">
                                 <div>
@@ -174,7 +174,8 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="">Date limite de dépôt des candidatures *</label>
-                            <input type="date" formControlName="date_limite" id="" rows="4"
+                            <input type="date" [value]="formSession.get('date_limite')?.value"
+                                formControlName="date_limite" id="" rows="4"
                                 [ngClass]="{required: formSession.get('date_limite')!.invalid}" />
                         </div>
                         <div class="alert" *ngIf="formSessionControl['date_limite'].errors">
@@ -200,9 +201,13 @@
                     <div class="row">
                         <div class="form-group justify-start">
                             <label for="">Status *</label>
-                            <div>
-                                <input type="radio" value="active" name="status" id="" formControlName="statut">
-                                <input type="radio" value="inactive" name="status" id="" formControlName="statut">
+                            <div class="statut">
+                                <div class="row">
+                                    <input type="radio" value="true" name="statut" formControlName="statut">Active
+                                </div>
+                                <div class="row">
+                                    <input type="radio" value="false" name="statut" formControlName="statut">Inactive
+                                </div>
                             </div>
                         </div>
                         <div class="alert" *ngIf="formSessionControl['statut'].errors">

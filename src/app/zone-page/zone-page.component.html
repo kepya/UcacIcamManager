@@ -14,7 +14,7 @@
             <div class="search-content">
                 <div class="select-page-size">
                     <span>Voir</span>
-                    <select name="page-size" [(ngModel)]="pageSize" id="page-size">
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>

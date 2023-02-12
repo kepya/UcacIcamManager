@@ -1,8 +1,9 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Session } from '../shared/models/session';
-import { ZoneService } from '../zone-page/zone.service';
 import { SessionExamenService } from './session-examen.service';
+import { ZoneService } from 'src/app/shared/services/zone.service';
 
 @Component({
   selector: 'app-session-examen-page',
@@ -33,7 +34,7 @@ export class SessionExamenPageComponent implements OnInit {
     date_debut: new FormControl(null, [Validators.required]),
     date_limite: new FormControl(null, [Validators.required]),
     date_examen: new FormControl(null, [Validators.required]),
-    statut: new FormControl('', [Validators.required]),
+    statut: new FormControl(true, [Validators.required]),
   });
 
   constructor(private sessionSrv: SessionExamenService, private zoneSrv: ZoneService) { }
@@ -181,6 +182,11 @@ export class SessionExamenPageComponent implements OnInit {
     return this.formSession.controls;
   }
 
+  handlePageSize(event: any) {
+    console.log('value: ', event.target.value);
+    this.getSessions();
+  }
+
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
 
@@ -248,16 +254,16 @@ export class SessionExamenPageComponent implements OnInit {
     this.session = session;
     this.formSession.setValue({
       nom: session.nom,
-      date_debut: session.date_debut,
-      date_limite: session.date_limite,
-      date_examen: session.date_examen,
+      date_debut: formatDate(session.date_debut, 'yyyy-MM-dd', "en"),
+      date_limite: formatDate(session.date_limite, 'yyyy-MM-dd', "en"),
+      date_examen: formatDate(session.date_examen, 'yyyy-MM-dd', "en"),
       statut: session.statut
     });
   }
 
   createOrUpdateSession() {
     if (this.session?.id || 0 > 0) {
-      this.sessionSrv.update({ ...this.formSession.value }).subscribe({
+      this.sessionSrv.update({ ...this.formSession.value, id: this.session?.id }).subscribe({
         next: (value) => {
           this.getSessions();
           this.session = new Session();

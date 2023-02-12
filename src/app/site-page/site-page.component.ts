@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Site } from '../shared/models/site';
-import { ZoneService } from '../zone-page/zone.service';
-import { SiteService } from './site.service';
 import { Zone } from "../shared/models/zone";
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { SiteService } from 'src/app/shared/services/site.service';
 
 @Component({
   selector: 'app-site-page',
@@ -44,6 +44,7 @@ export class SitePageComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
+    this.getZones();
     this.getSites();
   }
 
@@ -180,6 +181,11 @@ export class SitePageComponent implements OnInit {
     }
   }
 
+  handlePageSize(event: any) {
+    console.log('value: ', event.target.value);
+    this.getSites();
+  }
+
   next() {
     this.page++;
     this.getSites();
@@ -193,6 +199,7 @@ export class SitePageComponent implements OnInit {
   getSites() {
     this.siteSrv.liste().subscribe({
       next: (value: Site[]) => {
+        console.log('value: ', value);
         value = this.sort('nom', value);
         this.searchSites = [];
         this.searchSites = value;
@@ -224,6 +231,8 @@ export class SitePageComponent implements OnInit {
     this.zoneSrv.liste().subscribe({
       next: (value: Zone[]) => {
         this.zones = value;
+        console.log('value: ', value);
+
       },
       error: (err) => {
         console.log('error: ', err);
@@ -245,7 +254,11 @@ export class SitePageComponent implements OnInit {
   createOrUpdateSite() {
     let zone: Zone = new Zone();
     if (this.site?.id || 0 > 0) {
-      this.siteSrv.update({ ...this.formSite.value, image: this.site.image, zone }).subscribe({
+      let d = { ...this.formSite.value };
+      delete d.zone_id;
+      d = { ...d, zone_id: parseInt(this.formSite.value.zone_id, 10) };
+
+      this.siteSrv.update({ ...d, image: this.site.image, zone, id: this.site.id }).subscribe({
         next: (value) => {
           this.getSites();
           this.site = new Site();
@@ -257,7 +270,11 @@ export class SitePageComponent implements OnInit {
         }
       })
     } else {
-      this.siteSrv.create({ ...this.formSite.value, zone }).subscribe({
+      let d = { ...this.formSite.value };
+      delete d.zone_id;
+      d = { ...d, zone_id: parseInt(this.formSite.value.zone_id, 10) };
+
+      this.siteSrv.create({ ...d, zone }).subscribe({
         next: (value) => {
           this.getSites();
           this.site = new Site();

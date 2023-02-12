@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { CandidatureService } from 'src/app/menu-candidature/candidature.service';
+import { Cycle } from 'src/app/shared/enums/cycle.enum';
+import { Genre } from 'src/app/shared/enums/genre.enum';
+import { Langue } from 'src/app/shared/enums/langue.enum';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { Statut } from 'src/app/shared/enums/statut.enum';
 import { Candidature } from 'src/app/shared/models/compte';
-import { Site } from 'src/app/shared/models/site';
 import { SiteService } from 'src/app/shared/services/site.service';
-import { CandidatureService } from '../candidature.service';
 
 @Component({
-  selector: 'app-liste-candidature',
-  templateUrl: './liste-candidature.component.html',
+  selector: 'app-liste-admis',
+  templateUrl: './liste-admis.component.html',
   styles: [
   ]
 })
-export class ListeCandidatureComponent implements OnInit {
+export class ListeAdmisComponent implements OnInit {
 
   candidatures: Candidature[] = [];
   candidature!: Candidature;
@@ -30,12 +33,47 @@ export class ListeCandidatureComponent implements OnInit {
   constructor(private candidatureSrv: CandidatureService, private siteSrv: SiteService) { }
 
   ngOnInit(): void {
-    this.sortProperty = "code_examen";
+    this.sortProperty = "nom";
     this.sortIcon = "fa-solid fa-arrow-down-short-wide";
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
     this.getCandidatures();
+    this.candidatures = [{
+      Lieu_de_naissance: "",
+      Date_naissance: "",
+      Nationalite: "",
+      Dernier_Etablissement: "",
+      Tel_pere: "",
+      Tel_mere: "",
+      email_pere: "",
+      email_mere: "",
+      Formation1: "",
+      Formation2: "",
+      Formation3: "",
+      centre: "Centre de Douala",
+      Paiement: "",
+      Reference_paiement: "",
+      Image: "",
+      telephone_paiement: "",
+      ville: "",
+      code_examen: 0,
+      nombre_choix: 0,
+      CompteID: 0,
+      cycle: Cycle.premier,
+      statut: Statut.En_Attente,
+      Genre: Genre.M,
+      langue: Langue.Francais,
+      compte: {
+        name: "Christian",
+        prenom: "kepya",
+        password: "",
+        email: "",
+        telephone: "",
+        role: Role.CANDIDAT,
+        id_disponibilite: 0,
+      }
+    }]
   }
 
   sort(property: string, candidatures: Candidature[] = this.candidatures) {
@@ -91,23 +129,23 @@ export class ListeCandidatureComponent implements OnInit {
       }
     }
 
-    if (property === 'statut') {
+    if (property === 'centre') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.statut > b.statut) {
+          if (a.centre > b.centre) {
             return 1;
           }
-          if (b.statut > a.statut) {
+          if (b.centre > a.centre) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.statut > b.statut) {
+          if (a.centre > b.centre) {
             return -1;
           }
-          if (b.statut > a.statut) {
+          if (b.centre > a.centre) {
             return 1;
           }
           return 0;
@@ -115,53 +153,6 @@ export class ListeCandidatureComponent implements OnInit {
       }
     }
 
-    if (property === 'nationalite') {
-      if (this.isAsc) {
-        candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
-            return 1;
-          }
-          if (b.Nationalite > a.Nationalite) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
-            return -1;
-          }
-          if (b.Nationalite > a.Nationalite) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
-    if (property === 'photo') {
-      if (this.isAsc) {
-        candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
-            return 1;
-          }
-          if (b.Image > a.Image) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
-            return -1;
-          }
-          if (b.Image > a.Image) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
     return candidatures;
   }
 
@@ -224,3 +215,4 @@ export class ListeCandidatureComponent implements OnInit {
     });
   }
 }
+

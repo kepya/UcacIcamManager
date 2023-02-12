@@ -1,12 +1,9 @@
 <section class="Candidature-page page-content">
-    <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Liste des candidatures</h1>
+    <h1 class="page-title"> Listes <i class="pi pi-angle-right"></i> Liste d'admissibilité</h1>
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Liste des candidatures Ucac-Icam</h3>
-            <button class="btn btn-danger">
-                Exporter la liste des canditats
-            </button>
+            <h3 class="title">Liste d'admissibilité</h3>
         </div>
         <div class="line"></div>
 
@@ -36,10 +33,15 @@
                     <tr>
                         <th>
                             <div>
-                                Code d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'code_examen' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'code_examen'}"
-                                    (click)="sort('code_examen')"></i>
+                                Numero <i class="icon-sort {{this.sortProperty == 'numero' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'numero'}" (click)="sort('numero')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Centre d'examen <i
+                                    class="icon-sort {{this.sortProperty == 'centre' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'centre'}" (click)="sort('centre')"></i>
                             </div>
                         </th>
                         <th>
@@ -54,42 +56,20 @@
                                     [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Nationalité <i
-                                    class="icon-sort {{this.sortProperty == 'nationalite' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nationalite'}"
-                                    (click)="sort('nationalite')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Photo <i class="icon-sort {{this.sortProperty == 'photo' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'photo'}" (click)="sort('photo')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Statut <i class="icon-sort {{this.sortProperty == 'statut' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
-                            </div>
-                        </th>
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
-                        <td>{{candidature.code_examen}}</td>
+                        <td>{{candidature.id}}</td>
+                        <td>{{candidature.centre}}</td>
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
-                        <td>{{candidature.Nationalite}}</td>
-                        <td>{{candidature.Image}}</td>
-                        <td>{{candidature.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="6"><span class="vh-center">
+                        <td colspan="4"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="6"><span class="vh-center">
+                        <td colspan="4"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>

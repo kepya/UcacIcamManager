@@ -37,6 +37,31 @@ const routes: Routes = [
     data: { title: `Liste candidature` },
     loadChildren: () => import('./menu-candidature/liste-candidature/liste-candidature.module').then(s => s.ListeCandidatureModule)
   },
+  {
+    path: 'gestion_admissibilite',
+    data: { title: `Candidature` },
+    loadChildren: () => import('./menu-candidature/gestion-admissibilite/gestion-admissibilite.module').then(s => s.GestionAdmissibiliteModule)
+  },
+  {
+    path: 'liste_admissibilite',
+    data: { title: `Liste admissibilite` },
+    loadChildren: () => import('./menu-liste/liste-admissibilite/liste-admissibilite.module').then(s => s.ListeAdmissibiliteModule)
+  },
+  {
+    path: 'liste_admis',
+    data: { title: `Liste admis` },
+    loadChildren: () => import('./menu-liste/liste-admis/liste-admis.module').then(s => s.ListeAdmisModule)
+  },
+  {
+    path: 'role_admin',
+    data: { title: `Role admin` },
+    loadChildren: () => import('./menu-roles/administrateur/administrateur.module').then(s => s.AdministrateurModule)
+  },
+  {
+    path: 'role_jury',
+    data: { title: `Role jury` },
+    loadChildren: () => import('./menu-roles/jury-member/jury-member.module').then(s => s.JuryMemberModule)
+  },
 ];
 
 @NgModule({

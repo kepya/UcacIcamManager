@@ -14,7 +14,7 @@
             <div class="search-content">
                 <div class="select-page-size">
                     <span>Voir</span>
-                    <select name="page-size" [(ngModel)]="pageSize" id="page-size">
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -68,7 +68,7 @@
                         </th>
                     </tr>
                     <tr *ngFor="let site of sites">
-                        <td>{{site.zone}}</td>
+                        <td>{{site.zone?.nom}}</td>
                         <td>{{site.nom}}</td>
                         <td>{{site.description}}</td>
                         <td>{{site.pays}}</td>
@@ -138,7 +138,8 @@
                         <div class="form-group">
                             <label for="">Zone d'appartenance *</label>
                             <select formControlName="zone_id" [ngClass]="{required: formSite.get('zone_id')!.invalid}">
-                                <option [value]="zone.id" *ngFor="let zone of zones"></option>
+                                <option value="">Zone d'appartenance</option>
+                                <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
                             </select>
                         </div>
                         <div class="alert" *ngIf="formSiteControl['zone_id'].errors">

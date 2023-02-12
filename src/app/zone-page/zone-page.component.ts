@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { zones } from '../shared/mocks/mock';
 import { Zone } from "../shared/models/zone";
-import { ZoneService } from './zone.service';
+import { ZoneService } from 'src/app/shared/services/zone.service';
 
 @Component({
   selector: 'app-zone-page',
@@ -129,6 +129,11 @@ export class ZonePageComponent implements OnInit {
     return this.formZone.controls;
   }
 
+  handlePageSize(event: any) {
+    console.log('value: ', event.target.value);
+    this.getZones();
+  }
+
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
 
@@ -202,7 +207,7 @@ export class ZonePageComponent implements OnInit {
 
   createOrUpdateZone() {
     if (this.zone?.id || 0 > 0) {
-      this.zoneSrv.update({ ...this.formZone.value }).subscribe({
+      this.zoneSrv.update({ ...this.formZone.value, id: this.zone?.id }).subscribe({
         next: (value) => {
           this.getZones();
           this.zone = new Zone();
