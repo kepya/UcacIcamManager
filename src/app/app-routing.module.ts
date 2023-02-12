@@ -1,3 +1,4 @@
+import { CalendrierDisponibiliteModule } from './menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -43,6 +44,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-candidature/gestion-admissibilite/gestion-admissibilite.module').then(s => s.GestionAdmissibiliteModule)
   },
   {
+    path: 'gestion_admis',
+    data: { title: `Candidature` },
+    loadChildren: () => import('./menu-candidature/gestion-admis/gestion-admis.module').then(s => s.GestionAdmisModule)
+  },
+  {
     path: 'liste_admissibilite',
     data: { title: `Liste admissibilite` },
     loadChildren: () => import('./menu-liste/liste-admissibilite/liste-admissibilite.module').then(s => s.ListeAdmissibiliteModule)
@@ -61,6 +67,36 @@ const routes: Routes = [
     path: 'role_jury',
     data: { title: `Role jury` },
     loadChildren: () => import('./menu-roles/jury-member/jury-member.module').then(s => s.JuryMemberModule)
+  },
+  {
+    path: 'calendrier_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule)
+  },
+  {
+    path: 'calendrier_disponibilites',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule)
+  },
+  {
+    path: 'note_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/note-entretien/note-entretien.module').then(s => s.NoteEntretienModule)
+  },
+  {
+    path: 'periode_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/periode-entretien/periode-entretien.module').then(s => s.PeriodeEntretienModule)
+  },
+  {
+    path: 'calendrier_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule)
+  },
+  {
+    path: '**',
+    pathMatch: 'full',
+    redirectTo: 'zones'
   },
 ];
 

@@ -47,18 +47,21 @@
                 <ul class="nav child_menu child_menu_one_line">
                     <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Liste des candidatures</a></li>
                     <li (click)="goToUrl('gestion_admissibilite')"><a class="sub-link">Gestion d'admissibilité</a></li>
-                    <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Gestion des admis</a></li>
+                    <li (click)="goToUrl('gestion_admis')"><a class="sub-link">Gestion des admis</a></li>
                 </ul>
             </li>
 
-            <li [ngClass]="{'active-link': url.indexOf('interview') > -1}" #interviews
+            <li [ngClass]="{'active-link': url.indexOf('entretien') > -1}" #interviews
                 (click)="showMenuChild(interviews)">
                 <a class="link"><i class="fa fa-microphone"></i> Entretiens <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
-                    <li><a class="sub-link">Calendrier des entretiens</a></li>
-                    <li><a class="sub-link">Calendrier des disponibilités</a></li>
-                    <li><a class="sub-link">Définition période entretiens</a></li>
-                    <li><a class="sub-link">Notes entretiens</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('calendrier_entretiens')">Calendrier des entretiens</a>
+                    </li>
+                    <li><a class="sub-link" (click)="goToUrl('calendrier_disponibilites')">Calendrier des
+                            disponibilités</a></li>
+                    <li><a class="sub-link" (click)="goToUrl('periode_entretiens')">Définition période entretiens</a>
+                    </li>
+                    <li><a class="sub-link" (click)="goToUrl('note_entretiens')">Notes entretiens</a></li>
                 </ul>
             </li>
 

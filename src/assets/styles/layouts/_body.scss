@@ -37,6 +37,8 @@ body {
         grid-area: menu;
     }
     .item3 {
+        overflow-x: auto;
+        width: 100%;
         grid-area: main;
         padding: 1rem;
     }
