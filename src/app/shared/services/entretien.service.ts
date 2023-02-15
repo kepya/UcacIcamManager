@@ -12,7 +12,7 @@ export class EntretienService {
   url = '';
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
-    this.url = `${this.baseUrlSvr.getOrigin()}${environment.basePath}`;
+    this.url = `${this.baseUrlSvr.getOrigin()}${environment.interviewPath}`;
     this.url += 'zone/';
   }
 

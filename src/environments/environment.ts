@@ -5,10 +5,11 @@
 export const environment = {
   production: false,
   secretKey: 'securesecuresecuresecure',
-  basePath: 'api/v1/admin/',
-  candidaturePath: '',
-  port: '8080',
-  apiUrl: 'http://localhost:8080/',
+  candidaturePath: ':9090/',
+  interviewPath: ':8082/',
+  accountPath: ':8081/',
+  administrationPath: ':8080/api/v1/admin/',
+  apiUrl: 'http://51.178.136.105',
   sessionTTL: 15,
 };
 

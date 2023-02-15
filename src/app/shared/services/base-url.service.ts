@@ -11,7 +11,8 @@ export class BaseUrlService {
     // this.origin = environment.apiUrl;
 
     this.origin =
-      'http://' + window.location.hostname + ':' + environment.port + '/';
+      // 'http://' + window.location.hostname + ':' + environment.port + '/';
+      'http://' + window.location.hostname;
   }
 
   getOrigin() {
