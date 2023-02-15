@@ -10,6 +10,7 @@ export const environment = {
   accountPath: ':8081/',
   administrationPath: ':8080/api/v1/admin/',
   apiUrl: 'http://51.178.136.105',
+  path: 'http://172.18.0.',
   sessionTTL: 15,
 };
 

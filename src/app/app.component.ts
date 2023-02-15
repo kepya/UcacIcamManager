@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from "rxjs";
+import { BaseUrlService } from './shared/services/base-url.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
   isExtend: boolean = true;
   url: string = '';
 
-  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
+  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
 
   }
 
@@ -24,6 +25,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("url1: " + this.baseUrlSrv.getOrigin());
+
     this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
