@@ -49,8 +49,6 @@ export class NoteEntretienComponent implements OnInit {
   }
 
   sort(property: string, notes: Note[] = this.notes) {
-    console.log("note", notes);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -182,7 +180,7 @@ export class NoteEntretienComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getNotes();
   }
 

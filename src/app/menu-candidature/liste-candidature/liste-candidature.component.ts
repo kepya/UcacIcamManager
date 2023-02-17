@@ -166,7 +166,7 @@ export class ListeCandidatureComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getCandidatures();
   }
 

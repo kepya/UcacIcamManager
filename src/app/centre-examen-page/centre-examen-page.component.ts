@@ -51,8 +51,6 @@ export class CentreExamenPageComponent implements OnInit {
   }
 
   sort(property: string, centres: Centre[] = this.centres) {
-    console.log("centre", centres);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -161,14 +159,12 @@ export class CentreExamenPageComponent implements OnInit {
   }
 
   checkSite(event: any) {
-    console.log('value: ', event.target.value);
     if (event.target.value == "") {
       alert(this.formCentre.get('site_id')?.value);;
     }
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
     this.getCentres();
   }
 

@@ -44,8 +44,6 @@ export class ZonePageComponent implements OnInit {
   }
 
   sort(property: string, zones: Zone[] = this.zones) {
-    console.log("zone", zones);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -130,7 +128,7 @@ export class ZonePageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getZones();
   }
 

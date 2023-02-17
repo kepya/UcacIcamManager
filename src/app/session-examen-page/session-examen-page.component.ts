@@ -49,8 +49,6 @@ export class SessionExamenPageComponent implements OnInit {
   }
 
   sort(property: string, sessions: Session[] = this.sessions) {
-    console.log("session", sessions);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -183,7 +181,7 @@ export class SessionExamenPageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getSessions();
   }
 

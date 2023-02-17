@@ -49,8 +49,6 @@ export class SitePageComponent implements OnInit {
   }
 
   sort(property: string, sites: Site[] = this.sites) {
-    console.log("site", sites);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -182,7 +180,7 @@ export class SitePageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getSites();
   }
 
@@ -199,7 +197,6 @@ export class SitePageComponent implements OnInit {
   getSites() {
     this.siteSrv.liste().subscribe({
       next: (value: Site[]) => {
-        console.log('value: ', value);
         value = this.sort('nom', value);
         this.searchSites = [];
         this.searchSites = value;
@@ -231,7 +228,7 @@ export class SitePageComponent implements OnInit {
     this.zoneSrv.liste().subscribe({
       next: (value: Zone[]) => {
         this.zones = value;
-        console.log('value: ', value);
+
 
       },
       error: (err) => {

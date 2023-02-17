@@ -25,8 +25,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("url1: " + this.baseUrlSrv.getOrigin());
-
     this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
