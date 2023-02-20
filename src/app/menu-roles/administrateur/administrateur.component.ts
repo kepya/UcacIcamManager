@@ -29,7 +29,6 @@ export class AdministrateurComponent implements OnInit {
   formCompte: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
-    nom: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     confirm_password: new FormControl('', [Validators.required]),
@@ -157,7 +156,6 @@ export class AdministrateurComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    ;
     this.getComptes();
   }
 
@@ -260,5 +258,16 @@ export class AdministrateurComponent implements OnInit {
         }
       })
     }
+  }
+
+  deleteCompte() {
+    this.compteSrv.delete(this.compte.id || 0).subscribe({
+      next: (value) => {
+        this.getComptes();
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+      }
+    });
   }
 }

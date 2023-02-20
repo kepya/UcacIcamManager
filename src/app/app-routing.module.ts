@@ -6,7 +6,12 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'zones'
+    redirectTo: 'login'
+  },
+  {
+    path: 'login',
+    data: { title: 'Login' },
+    loadChildren: () => import('./login/login.module').then(z => z.LoginModule)
   },
   {
     path: 'home',

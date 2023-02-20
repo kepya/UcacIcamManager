@@ -1,0 +1,79 @@
+//https://michel.dumont.io/fr/news/css-utilisation-des-symboles-de-base-6.html
+.login-container {
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    padding: 0;
+    background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+
+    & > .content {
+        height: 60%;
+        width: 100%;
+        margin: auto;
+        display: grid;
+        align-content: center;
+
+        & > .card {
+            margin: auto;
+            border-radius: 10px;
+            padding: 0;
+            display: grid !important;
+            width: 65%;
+            height: 100%;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            box-shadow: 0 0 3px #9f8e3b;
+
+            & > .illustration {
+                & > img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            & > .card__content {
+                padding: 0.75rem;
+                & > .header {
+                    text-align: center;
+
+                    .title {
+                        font-size: xx-large;
+                    }
+                }
+                & > .form {
+                    & > .row {
+                        .is-invalid {
+                            border: 1px solid #c0262d !important;
+                        }
+
+                        .invalid-feedback {
+                            color: #c0262d;
+                        }
+
+                        & > .form-group {
+                            .form-input {
+                                width: 100%;
+                                padding: 0.75rem;
+
+                                height: 50px;
+                                border-radius: 10px;
+                                outline: none;
+                                background: ghostwhite;
+                                border: 1px solid gainsboro;
+                            }
+                        }
+
+                        & > {
+                            .form-button {
+                                .btn {
+                                    height: 50px;
+                                    border-radius: 10px;
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+<section class="login-container">
+    <section class="content">
+        <div class="card">
+            <div class="illustration">
+                <img src="/assets/images/auth/signin.svg" alt="" loading="lazy" srcset="">
+            </div>
+            <div class="card__content">
+                <div class="header">
+                    <img src="assets/images/person.svg" width="100px" height="100px">
+                    <h4 class="mb-15 wow fadeInUp title" data-wow-delay=".2s" style="color: #c0262d;">Se connecter</h4>
+                    <div>&nbsp;</div>
+                </div>
+                <form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
+                    <div *ngIf="showMsgError" style="color: #c0262d;">
+                        {{msgError}}
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <input type="email" name="username" id="username" class="form-input col-12"
+                                placeholder="Email" formControlName="username" [ngClass]="{
+                                    'is-invalid':
+                                    loginControls['username'].errors &&
+                                    loginControls['username'].touched,
+                                    'is-valid': loginControls['username'].valid
+                                }">
+
+                            <div *ngIf="loginControls['username'].errors && loginControls['username'].touched"
+                                class="invalid-feedback">
+                                <div *ngIf="loginControls['username'].errors['required']">
+                                    Email requis
+                                </div>
+                                <div *ngIf="loginControls['username'].errors['email']">
+                                    L'email doit être conforme
+                                </div>
+                            </div>
+                        </div>
+                        <div>&nbsp;</div>
+                        <div class="form-group">
+                            <!--<label for="email">Email</label>-->
+                            <input type="password" class="form-input col-12" placeholder="Mot de passe" name="password"
+                                id="password" formControlName="password" [ngClass]="{
+                                    'is-invalid':
+                                    loginControls['password'].errors &&
+                                    loginControls['password'].touched,
+                                    'is-valid': loginControls['password'].valid
+                                }">
+
+                            <div *ngIf="loginControls['password'].errors && loginControls['password'].touched"
+                                class="invalid-feedback">
+                                <div *ngIf="loginControls['password'].errors['required']">
+                                    Password requis
+                                </div>
+                                <div *ngIf="loginControls['password'].errors['minlength']">
+                                    La password doit avoir au minimun 3
+                                    charactères
+                                </div>
+                            </div>
+                        </div>
+                        <div>&nbsp;</div>
+                        <div class="form-button">
+                            <button type="submit" [disabled]="loginForm.invalid || isLoading"
+                                class="btn btn-primary radius-10">Se
+                                connecter </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</section>

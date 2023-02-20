@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from "rxjs";
 import { BaseUrlService } from './shared/services/base-url.service';
@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   title = 'admin-ucac-dashboard';
   isExtend: boolean = true;
   url: string = '';
+  isLogin = false;
 
   constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
 
@@ -47,6 +48,13 @@ export class AppComponent implements OnInit {
         this.titleService.setTitle(`My App - ${title}`);
         this.url = title;
       }
+    });
+
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationStart),
+    ).subscribe((nav: any) => {
+      console.log('url: ', nav.url);
+      this.isLogin = nav.url.indexOf("login") > -1 ? true : false;
     });
   }
 }

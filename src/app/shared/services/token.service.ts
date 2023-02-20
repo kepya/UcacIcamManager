@@ -3,17 +3,14 @@ import { Router } from '@angular/router';
 import * as jwt_decode from "jwt-decode";
 import jwtDecode from "jwt-decode";
 import { TokenModel } from '../models/token';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-  constructor(private router: Router) { }
-
-  saveToken(token: string): void {
-    localStorage.setItem('token', token);
-  }
+  constructor(private router: Router, private storageService: StorageService) { }
 
   isLogged(): boolean {
     const tokenStr = localStorage.getItem('token');
@@ -23,29 +20,19 @@ export class TokenService {
       if (this.isTokenValid(token)) {
         return this.isTokenValid(token);
       } else {
-        this.clearToken();
+        this.storageService.clear();
         return false;
       }
     }
     return false;
   }
 
-  clearToken(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/']);
-  }
   decodeToken(token: string): TokenModel {
     return jwtDecode<TokenModel>(token);
   }
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-  tokenExpired(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/auth/login']);
-  }
+
   getScope(): string {
-    let token: string | null = localStorage.getItem('token');
+    let token: string | null = this.storageService.getUserTokenConnected();
     if (token != null) {
       return this.decodeToken(token).scope;
     } else {
@@ -53,7 +40,7 @@ export class TokenService {
     }
   }
   getEmail(): string {
-    let token: string | null = localStorage.getItem('token');
+    let token: string | null = this.storageService.getUserTokenConnected();
     if (token != null) {
       return this.decodeToken(token).sub;
     } else {

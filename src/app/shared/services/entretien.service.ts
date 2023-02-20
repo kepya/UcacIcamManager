@@ -13,11 +13,11 @@ export class EntretienService {
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.interviewPath}`;
-    this.url += 'zone/';
+    this.url += 'comptes/';
   }
 
   public liste(): Observable<Disponibility[]> {
-    return this.http.get<Disponibility[]>(this.url + "all");
+    return this.http.get<Disponibility[]>(this.url + "" + "all");
   }
 
   public getOne(id: number): Observable<Disponibility> {

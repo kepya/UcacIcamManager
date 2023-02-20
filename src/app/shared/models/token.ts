@@ -5,3 +5,7 @@ export interface TokenModel {
     iat: number,
     scope: string
 }
+
+export interface IToken {
+    accessToken: string
+}
