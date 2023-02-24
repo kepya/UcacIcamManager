@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from "rxjs";
+import { AuthService } from './shared/services/auth.service';
 import { BaseUrlService } from './shared/services/base-url.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
   url: string = '';
   isLogin = false;
 
-  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
+  constructor(private router: Router, private authService: AuthService, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
 
   }
 
@@ -26,6 +27,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLogin.subscribe({
+      next: (value: boolean) => {
+        console.log('loog: ', value);
+
+        this.isLogin = value;
+      },
+      error: (err) => {
+        this.isLogin = false;
+      }
+    });
     this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -51,10 +62,10 @@ export class AppComponent implements OnInit {
     });
 
     this.router.events.pipe(
-      filter((event) => event instanceof NavigationStart),
+      filter((event) => event instanceof NavigationEnd),
     ).subscribe((nav: any) => {
       console.log('url: ', nav.url);
-      this.isLogin = nav.url.indexOf("login") > -1 ? true : false;
+      this.isLogin = nav.url.indexOf("login") > -1 ? false : this.isLogin;
     });
   }
 }

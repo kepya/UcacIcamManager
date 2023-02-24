@@ -1,3 +1,4 @@
+import { CompteService } from './../shared/services/compte.service';
 import { StorageService } from './../shared/services/storage.service';
 import { IToken } from './../shared/models/token';
 import { AbstractControl, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private storageService: StorageService,
     private userService: UserService,
+    private compteService: CompteService,
     private messageService: MessageService
   ) { }
 
@@ -53,12 +55,13 @@ export class LoginComponent implements OnInit {
       next: (value: IToken) => {
         let role: string = this.tokenService.decodeToken(value.accessToken).scope;
         this.isLoading = false;
+        this.storageService.storeUserToken(value.accessToken);
 
         if (role == "ADMIN") {
-          this.userService.getOneByEmail(this.tokenService.decodeToken(value.accessToken).sub).subscribe({
+          this.compteService.getOneByEmail(this.tokenService.decodeToken(value.accessToken).sub).subscribe({
             next: (compte: Compte) => {
+              this.authService.isLogin.next(true);
               this.storageService.storeUserConnected(compte);
-              this.storageService.storeUserToken(value.accessToken);
               this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec success' });
               this.router.navigate(['/zones']);
             },

@@ -64,7 +64,7 @@
                     <tr *ngFor="let zone of zones">
                         <td>{{zone.nom}}</td>
                         <td>{{zone.description}}</td>
-                        <td>{{zone.nbreSite}}</td>
+                        <td>{{zone.count_site}}</td>
                         <td>
                             <button class="btn" (click)="updateZone(zone)">
                                 <div>
@@ -72,6 +72,14 @@
                                 </div>
                                 <span>
                                     Modifier
+                                </span>
+                            </button>
+                            <button class="btn mt-2" (click)="deleteZone(zone.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
                                 </span>
                             </button>
                         </td>

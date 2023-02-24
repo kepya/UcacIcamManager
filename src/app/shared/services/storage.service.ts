@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { environment } from 'src/environments/environment';
 import { Compte } from '../models/compte';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   async setString(key: string, value: string) {
     key = this.encryptUsingAES256(key);
@@ -66,8 +67,9 @@ export class StorageService {
   }
 
   clear(): void {
+    this.authService.isLogin.next(false);
     localStorage.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   private encryptUsingAES256(data: any): any {

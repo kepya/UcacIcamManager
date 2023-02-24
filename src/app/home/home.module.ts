@@ -5,7 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { TableModule } from 'primeng/table';
   imports: [
     CommonModule,
     HomeRoutingModule,
-    TableModule,
+    AccordionModule,
     ButtonModule
   ]
 })

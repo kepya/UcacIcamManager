@@ -81,6 +81,14 @@
                                     Modifier
                                 </span>
                             </button>
+                            <button class="btn mt-2" (click)="deleteCompte(compte.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
+                                </span>
+                            </button>
                         </td>
                     </tr>
                     <tr *ngIf="searchValue && comptes.length === 0">

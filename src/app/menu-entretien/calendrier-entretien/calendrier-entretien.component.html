@@ -1,4 +1,4 @@
-<section class="calendrier-entretien-page page-content">
+<section class="calendrier-entretien-page calendrier-page page-content">
     <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des entretiens</h1>
 
     <div class="card">
@@ -22,30 +22,21 @@
                     <th>Interviewer</th>
                 </thead>
                 <tbody>
-                    <!-- <tr *ngFor="let entretien of entretiens">
+                    <tr *ngFor="let entretien of entretiens; let i = index">
                         <td>{{(entretien.disponibility.debut_disponibilite | date:'H:mm') + ' - ' +
                             (entretien.disponibility.fin_disponibilite|
                             date:'H:mm')}} </td>
                         <td>{{entretien.centre}}</td>
                         <td>{{entretien.disponibility.compte.name}}</td>
                         <td>{{entretien.disponibility.compte.prenom}}</td>
-                        <td [attr.rowspan]="entretiens.length">{{entretien.interviewer}}</td>
-                    </tr> -->
-                    <ng-container>
-                        <tr>
-                            <td [attr.rowspan]="entretiens.length + 1">{{entretiens[0].interviewer}}</td>
-                        </tr>
-                        <ng-container *ngFor="let entretien of entretiens; let i= index;">
-                            <tr>
-                                <td>{{(entretien.disponibility.debut_disponibilite | date:'H:mm') + ' - ' +
-                                    (entretien.disponibility.fin_disponibilite|
-                                    date:'H:mm')}} </td>
-                                <td>{{entretien.centre}}</td>
-                                <td>{{entretien.disponibility.compte.name}}</td>
-                                <td>{{entretien.disponibility.compte.prenom}}</td>
-                            </tr>
-                        </ng-container>
-                    </ng-container>
+                        <td class="rowspan" [attr.rowspan]="entretiens.length + 1" *ngIf="i == 0">
+                            <div>{{entretien.interviewer}}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>12h00 - 13h00</td>
+                        <td colspan="3" class="pause">Pause</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

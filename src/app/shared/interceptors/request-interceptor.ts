@@ -16,6 +16,7 @@ export class RequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.storageService.getUserTokenConnected();
+    console.log("token: ", token);
     if (token != null) {
       let cloneRequest = request.clone({
         headers: request.headers.set('Authorization', ' bearer ' + token)

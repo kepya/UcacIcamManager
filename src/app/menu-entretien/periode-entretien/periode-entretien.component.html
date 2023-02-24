@@ -14,6 +14,36 @@
             <div class="main">
                 <div class="row">
                     <div class="form-group">
+                        <label for="">Interviewer *</label>
+                        <select name="" id="" formControlName="compte"
+                            [ngClass]="{required: formDisponibility.get('compte')!.invalid}">
+                            <option value="" disabled>Choisir l'interviewer</option>
+                            <option [value]="compte.email" *ngFor="let compte of comptes">{{compte.name}}
+                                {{compte.prenom}}</option>
+                        </select>
+                    </div>
+                    <div class="alert" *ngIf="formDisponibilityControl['compte'].errors">
+                        <div *ngIf="formDisponibilityControl['compte'].errors['required']">
+                            Veuillez s'il vous plait entrer une
+                            valeur
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Date *</label>
+                        <input type="date" formControlName="date_disponibilite" id="" rows="4"
+                            [ngClass]="{required: formDisponibility.get('date_disponibilite')!.invalid}" />
+                    </div>
+                    <div class="alert" *ngIf="formDisponibilityControl['date_disponibilite'].errors">
+                        <div *ngIf="formDisponibilityControl['date_disponibilite'].errors['required']">
+                            Veuillez s'il vous plait entrer une
+                            valeur
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
                         <label for="">Date de début *</label>
                         <input type="date" formControlName="debut_disponibilite" id="" rows="4"
                             [ngClass]="{required: formDisponibility.get('debut_disponibilite')!.invalid}" />

@@ -68,4 +68,24 @@
     tr:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    .rowspan {
+        background-color: rgba(0, 0, 0, 0.05);
+        & > div {
+            writing-mode: tb-rl;
+            margin: auto;
+            font-weight: bold;
+            font-family: var(--Poppins-bold);
+            font-size: var(--fs-small);
+        }
+    }
+
+    .pause {
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .mt-2 {
+        margin-top: 0.75rem;
+    }
 }

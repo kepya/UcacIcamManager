@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Disponibility, Entretien } from 'src/app/shared/models/entretient';
+import { EntretienService } from 'src/app/shared/services/entretien.service';
 
 @Component({
   selector: 'app-calendrier-entretien',
@@ -62,9 +63,21 @@ export class CalendrierEntretienComponent implements OnInit {
     },
   ];
 
-  constructor() { }
+  constructor(private entretienSrv: EntretienService) { }
 
   ngOnInit(): void {
+    this.getEntretiens();
+  }
+
+  getEntretiens() {
+    this.entretienSrv.listeEntretien().subscribe({
+      next: (value: Entretien[]) => {
+        this.entretiens = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 
 }

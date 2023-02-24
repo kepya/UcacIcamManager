@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Session } from '../shared/models/session';
 import { SessionExamenService } from './session-examen.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-session-examen-page',
@@ -37,7 +38,7 @@ export class SessionExamenPageComponent implements OnInit {
     statut: new FormControl(true, [Validators.required]),
   });
 
-  constructor(private sessionSrv: SessionExamenService, private zoneSrv: ZoneService) { }
+  constructor(private sessionSrv: SessionExamenService, private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -266,25 +267,46 @@ export class SessionExamenPageComponent implements OnInit {
           this.getSessions();
           this.session = new Session();
           this.formSession.reset();
+          this.messageService.add({ severity: 'success', summary: 'Modification de session', detail: 'Modification effectuée avec success' });
+
           this.isFormSession = false;
         },
         error: (err) => {
           console.log("Error: ", err);
+          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
+
         }
       })
     } else {
       this.sessionSrv.create({ ...this.formSession.value }).subscribe({
         next: (value) => {
           this.getSessions();
+          this.messageService.add({ severity: 'success', summary: 'Création de session', detail: 'Création effectuée avec success' });
+
           this.session = new Session();
           this.formSession.reset();
           this.isFormSession = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+
           console.log("Error: ", err);
         }
       })
     }
+  }
+
+  deleteSession(id: number) {
+    this.sessionSrv.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getSessions();
+        this.messageService.add({ severity: 'success', summary: 'Suppression de session ', detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
   }
 }
 

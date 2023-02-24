@@ -9,6 +9,7 @@ export class Disponibility {
 }
 
 export class Entretien {
+    id?: number;
     interviewer!: string;
     disponibility!: Disponibility;
     centre!: string;
