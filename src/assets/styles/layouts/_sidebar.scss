@@ -6,12 +6,12 @@
     height: 100vh;
     transition: width 2000ms ease;
     .navbar {
-        min-height: 60.8px;
+        min-height: 3.8rem;
         height: var(--header-height);
     }
 
     .profile {
-        min-height: 20px;
+        min-height: 1.25rem;
     }
 
     .menu_section {
@@ -82,7 +82,7 @@
 }
 
 .extended {
-    width: 250px;
+    width: 15.625rem;
     .navbar {
         width: 100%;
         background-color: var(--clr-primary-500);
@@ -155,8 +155,8 @@
                             bottom: auto;
                             content: "";
                             height: 0.5rem;
-                            left: 23px;
-                            margin-top: 15px;
+                            left: 1.438rem;
+                            margin-top: 0.938rem;
                             position: absolute;
                             right: auto;
                             width: 0.5rem;
@@ -168,7 +168,7 @@
                             border-left: 1px solid var(--clr-primary-500);
                             bottom: 0;
                             content: "";
-                            left: 27px;
+                            left: 1.688rem;
                             position: absolute;
                             top: 0;
                         }
@@ -212,7 +212,7 @@
 }
 
 .collapse {
-    width: 98px;
+    width: 6.125rem;
 
     .navbar {
         width: 100%;
@@ -250,7 +250,7 @@
                 }
 
                 .child_menu {
-                    margin-left: 98px;
+                    margin-left: 6.125rem;
                     position: absolute;
                     list-style: none;
                     display: none;
@@ -259,10 +259,10 @@
 
             & > .active-link {
                 .child_menu_one_line {
-                    margin-top: -54.04px !important;
+                    margin-top: -3.375rem !important;
                 }
                 .child_menu_two_line {
-                    margin-top: -72.8px !important;
+                    margin-top: -4.55rem !important;
                 }
             }
         }

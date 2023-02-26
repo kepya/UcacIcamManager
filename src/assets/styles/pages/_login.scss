@@ -15,7 +15,7 @@
 
         & > .card {
             margin: auto;
-            border-radius: 10px;
+            border-radius: 0.625rem;
             padding: 0;
             display: grid !important;
             width: 65%;
@@ -54,8 +54,8 @@
                                 width: 100%;
                                 padding: 0.75rem;
 
-                                height: 50px;
-                                border-radius: 10px;
+                                height: 3.125rem;
+                                border-radius: 0.625rem;
                                 outline: none;
                                 background: ghostwhite;
                                 border: 1px solid gainsboro;
@@ -65,8 +65,8 @@
                         & > {
                             .form-button {
                                 .btn {
-                                    height: 50px;
-                                    border-radius: 10px;
+                                    height: 3.125rem;
+                                    border-radius: 0.625rem;
                                     width: 100%;
                                 }
                             }
