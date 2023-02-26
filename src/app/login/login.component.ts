@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.isLoading = true;
+    // alert('ok');
     this.authService.login({ ...this.loginForm.value }).subscribe({
       next: (value: IToken) => {
         let role: string = this.tokenService.decodeToken(value.accessToken).scope;
