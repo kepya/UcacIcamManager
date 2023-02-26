@@ -4,7 +4,11 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des candidatures Ucac-Icam</h3>
-            <button class="btn btn-danger">
+            <div *ngIf="loading">
+              <p>Téléchargement en cours...</p>
+              <!-- ou utiliser une barre de chargement -->
+            </div>
+            <button (click)="exportToExcel()" class="btn btn-danger">
                 Exporter la liste des canditats
             </button>
         </div>
@@ -74,6 +78,7 @@
                                     [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
                             </div>
                         </th>
+
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
                         <td>{{candidature.code_examen}}</td>
