@@ -13,10 +13,9 @@ export class TokenService {
   constructor(private router: Router, private storageService: StorageService) { }
 
   isLogged(): boolean {
-    const tokenStr = localStorage.getItem('token');
-    if (!!tokenStr) {
+    let tokenStr: string | null = this.storageService.getUserTokenConnected();
+    if (tokenStr != null) {
       let token: TokenModel = this.decodeToken(tokenStr);
-      console.log(token);
       if (this.isTokenValid(token)) {
         return this.isTokenValid(token);
       } else {
@@ -51,7 +50,6 @@ export class TokenService {
   isTokenValid(token: TokenModel): boolean {
     const expiration: number | null = this.getTokenExpiration(token);
     if (typeof expiration == "number") {
-      console.log("Temps du token : " + expiration);
       return expiration > Date.now();
     }
 
@@ -60,9 +58,7 @@ export class TokenService {
 
 
   getTokenExpiration(token: TokenModel): number | null {
-
     if (token && token.exp) {
-
       return token.exp * 1000;
     }
     return null;

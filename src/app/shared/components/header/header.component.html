@@ -6,7 +6,7 @@
 
         <div class="vh-space-between">
             <span (click)="menu.toggle($event)" class="user">
-                Sadjo Mohammadou <i class="fa fa-chevron-down"></i>
+                {{this.compte!?.name || ''}} {{this.compte!?.prenom || ''}} <i class="fa fa-chevron-down"></i>
             </span>
             <p-menu [model]="items" #menu [popup]="true"></p-menu>
         </div>

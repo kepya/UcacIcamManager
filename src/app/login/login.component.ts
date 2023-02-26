@@ -42,9 +42,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     var oldToken = this.storageService.getUserTokenConnected();
+
     if (this.tokenService.isLogged()) {
       this.router.navigate(['/zones']);
-    } else if (!!oldToken) {
+    } else if (oldToken == undefined || oldToken == null) {
       this.storageService.clear();
     }
   }
@@ -62,8 +63,8 @@ export class LoginComponent implements OnInit {
             next: (compte: Compte) => {
               this.authService.isLogin.next(true);
               this.storageService.storeUserConnected(compte);
-              this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec success' });
               this.router.navigate(['/zones']);
+              this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec success' });
             },
             error: (err) => {
               console.log("User Find Error: ", err);

@@ -13,13 +13,12 @@ import { BaseUrlService } from './shared/services/base-url.service';
 })
 export class AppComponent implements OnInit {
 
-  title = 'admin-ucac-dashboard';
   isExtend: boolean = true;
+  isLogin: boolean = true;
   url: string = '';
-  isLogin = false;
+  title = 'admin-ucac-dashboard';
 
-  constructor(private router: Router, private authService: AuthService, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
-
+  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
   }
 
   checkSidebarMode(isExtend: boolean) {
@@ -27,16 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.isLogin.subscribe({
-      next: (value: boolean) => {
-        console.log('loog: ', value);
-
-        this.isLogin = value;
-      },
-      error: (err) => {
-        this.isLogin = false;
-      }
-    });
     this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -61,11 +50,11 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-    ).subscribe((nav: any) => {
-      console.log('url: ', nav.url);
-      this.isLogin = nav.url.indexOf("login") > -1 ? false : this.isLogin;
-    });
+    // this.router.events.pipe(
+    //   filter((event) => event instanceof NavigationStart),
+    // ).subscribe((nav: any) => {
+    //   this.isLogin = nav.url.indexOf('login') > -1 ? false : true;
+    // });
+
   }
 }

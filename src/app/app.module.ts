@@ -1,5 +1,4 @@
 import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from './shared/shared.module';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +11,7 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { httpInterceptorProviders } from './shared/interceptors';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { SharedModule } from './shared/shared.module';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -24,8 +24,8 @@ registerLocaleData(localeFr, 'fr');
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    SharedModule,
     HttpClientModule,
+    SharedModule,
     ToastModule
   ],
   providers: [MessageService, AuthGuard, { provide: LOCALE_ID, useValue: 'fr' }, httpInterceptorProviders],
