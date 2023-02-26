@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from "rxjs";
+import { AuthService } from './shared/services/auth.service';
 import { BaseUrlService } from './shared/services/base-url.service';
 
 @Component({
@@ -12,12 +13,12 @@ import { BaseUrlService } from './shared/services/base-url.service';
 })
 export class AppComponent implements OnInit {
 
-  title = 'admin-ucac-dashboard';
   isExtend: boolean = true;
+  isLogin: boolean = true;
   url: string = '';
+  title = 'admin-ucac-dashboard';
 
-  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig, private baseUrlSrv: BaseUrlService) {
-
+  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
   }
 
   checkSidebarMode(isExtend: boolean) {
@@ -25,8 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("url1: " + this.baseUrlSrv.getOrigin());
-
     this.primengConfig.ripple = true;
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -48,7 +47,9 @@ export class AppComponent implements OnInit {
       if (title) {
         this.titleService.setTitle(`My App - ${title}`);
         this.url = title;
+        this.isLogin = title.indexOf('Login') > -1 ? false : true;
       }
     });
+
   }
 }

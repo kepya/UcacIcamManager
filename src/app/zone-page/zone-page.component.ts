@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { zones } from '../shared/mocks/mock';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-zone-page',
@@ -32,7 +33,7 @@ export class ZonePageComponent implements OnInit {
     description: new FormControl('', [Validators.required])
   });
 
-  constructor(private zoneSrv: ZoneService) { }
+  constructor(private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -44,8 +45,6 @@ export class ZonePageComponent implements OnInit {
   }
 
   sort(property: string, zones: Zone[] = this.zones) {
-    console.log("zone", zones);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -101,20 +100,20 @@ export class ZonePageComponent implements OnInit {
     if (property === 'nbreSite') {
       if (this.isAsc) {
         zones.sort((a, b) => {
-          if (a.nbreSite > b.nbreSite) {
+          if (a.count_site > b.count_site) {
             return 1;
           }
-          if (b.nbreSite > a.nbreSite) {
+          if (b.count_site > a.count_site) {
             return -1;
           }
           return 0;
         });
       } else {
         zones.sort((a, b) => {
-          if (a.nbreSite > b.nbreSite) {
+          if (a.count_site > b.count_site) {
             return -1;
           }
-          if (b.nbreSite > a.nbreSite) {
+          if (b.count_site > a.count_site) {
             return 1;
           }
           return 0;
@@ -130,7 +129,7 @@ export class ZonePageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getZones();
   }
 
@@ -212,9 +211,12 @@ export class ZonePageComponent implements OnInit {
           this.getZones();
           this.zone = new Zone();
           this.formZone.reset();
+          this.messageService.add({ severity: 'success', summary: 'Modification de zone', detail: 'Modification effectuée avec success' });
+
           this.isFormZone = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
           console.log("Error: ", err);
         }
       })
@@ -222,14 +224,30 @@ export class ZonePageComponent implements OnInit {
       this.zoneSrv.create({ ...this.formZone.value }).subscribe({
         next: (value) => {
           this.getZones();
+          this.messageService.add({ severity: 'success', summary: 'Création de zone', detail: 'Création effectuée avec success' });
           this.zone = new Zone();
           this.formZone.reset();
           this.isFormZone = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
           console.log("Error: ", err);
         }
       })
     }
+  }
+
+
+  deleteZone(id: number) {
+    this.zoneSrv.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getZones();
+        this.messageService.add({ severity: 'success', summary: 'Suppression de zone ', detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
   }
 }

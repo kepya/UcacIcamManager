@@ -8,7 +8,7 @@ export class Compte {
     id?: number;
     name!: string;
     prenom!: string;
-    password!: string;
+    password?: string;
     email!: string;;
     telephone!: string;
     role!: Role;

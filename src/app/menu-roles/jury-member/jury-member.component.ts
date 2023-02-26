@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-jury-member',
@@ -27,7 +29,6 @@ export class JuryMemberComponent implements OnInit {
   isFormCompte!: boolean;
 
   formCompte: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     nom: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
@@ -36,7 +37,7 @@ export class JuryMemberComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private compteSrv: CompteService) { }
+  constructor(private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -157,7 +158,7 @@ export class JuryMemberComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getComptes();
   }
 
@@ -227,7 +228,7 @@ export class JuryMemberComponent implements OnInit {
     this.isFormCompte = true;
     this.compte = compte;
     this.formCompte.setValue({
-      name: compte.name,
+      nom: compte.name,
       prenom: compte.prenom,
       telephone: compte.telephone,
       email: compte.email
@@ -241,24 +242,42 @@ export class JuryMemberComponent implements OnInit {
           this.getComptes();
           this.compte = new Compte();
           this.formCompte.reset();
+          this.messageService.add({ severity: 'success', summary: 'Modification de compte jury', detail: 'Modification effectuée avec success' });
           this.isFormCompte = false;
         },
         error: (err) => {
           console.log("Error: ", err);
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
         }
       })
     } else {
-      this.compteSrv.create({ ...this.formCompte.value }).subscribe({
+      this.compteSrv.create({ ...this.formCompte.value, role: Role.JURY }).subscribe({
         next: (value) => {
           this.getComptes();
           this.compte = new Compte();
           this.formCompte.reset();
+          this.messageService.add({ severity: 'success', summary: 'Création de compte jury', detail: 'Création effectuée avec success' });
+
           this.isFormCompte = false;
         },
         error: (err) => {
           console.log("Error: ", err);
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
         }
       })
     }
+  }
+
+  deleteCompte(id: number) {
+    this.compteSrv.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getComptes();
+        this.messageService.add({ severity: 'success', summary: 'Suppression de compte jury', detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
   }
 }

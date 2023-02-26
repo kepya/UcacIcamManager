@@ -41,9 +41,11 @@ body {
         width: 100%;
         grid-area: main;
         padding: 1rem;
+        padding-bottom: 0;
     }
     .item4 {
         grid-area: footer;
+        margin-top: 1rem;
         height: var(--header-height);
     }
 }

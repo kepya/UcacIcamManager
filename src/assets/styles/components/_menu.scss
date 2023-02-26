@@ -27,10 +27,13 @@
     -webkit-box-shadow: none;
     right: 0;
     left: auto;
-    width: 250px;
+    width: 15.625rem;
+    position: absolute;
+    top: 0;
+    border-radius: 0.4rem;
 
     .p-menuitem {
-        padding: 12px 20px;
+        padding: 0.75rem 1.25rem;
         .p-menuitem-link {
             color: black;
             font-size: 13px;

@@ -4,6 +4,7 @@ import { Site } from '../shared/models/site';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/shared/services/site.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-site-page',
@@ -36,7 +37,7 @@ export class SitePageComponent implements OnInit {
     zone_id: new FormControl('', [Validators.required]),
   });
 
-  constructor(private siteSrv: SiteService, private zoneSrv: ZoneService) { }
+  constructor(private siteSrv: SiteService, private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -49,8 +50,6 @@ export class SitePageComponent implements OnInit {
   }
 
   sort(property: string, sites: Site[] = this.sites) {
-    console.log("site", sites);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -182,7 +181,7 @@ export class SitePageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
+    ;
     this.getSites();
   }
 
@@ -199,7 +198,6 @@ export class SitePageComponent implements OnInit {
   getSites() {
     this.siteSrv.liste().subscribe({
       next: (value: Site[]) => {
-        console.log('value: ', value);
         value = this.sort('nom', value);
         this.searchSites = [];
         this.searchSites = value;
@@ -231,7 +229,7 @@ export class SitePageComponent implements OnInit {
     this.zoneSrv.liste().subscribe({
       next: (value: Zone[]) => {
         this.zones = value;
-        console.log('value: ', value);
+
 
       },
       error: (err) => {
@@ -264,8 +262,12 @@ export class SitePageComponent implements OnInit {
           this.site = new Site();
           this.formSite.reset();
           this.isFormSite = false;
+          this.messageService.add({ severity: 'success', summary: 'Modification de site', detail: 'Modification effectuée avec success' });
+
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
+
           console.log("Error: ", err);
         }
       })
@@ -279,12 +281,29 @@ export class SitePageComponent implements OnInit {
           this.getSites();
           this.site = new Site();
           this.formSite.reset();
+          this.messageService.add({ severity: 'success', summary: 'Création de zone', detail: 'Création effectuée avec success' });
+
           this.isFormSite = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+
           console.log("Error: ", err);
         }
       })
     }
+  }
+
+  deleteSite(id: number) {
+    this.siteSrv.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getSites();
+        this.messageService.add({ severity: 'success', summary: 'Suppression de site ', detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
   }
 }

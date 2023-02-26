@@ -1,1 +1,46 @@
-<p>calendrier-entretien works!</p>
+<section class="calendrier-entretien-page calendrier-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des entretiens</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Entretiens concours</h3>
+        </div>
+        <div class="line"></div>
+
+        <div class="sub-header">
+            <h3 class="title">Entretiens concours Ucac-Icam</h3>
+            <h3 class="title">{{date | date}}</h3>
+        </div>
+
+        <div class="calendrier">
+            <table id="table">
+                <thead>
+                    <th>Horaire</th>
+                    <th>Centre d'examen</th>
+                    <th>Noms</th>
+                    <th>Prénoms</th>
+                    <th>Interviewer</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let entretien of entretiens; let i = index">
+                        <td>{{(entretien.disponibility.debut_disponibilite | date:'H:mm') + ' - ' +
+                            (entretien.disponibility.fin_disponibilite|
+                            date:'H:mm')}} </td>
+                        <td>{{entretien.centre}}</td>
+                        <td>{{entretien.disponibility.compte.name}}</td>
+                        <td>{{entretien.disponibility.compte.prenom}}</td>
+                        <td class="rowspan" [attr.rowspan]="entretiens.length + 1" *ngIf="i == 0">
+                            <div>{{entretien.interviewer}}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>12h00 - 13h00</td>
+                        <td colspan="3" class="pause">Pause</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</section>

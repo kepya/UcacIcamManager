@@ -91,6 +91,14 @@
                                     Modifier
                                 </span>
                             </button>
+                            <button class="btn mt-2" (click)="deleteSession(session.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
+                                </span>
+                            </button>
                         </td>
                     </tr>
                     <tr *ngIf="searchValue && sessions.length === 0">

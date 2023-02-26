@@ -5,6 +5,7 @@ import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
 import { CentreExamenService } from './centre-examen.service';
 import { SiteService } from 'src/app/shared/services/site.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-centre-examen-page',
@@ -38,7 +39,7 @@ export class CentreExamenPageComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private centreSrv: CentreExamenService, private siteSrv: SiteService) { }
+  constructor(private centreSrv: CentreExamenService, private siteSrv: SiteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -51,8 +52,6 @@ export class CentreExamenPageComponent implements OnInit {
   }
 
   sort(property: string, centres: Centre[] = this.centres) {
-    console.log("centre", centres);
-
     this.sortProperty = property;
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
@@ -161,14 +160,12 @@ export class CentreExamenPageComponent implements OnInit {
   }
 
   checkSite(event: any) {
-    console.log('value: ', event.target.value);
     if (event.target.value == "") {
       alert(this.formCentre.get('site_id')?.value);;
     }
   }
 
   handlePageSize(event: any) {
-    console.log('value: ', event.target.value);
     this.getCentres();
   }
 
@@ -270,9 +267,13 @@ export class CentreExamenPageComponent implements OnInit {
           this.getCentres();
           this.centre = new Centre();
           this.formCentre.reset();
+          this.messageService.add({ severity: 'success', summary: 'Modification de session', detail: 'Modification effectuée avec success' });
+
           this.isFormCentre = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
+
           console.log("Error: ", err);
         }
       })
@@ -284,14 +285,31 @@ export class CentreExamenPageComponent implements OnInit {
       this.centreSrv.create(d).subscribe({
         next: (value) => {
           this.getCentres();
+          this.messageService.add({ severity: 'success', summary: 'Création de session', detail: 'Création effectuée avec success' });
+
           this.centre = new Centre();
           this.formCentre.reset();
           this.isFormCentre = false;
         },
         error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+
           console.log("Error: ", err);
         }
       })
     }
+  }
+
+  deleteCentre(id: number) {
+    this.centreSrv.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getCentres();
+        this.messageService.add({ severity: 'success', summary: 'Suppression de centre ', detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
   }
 }

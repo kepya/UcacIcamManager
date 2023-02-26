@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  secretKey: 'securesecuresecuresecure',
+  secretKey: 'securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure',
   candidaturePath: ':9090/',
   interviewPath: ':8082/',
   accountPath: ':8081/',

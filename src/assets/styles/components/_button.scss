@@ -56,3 +56,20 @@
         border-color: -internal-light-dark(rgba(118, 118, 118, 0.3), rgba(195, 195, 195, 0.3));
     }
 }
+
+.btn-primary {
+    color: #fff;
+    border: 1px solid var(--clr-primary-500);
+    background: var(--clr-primary-500);
+    margin-block: 5px;
+
+    &:hover {
+        background-color: var(--clr-primary-300);
+        border-color: var(--clr-primary-300);
+    }
+    &:disabled {
+        background-color: -internal-light-dark(rgba(239, 239, 239, 0.3), rgba(19, 1, 1, 0.3));
+        color: -internal-light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
+        border-color: -internal-light-dark(rgba(118, 118, 118, 0.3), rgba(195, 195, 195, 0.3));
+    }
+}
