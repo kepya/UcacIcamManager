@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Note } from 'src/app/shared/models/note';
 import { Site } from 'src/app/shared/models/site';
 import { NoteService } from 'src/app/shared/services/note.service';
-import { SiteService } from 'src/app/shared/services/site.service';
+import { SiteService } from 'src/app/site-page/site.service';
 
 @Component({
   selector: 'app-note-entretien',

@@ -9,7 +9,7 @@ export class Compte {
     name!: string;
     prenom!: string;
     password!: string;
-    email!: string;;
+    email!: string;
     telephone!: string;
     role!: Role;
     id_disponibilite?: number;
@@ -21,10 +21,8 @@ export class Candidature {
     Date_naissance!: string;
     Nationalite!: string;
     Dernier_Etablissement!: string;
-    Tel_pere!: string;
-    Tel_mere!: string;
-    email_pere!: string;
-    email_mere!: string;
+    email_parents!: string;
+    tel_parents!: string;
     Formation1!: string;
     Formation2!: string;
     Formation3!: string;

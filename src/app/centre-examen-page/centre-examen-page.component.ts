@@ -4,7 +4,7 @@ import { parse } from 'path';
 import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
 import { CentreExamenService } from './centre-examen.service';
-import { SiteService } from 'src/app/shared/services/site.service';
+import { SiteService } from 'src/app/site-page/site.service';
 
 @Component({
   selector: 'app-centre-examen-page',

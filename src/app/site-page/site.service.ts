@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Site } from '../models/site';
-import { BaseUrlService } from './base-url.service';
+import { Site } from '../shared/models/site';
+import { BaseUrlService } from '../shared/services/base-url.service';
 
 @Injectable({
   providedIn: 'root'

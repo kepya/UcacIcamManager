@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Candidature } from 'src/app/shared/models/compte';
 import { Site } from 'src/app/shared/models/site';
-import { SiteService } from 'src/app/shared/services/site.service';
+import { SiteService } from 'src/app/site-page/site.service';
 import { CandidatureService } from '../candidature.service';
+import {HttpClient} from "@angular/common/http";
+import {ExportExcelService} from "../../shared/services/export-excel.service";
 
 @Component({
   selector: 'app-liste-candidature',
@@ -16,7 +18,7 @@ export class ListeCandidatureComponent implements OnInit {
   candidatures: Candidature[] = [];
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
-  loading: boolean = true;
+  loading: boolean = false;
   sortIcon!: string;
   sortProperty!: string;
   isAsc!: boolean;
@@ -27,7 +29,8 @@ export class ListeCandidatureComponent implements OnInit {
   collectionSize!: number;
   nbrOfPage!: number;
 
-  constructor(private candidatureSrv: CandidatureService, private siteSrv: SiteService) { }
+
+  constructor(private candidatureSrv: CandidatureService, private siteSrv: SiteService, private exportExcelService: ExportExcelService) { }
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -163,6 +166,23 @@ export class ListeCandidatureComponent implements OnInit {
       }
     }
     return candidatures;
+  }
+
+
+  exportToExcel() {
+    this.loading = true;
+    this.exportExcelService.downloadCandidatureExcel().subscribe(response => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    });
+
+
   }
 
   handlePageSize(event: any) {

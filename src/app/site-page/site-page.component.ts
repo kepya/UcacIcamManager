@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Site } from '../shared/models/site';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
-import { SiteService } from 'src/app/shared/services/site.service';
+import { SiteService } from 'src/app/site-page/site.service';
 
 @Component({
   selector: 'app-site-page',
