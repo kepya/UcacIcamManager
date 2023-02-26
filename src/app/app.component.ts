@@ -47,14 +47,9 @@ export class AppComponent implements OnInit {
       if (title) {
         this.titleService.setTitle(`My App - ${title}`);
         this.url = title;
+        this.isLogin = title.indexOf('Login') > -1 ? false : true;
       }
     });
-
-    // this.router.events.pipe(
-    //   filter((event) => event instanceof NavigationStart),
-    // ).subscribe((nav: any) => {
-    //   this.isLogin = nav.url.indexOf('login') > -1 ? false : true;
-    // });
 
   }
 }
