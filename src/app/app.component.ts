@@ -1,3 +1,4 @@
+import { LoginComponent } from './login/login.component';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { BaseUrlService } from './shared/services/base-url.service';
 export class AppComponent implements OnInit {
 
   isExtend: boolean = true;
-  isLogin: boolean = true;
+  isLoginPage: boolean = true;
   url: string = '';
   title = 'admin-ucac-dashboard';
 
@@ -47,9 +48,16 @@ export class AppComponent implements OnInit {
       if (title) {
         this.titleService.setTitle(`My App - ${title}`);
         this.url = title;
-        this.isLogin = title.indexOf('Login') > -1 ? false : true;
       }
     });
 
+  }
+
+  onLoadPage(component: any) {
+    if (component instanceof LoginComponent) {
+      this.isLoginPage = true;
+    } else {
+      this.isLoginPage = false;
+    }
   }
 }

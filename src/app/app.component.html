@@ -1,14 +1,10 @@
 <p-toast></p-toast>
 
-<div id="app" *ngIf="isLogin">
-    <app-header class="item1" (extendEvent)="checkSidebarMode($event)"></app-header>
-    <app-sidebar class="item2" [url]="url.toLowerCase()" [isExtended]="isExtend"></app-sidebar>
+<div id="app">
+    <app-header *ngIf="!isLoginPage" class="item1" (extendEvent)="checkSidebarMode($event)"></app-header>
+    <app-sidebar *ngIf="!isLoginPage" class="item2" [url]="url.toLowerCase()" [isExtended]="isExtend"></app-sidebar>
     <div class="item3">
-        <router-outlet></router-outlet>
+        <router-outlet (activate)="onLoadPage($event)"></router-outlet>
     </div>
-    <app-footer class="item4"></app-footer>
-</div>
-
-<div *ngIf="!isLogin">
-    <router-outlet></router-outlet>
+    <app-footer *ngIf="!isLoginPage" class="item4"></app-footer>
 </div>
