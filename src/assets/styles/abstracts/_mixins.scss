@@ -10,7 +10,9 @@ $grid-breakpoints: (
     // X-Large devices (large desktops, 1200px and up)
     xl: 1200px,
     // XX-Large devices (larger desktops, 1400px and up)
-    xxl: 1400px
+    xxl: 1400px,
+    // XXX-Large devices (larger desktops, 1400px and up)
+    xxxl: 1600px
 );
 
 @mixin v-center {
@@ -114,7 +116,7 @@ $grid-breakpoints: (
 }
 
 @mixin xxl-only {
-    @media screen and (min-width: map-get($grid-breakpoints, xxl)) {
+    @media screen and (max-width: map-get($grid-breakpoints, xxxl)) {
         @content;
     }
 }

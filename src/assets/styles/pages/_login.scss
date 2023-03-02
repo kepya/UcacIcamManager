@@ -1,4 +1,7 @@
 //https://michel.dumont.io/fr/news/css-utilisation-des-symboles-de-base-6.html
+
+@use "../abstracts/index" as *;
+
 .login-container {
     height: 100vh;
     min-height: 100vh;
@@ -15,13 +18,22 @@
 
         & > .card {
             margin: auto;
-            border-radius: 0.625rem;
             padding: 0;
+            border-radius: 0.625rem;
             display: grid !important;
-            width: 65%;
-            height: 100%;
+            width: 45%;
+
+            @include xxl-only {
+                width: 55%;
+            }
+
+            @include xs-only {
+                width: 85%;
+            }
+
+            height: auto;
             gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             box-shadow: 0 0 3px #9f8e3b;
 
             & > .illustration {
@@ -29,9 +41,16 @@
                     width: 100%;
                     height: 100%;
                 }
+
+                @include lg-only {
+                    display: none;
+                }
             }
             & > .card__content {
-                padding: 0.75rem;
+                padding: 1rem;
+                @include flex-column;
+                justify-content: center;
+
                 & > .header {
                     text-align: center;
 
