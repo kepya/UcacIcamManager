@@ -13,10 +13,15 @@
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
     @include flex-column;
-    height: 93%;
+    height: 94%;
+
+    @include xxl-only {
+        height: 92%;
+    }
 
     & > .header {
         @include vh-space-between;
+        flex-wrap: wrap;
 
         .title {
             color: var(--clr-primary-500);
@@ -25,7 +30,10 @@
             font-weight: 400;
         }
 
-        .btn {
+        @include xs-only {
+            .btn {
+                width: 100%;
+            }
         }
     }
 

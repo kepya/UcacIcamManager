@@ -83,6 +83,11 @@
 
 .extended {
     width: 15.625rem;
+
+    @include xs-only {
+        width: 100vw;
+    }
+
     .navbar {
         width: 100%;
         background-color: var(--clr-primary-500);
@@ -213,6 +218,10 @@
 
 .collapse {
     width: 6.125rem;
+
+    @include xs-only {
+        display: none;
+    }
 
     .navbar {
         width: 100%;
