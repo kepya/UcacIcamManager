@@ -3,6 +3,7 @@ import { Genre } from "../enums/genre.enum";
 import { Langue } from "../enums/langue.enum";
 import { Role } from "../enums/role.enum";
 import { Statut } from "../enums/statut.enum";
+import { Candidature } from "../models/compte";
 import { Zone } from "../models/zone";
 
 export const zones: Zone[] = [
@@ -81,17 +82,15 @@ export const zones: Zone[] = [
 
 ];
 
-export const candidats = [
+export const candidats: Candidature[] = [
     {
         id: 1,
         Lieu_de_naissance: "",
         Date_naissance: "",
         Nationalite: "",
         Dernier_Etablissement: "",
-        Tel_pere: "",
-        Tel_mere: "",
-        email_pere: "",
-        email_mere: "",
+        email_parents: "",
+        tel_parents: "",
         Formation1: "",
         Formation2: "",
         Formation3: "",
@@ -124,10 +123,8 @@ export const candidats = [
         Date_naissance: "",
         Nationalite: "",
         Dernier_Etablissement: "",
-        Tel_pere: "",
-        Tel_mere: "",
-        email_pere: "",
-        email_mere: "",
+        email_parents: "",
+        tel_parents: "",
         Formation1: "",
         Formation2: "",
         Formation3: "",
@@ -160,10 +157,8 @@ export const candidats = [
         Date_naissance: "",
         Nationalite: "",
         Dernier_Etablissement: "",
-        Tel_pere: "",
-        Tel_mere: "",
-        email_pere: "",
-        email_mere: "",
+        email_parents: "",
+        tel_parents: "",
         Formation1: "",
         Formation2: "",
         Formation3: "",
@@ -189,5 +184,5 @@ export const candidats = [
             role: Role.CANDIDAT,
             id_disponibilite: 0,
         }
-    },
+    }
 ]

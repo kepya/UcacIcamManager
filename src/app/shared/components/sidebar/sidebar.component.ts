@@ -24,6 +24,10 @@ export class SidebarComponent implements OnInit {
     content.classList.toggle("active-link");
   }
 
+  displaySidebar() {
+    this.isExtended = !this.isExtended;
+  }
+
   goToUrl(url: string) {
     this.router.navigate(['/' + url]);
   }

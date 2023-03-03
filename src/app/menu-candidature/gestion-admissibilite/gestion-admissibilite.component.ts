@@ -7,7 +7,7 @@ import { Role } from 'src/app/shared/enums/role.enum';
 import { Statut } from 'src/app/shared/enums/statut.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Site } from 'src/app/shared/models/site';
-import { SiteService } from 'src/app/shared/services/site.service';
+import { SiteService } from 'src/app/site-page/site.service';
 import { CandidatureService } from '../candidature.service';
 
 @Component({
@@ -46,10 +46,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
       Date_naissance: "",
       Nationalite: "",
       Dernier_Etablissement: "",
-      Tel_pere: "",
-      Tel_mere: "",
-      email_pere: "",
-      email_mere: "",
+      tel_parents	: "",
+      email_parents: "",
       Formation1: "",
       Formation2: "",
       Formation3: "",

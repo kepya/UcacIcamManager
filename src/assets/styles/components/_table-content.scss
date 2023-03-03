@@ -3,8 +3,10 @@
 .table-content {
     justify-content: space-between;
     .search-content {
+        flex-wrap: wrap;
         @include vh-space-between;
         margin-bottom: 0.75rem;
+
         span {
             color: var(--clr-primary-500);
         }
@@ -15,6 +17,9 @@
         }
 
         .select-page-size {
+            @include xs-only {
+                margin-bottom: 0.5rem;
+            }
             select,
             option {
                 font-family: var(--Poppins-regular) !important;
@@ -28,6 +33,7 @@
 
         .search_value {
             @include vh-space-between;
+
             div {
                 margin-left: 0.5rem;
                 position: relative;
@@ -45,6 +51,18 @@
                     color: #6610f2;
                     font-weight: 900;
                     cursor: pointer;
+                }
+            }
+
+            @include xs-only {
+                width: -webkit-fill-available;
+
+                div {
+                    width: 50%;
+
+                    input {
+                        width: -webkit-fill-available;
+                    }
                 }
             }
         }
@@ -73,15 +91,25 @@
 
     .pagination_content {
         margin-top: 0.75rem;
+        flex-wrap: wrap;
         @include vh-space-between;
         span {
             color: var(--clr-primary-500);
+        }
+
+        @include xs-only {
+            flex-direction: column;
+            justify-content: center;
+            span {
+                margin-bottom: 0.5rem;
+            }
         }
 
         ul {
             background: rgba(0, 0, 0, 0.05);
             list-style: none;
             @include vh-space-between;
+
             li {
                 padding: 0.5rem 0.75rem;
 
