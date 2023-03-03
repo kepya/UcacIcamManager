@@ -33,6 +33,7 @@
 
         .search_value {
             @include vh-space-between;
+
             div {
                 margin-left: 0.5rem;
                 position: relative;
@@ -50,6 +51,18 @@
                     color: #6610f2;
                     font-weight: 900;
                     cursor: pointer;
+                }
+            }
+
+            @include xs-only {
+                width: -webkit-fill-available;
+
+                div {
+                    width: 50%;
+
+                    input {
+                        width: -webkit-fill-available;
+                    }
                 }
             }
         }
@@ -85,6 +98,7 @@
         }
 
         @include xs-only {
+            flex-direction: column;
             justify-content: center;
             span {
                 margin-bottom: 0.5rem;
