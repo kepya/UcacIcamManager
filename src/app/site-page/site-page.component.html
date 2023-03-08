@@ -191,6 +191,22 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
+                            <label for="">Message de paiement *</label>
+                            <textarea formControlName="msgPaiement" id="" rows="4"
+                                [ngClass]="{required: formSite.get('msgPaiement')!.invalid}"></textarea>
+                        </div>
+                        <div class="alert" *ngIf="formSiteControl['msgPaiement'].errors">
+                            <div *ngIf="formSiteControl['msgPaiement'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formSiteControl['msgPaiement'].errors['minlength']">
+                                Description doit avoir au minimun 4 charactères
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
                             <label for="">Pays *</label>
                             <input type="text" formControlName="pays"
                                 [ngClass]="{required: formSite.get('pays')!.invalid}">
@@ -201,6 +217,22 @@
                                 valeur
                             </div>
                             <div *ngIf="formSiteControl['pays'].errors['minlength']">
+                                Pays doit avoir au minimun 4 charactères
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Indicatif *</label>
+                            <input type="text" formControlName="indicatif"
+                                [ngClass]="{required: formSite.get('indicatif')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formSiteControl['indicatif'].errors">
+                            <div *ngIf="formSiteControl['indicatif'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formSiteControl['indicatif'].errors['minlength']">
                                 Pays doit avoir au minimun 4 charactères
                             </div>
                         </div>

@@ -1,3 +1,4 @@
+import { LoaderService } from './shared/services/loader.service';
 import { LoginComponent } from './login/login.component';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -15,11 +16,12 @@ import { BaseUrlService } from './shared/services/base-url.service';
 export class AppComponent implements OnInit {
 
   isExtend: boolean = true;
+  isLoading: boolean = true;
   isLoginPage: boolean = true;
   url: string = '';
   title = 'admin-ucac-dashboard';
 
-  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig) {
+  constructor(private router: Router, private titleService: Title, private primengConfig: PrimeNGConfig, private loaderService: LoaderService) {
   }
 
   checkSidebarMode(isExtend: boolean) {
@@ -50,7 +52,11 @@ export class AppComponent implements OnInit {
         this.url = title;
       }
     });
-
+    this.loaderService.isLoading.subscribe({
+      next: (loading: boolean) => {
+        this.isLoading = loading;
+      }
+    })
   }
 
   onLoadPage(component: any) {

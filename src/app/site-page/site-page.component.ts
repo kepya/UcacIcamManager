@@ -34,6 +34,8 @@ export class SitePageComponent implements OnInit {
     nom: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     pays: new FormControl('', [Validators.required]),
+    msgPaiement: new FormControl('', [Validators.required]),
+    indicatif: new FormControl('', [Validators.required]),
     zone_id: new FormControl('', [Validators.required]),
   });
 
