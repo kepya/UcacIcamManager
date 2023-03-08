@@ -12,6 +12,7 @@ import localeFr from '@angular/common/locales/fr';
 import { httpInterceptorProviders } from './shared/interceptors';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { SharedModule } from './shared/shared.module';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -26,7 +27,8 @@ registerLocaleData(localeFr, 'fr');
     BrowserAnimationsModule,
     HttpClientModule,
     SharedModule,
-    ToastModule
+    ToastModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService, AuthGuard, { provide: LOCALE_ID, useValue: 'fr' }, httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -4,6 +4,11 @@
     <app-header *ngIf="!isLoginPage" class="item1" (extendEvent)="checkSidebarMode($event)"></app-header>
     <app-sidebar *ngIf="!isLoginPage" class="item2" [url]="url.toLowerCase()" [isExtended]="isExtend"></app-sidebar>
     <div class="item3">
+        <div class="loading-container" *ngIf="isLoading">
+            <div class="spinner">
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+        </div>
         <router-outlet (activate)="onLoadPage($event)"></router-outlet>
     </div>
     <app-footer *ngIf="!isLoginPage" class="item4"></app-footer>
