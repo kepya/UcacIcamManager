@@ -45,37 +45,4 @@ export class EntretienService {
   }
 
 
-  /*
-    disponibilite
-  **/
-  public listeDisponibility(): Observable<Disponibility[]> {
-    // return this.http.get<Disponibility[]>(this.urlDisponibility + "" + "all");
-    return this.http.get<Disponibility[]>(this.urlDisponibility + "disponibilites");
-  }
-
-  public getOneDisponibility(id: number): Observable<Disponibility> {
-    return this.http.get<Disponibility>(this.urlDisponibility + id);
-  }
-
-  public getOneDisponibilityByCompte(id: number): Observable<Disponibility> {
-    return this.http.get<Disponibility>(this.urlDisponibility + 'disponibilite/' + id);
-  }
-
-  public createDisponibility(disponibility: Disponibility): Observable<Disponibility> {
-    // return this.http.post<Disponibility>(this.urlDisponibility + "create", disponibility);
-    let url = "" + this.urlDisponibility + "comptes/" + disponibility.compte.id + "/disponibilites";
-    return this.http.post<Disponibility>(url, disponibility);
-  }
-
-  public updateDisponibility(disponibility: Disponibility): Observable<Disponibility> {
-    // return this.http.patch<Disponibility>(this.urlDisponibility + disponibility?.id, disponibility);
-    let url = "" + this.urlDisponibility + "comptes/" + disponibility.compte.id + "/disponibilites/" + disponibility.id;
-    return this.http.patch<Disponibility>(url, disponibility);
-  }
-
-  public deleteDisponibility(idCompte: number, idDisponibility: number): Observable<void> {
-    let url = "" + this.urlDisponibility + "comptes/" + idCompte + "/disponibilites/" + idDisponibility;
-    // return this.http.delete<void>(this.urlDisponibility + idDisponibility);
-    return this.http.delete<void>(url);
-  }
 }

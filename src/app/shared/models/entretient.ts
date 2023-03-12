@@ -5,7 +5,14 @@ export class Disponibility {
     date_disponibilite!: Date;
     debut_disponibilite!: Date;
     fin_disponibilite!: Date;
-    compte!: Compte;
+}
+
+export class CompteDisponibilite {
+    compte_id!: number;
+    disponibilite_id!: number;
+    id?: number;
+    compte?: Compte;
+    disponibilite?: Disponibility
 }
 
 export class Entretien {

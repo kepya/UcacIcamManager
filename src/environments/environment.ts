@@ -8,7 +8,7 @@ export const environment = {
   candidaturePath: ':9090/',
   interviewPath: ':8082/',
   accountPath: ':8081/',
-  administrationPath: ':8080/api/v1/admin/',
+  administrationPath: ':8080/',
   apiUrl: 'http://51.178.136.105',
   path: 'http://172.18.0.',
   sessionTTL: 15,

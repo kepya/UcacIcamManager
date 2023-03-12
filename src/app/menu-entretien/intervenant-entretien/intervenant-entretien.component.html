@@ -1,0 +1,68 @@
+<section class="intervant-page page-content">
+    <h1 class="page-title">Entretiens <i class="pi pi-angle-right"></i>Selection des intervenants des entretiens</h1>
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Intervenant des entretiens
+            </h3>
+        </div>
+        <div class="line"></div>
+        <form class="form" [formGroup]="formCompteDisponibility" (ngSubmit)="createCompteDisponibility()">
+            <div class="header">
+                Veullez remplir les champs suivants
+                <div class="line"></div>
+            </div>
+            <div class="main">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Intervenant *</label>
+                        <select name="" id="" formControlName="compte_id"
+                            [ngClass]="{required: formCompteDisponibility.get('compte_id')!.invalid}">
+                            <option value="" disabled>Choisir l'intervenant</option>
+                            <option [value]="compte.id" *ngFor="let compte of comptes">{{compte.name}}
+                                {{compte.prenom}}</option>
+                        </select>
+                    </div>
+                    <div class="alert" *ngIf="formCompteDisponibilityControl['compte_id'].errors">
+                        <div *ngIf="formCompteDisponibilityControl['compte_id'].errors['required']">
+                            Veuillez s'il vous plait entrer une
+                            valeur
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Periode d'entretien *</label>
+                        <select name="" id="" formControlName="disponibilite_id"
+                            [ngClass]="{required: formCompteDisponibility.get('disponibilite_id')!.invalid}">
+                            <option value="" disabled>Choisir la periode</option>
+                            <option [value]="disponibility.id" *ngFor="let disponibility of disponibilities">
+                                {{disponibility.debut_disponibilite | date}} - {{disponibility.fin_disponibilite |
+                                date}}</option>
+                        </select>
+                    </div>
+                    <div class="alert" *ngIf="formCompteDisponibilityControl['disponibilite_id'].errors">
+                        <div *ngIf="formCompteDisponibilityControl['disponibilite_id'].errors['required']">
+                            Veuillez s'il vous plait entrer une
+                            valeur
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="line"></div>
+                <div class="btn-group">
+                    <button class="btn btn-info" [disabled]="formCompteDisponibility.invalid" type="submit">
+                        Soumettre
+                    </button>
+
+                    <button class="btn btn-danger" (click)="formCompteDisponibility.reset()">
+                        Renitialiser
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</section>

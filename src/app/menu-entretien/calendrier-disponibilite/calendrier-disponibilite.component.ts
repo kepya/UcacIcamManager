@@ -117,13 +117,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
+
       }
     },
     {
@@ -133,13 +127,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
+
       }
     },
     {
@@ -149,13 +137,6 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
       }
     },
   ];
@@ -191,10 +172,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
 
     let entretiensFinal: Entretien[] = [];
     let entretiens = this.entretienMap.get(this.currentDate.getTime().toString() + '|' + time);
-    let index = entretiens?.findIndex(e => e.disponibility.compte.email == candidatEmail);
-    if ((index || -2) > -1) {
-      let entretien = entretiens![index || 0];
-    }
+
   }
 
   handleInterviewerSelect(event: any, time: string) {

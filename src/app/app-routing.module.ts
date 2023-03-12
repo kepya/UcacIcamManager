@@ -95,6 +95,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-entretien/periode-entretien/periode-entretien.module').then(s => s.PeriodeEntretienModule),
   },
   {
+    path: 'intervenant_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/intervenant-entretien/intervenant-entretien.module').then(s => s.IntervenantEntretienModule),
+  },
+  {
     path: 'calendrier_entretiens',
     data: { title: `Entretien` },
     loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule),

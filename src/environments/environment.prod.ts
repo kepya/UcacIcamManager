@@ -4,7 +4,7 @@ export const environment = {
   candidaturePath: ':9090/',
   interviewPath: ':8082/',
   accountPath: ':8081/',
-  administrationPath: ':8080/api/v1/admin/',
+  administrationPath: ':8080/',
   // candidaturePath: 'http://172.18.0.7:9090/',
   // interviewPath: 'http://172.18.0.8:8082/',
   // accountPath: 'http://172.18.0.6:8081/',

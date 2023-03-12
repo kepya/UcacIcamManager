@@ -20,13 +20,6 @@ export class CalendrierEntretienComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
       }
     },
     {
@@ -36,13 +29,7 @@ export class CalendrierEntretienComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
+
       }
     },
     {
@@ -52,13 +39,7 @@ export class CalendrierEntretienComponent implements OnInit {
         date_disponibilite: new Date(),
         debut_disponibilite: new Date(),
         fin_disponibilite: new Date(),
-        compte: {
-          name: "Kepya",
-          prenom: "Christian",
-          email: 'christian@gmail.com',
-          telephone: '680000000',
-          role: Role.CANDIDAT
-        }
+
       }
     },
   ];
