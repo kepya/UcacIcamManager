@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Note } from 'src/app/shared/models/note';
 import { Site } from 'src/app/shared/models/site';
+import { CommonService } from 'src/app/shared/services/common.service';
 import { NoteService } from 'src/app/shared/services/note.service';
 import { SiteService } from 'src/app/site-page/site.service';
 
@@ -37,7 +38,7 @@ export class NoteEntretienComponent implements OnInit {
     note: new FormControl(0, [Validators.required]),
   });
 
-  constructor(private noteSrv: NoteService, private siteSrv: SiteService) { }
+  constructor(private noteSrv: NoteService, private commonService: CommonService, private siteSrv: SiteService) { }
 
   ngOnInit(): void {
     this.sortProperty = "horaire";
@@ -53,47 +54,23 @@ export class NoteEntretienComponent implements OnInit {
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
 
-    if (property === 'horaire') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.horaire > b.horaire) {
-            return 1;
-          }
-          if (b.horaire > a.horaire) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.horaire > b.horaire) {
-            return -1;
-          }
-          if (b.horaire > a.horaire) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
     if (property === 'nom') {
       if (this.isAsc) {
         notes.sort((a, b) => {
-          if (a.compte.name > b.compte.name) {
+          if (a.candidature!.compte!.name > b.candidature!.compte!.name) {
             return 1;
           }
-          if (b.compte.name > a.compte.name) {
+          if (b.candidature!.compte!.name > a.candidature!.compte!.name) {
             return -1;
           }
           return 0;
         });
       } else {
         notes.sort((a, b) => {
-          if (a.compte.name > b.compte.name) {
+          if (a.candidature!.compte!.name > b.candidature!.compte!.name) {
             return -1;
           }
-          if (b.compte.name > a.compte.name) {
+          if (b.candidature!.compte!.name > a.candidature!.compte!.name) {
             return 1;
           }
           return 0;
@@ -103,20 +80,20 @@ export class NoteEntretienComponent implements OnInit {
     if (property === 'prenom') {
       if (this.isAsc) {
         notes.sort((a, b) => {
-          if (a.compte.prenom > b.compte.prenom) {
+          if (a.candidature!.compte!.prenom > b.candidature!.compte!.prenom) {
             return 1;
           }
-          if (b.compte.prenom > a.compte.prenom) {
+          if (b.candidature!.compte!.prenom > a.candidature!.compte!.prenom) {
             return -1;
           }
           return 0;
         });
       } else {
         notes.sort((a, b) => {
-          if (a.compte.prenom > b.compte.prenom) {
+          if (a.candidature!.compte!.prenom > b.candidature!.compte!.prenom) {
             return -1;
           }
-          if (b.compte.prenom > a.compte.prenom) {
+          if (b.candidature!.compte!.prenom > a.candidature!.compte!.prenom) {
             return 1;
           }
           return 0;
@@ -124,29 +101,6 @@ export class NoteEntretienComponent implements OnInit {
       }
     }
 
-    if (property === 'centre') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.centre > b.centre) {
-            return 1;
-          }
-          if (b.centre > a.centre) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.centre > b.centre) {
-            return -1;
-          }
-          if (b.centre > a.centre) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
 
     if (property === 'note') {
       if (this.isAsc) {
@@ -188,8 +142,8 @@ export class NoteEntretienComponent implements OnInit {
     this.searchValue = event.target.value;
 
     if (this.searchValue !== '') {
-      let names = this.searchNotes.map(note => note.compte.name);
-      let name = names.filter(name => name.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
+      let names = this.searchNotes.map(note => note.candidature?.compte?.name);
+      let name = names.filter(name => name!.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
 
       if (name.length === 0) {
         this.notes = [];
@@ -197,7 +151,7 @@ export class NoteEntretienComponent implements OnInit {
         let notes: Note[] = [];
         for (let index = 0; index < name.length; index++) {
           const element = name[index];
-          let z = this.searchNotes.filter(note => note.compte.name.indexOf('' + element) > -1);
+          let z = this.searchNotes.filter(note => note.candidature!.compte!.name.indexOf('' + element) > -1);
           notes.push(...z);
         }
         this.notes = notes;
@@ -246,15 +200,19 @@ export class NoteEntretienComponent implements OnInit {
     }
   }
 
+  getHoraire(note: Note) {
+    let startTime = this.commonService.formatDate(note.debut_entretien);
+    let endTime = this.commonService.formatDate(note.fin_entretien);
+    return startTime + ' - ' + endTime;
+  }
+
   updateNote(note: Note) {
     this.isFormNote = true;
     this.note = note;
     this.formNote.setValue({
-      nom: note.compte.name,
-      prenom: note.compte.prenom,
+      nom: note.candidature?.compte?.name,
+      prenom: note.candidature?.compte?.prenom,
       note: note.note,
-      horaire: note.horaire,
-      centre: note.centre,
     });
   }
 

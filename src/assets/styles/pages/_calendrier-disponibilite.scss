@@ -45,5 +45,15 @@
                 width: 100%;
             }
         }
+
+        & > .footer {
+            .line {
+                margin-bottom: 0;
+            }
+
+            .btn-group {
+                @include vh-end;
+            }
+        }
     }
 }

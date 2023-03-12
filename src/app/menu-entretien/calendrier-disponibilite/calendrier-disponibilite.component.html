@@ -1,4 +1,4 @@
-<!-- <section class="calendrier-disponibilite-page calendrier-page page-content">
+<section class="calendrier-disponibilite-page calendrier-page page-content">
     <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des disponibilités</h1>
     <div class="page-header">
         <div class="header">
@@ -14,11 +14,11 @@
                 <th *ngFor="let date of dates">{{date | date}}</th>
             </thead>
             <tbody>
-                <tr *ngFor="let time of times">
-                    <td>{{time}} </td>
+                <tr *ngFor="let horaire of horaires">
+                    <td>{{horaire}} </td>
                     <td *ngFor="let date of dates"
-                        [ngClass]="{interviewer: (interverwerMap.get(date.toString() + '|' + time)?.length || 0 > 1)}">
-                        <div *ngFor="let interviewer of interverwerMap.get(date.toString() + '|' + time)">
+                        [ngClass]="{interviewer: (interverwerMap.get(date.toString() + '|' + horaire)?.length || 0 > 1)}">
+                        <div *ngFor="let interviewer of interverwerMap.get(date.toString() + '|' + horaire)">
                             {{interviewer}}
                         </div>
                     </td>
@@ -30,15 +30,18 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Entretiens concours</h3>
+            <button class="btn btn-danger" (click)="prochaineDate()" *ngIf="dates.length > 0">
+                Prochaine Date
+            </button>
         </div>
         <div class="line"></div>
 
         <div class="sub-header">
             <h3 class="title">Entretiens concours Ucac-Icam</h3>
-            <h3 class="title">{{date | date}}</h3>
+            <h3 class="title" *ngIf="currentDate != undefined && currentDate != null">{{currentDate | date}}</h3>
         </div>
 
-        <div class="calendrier">
+        <div class="calendrier" *ngIf="currentDate != undefined && currentDate != null">
             <table id="table">
                 <thead>
                     <th>Horaire</th>
@@ -51,7 +54,8 @@
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <select name="candidat" id="candidat" (change)="handleCandidatSelect($event, time)">
+                            <select *ngIf="time != '12h00 - 13h00'" name="candidat" id="candidat"
+                                (change)="handleCandidatSelect($event, time)">
                                 <option value="" disabled>Choisir un candidat</option>
 
                                 <option [value]="candidat.compte.email" *ngFor="let candidat of candidats">
@@ -61,9 +65,9 @@
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
                             <td>{{entretien!?.centre || ''}}</td>
-                            <td>{{entretien?.disponibility?.compte?.name || ''}}</td>
-                            <td>{{entretien?.disponibility?.compte?.prenom || ''}}</td>
-                            <td *ngIf="i == 0">
+                            <td>{{''}}</td>
+                            <td>{{''}}</td>
+                            <td>
                                 <select name="interviewer" id="interviewer"
                                     (change)="handleInterviewerSelect($event, time)">
                                     <option value="" disabled>Choisir un interviewer</option>
@@ -71,17 +75,22 @@
                                         {{interviewer}}</option>
                                 </select>
                             </td>
-                            <td class="rowspan" [attr.rowspan]="entretienTimes.length" *ngIf="i == 1">
-                                <div>{{entretien?.interviewer || ''}}</div>
-                            </td>
                         </ng-container>
-                        <td colspan="3" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
+                        <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
                     </tr>
-
                 </tbody>
             </table>
         </div>
 
+        <div class="footer">
+            <div class="line"></div>
+            <div class="btn-group">
+                <button class="btn btn-info" (click)="addNote()" type="submit">
+                    Soumettre
+                </button>
+            </div>
+        </div>
+
     </div>
 
-</section> -->
+</section>

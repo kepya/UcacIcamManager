@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="">Date de début *</label>
-                        <input type="date" formControlName="debut_disponibilite" id="" rows="4"
+                        <input type="datetime-local" formControlName="debut_disponibilite" id=""
                             [ngClass]="{required: formDisponibility.get('debut_disponibilite')!.invalid}" />
                     </div>
                     <div class="alert" *ngIf="formDisponibilityControl['debut_disponibilite'].errors">
@@ -41,8 +41,8 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="">Date de fin *</label>
-                        <input type="date" [value]="formDisponibility.get('fin_disponibilite')?.value"
-                            formControlName="fin_disponibilite" id="" rows="4"
+                        <input type="datetime-local" [value]="formDisponibility.get('fin_disponibilite')?.value"
+                            formControlName="fin_disponibilite" id=""
                             [ngClass]="{required: formDisponibility.get('fin_disponibilite')!.invalid}" />
                     </div>
                     <div class="alert" *ngIf="formDisponibilityControl['fin_disponibilite'].errors">

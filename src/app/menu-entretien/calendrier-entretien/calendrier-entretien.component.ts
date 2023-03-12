@@ -11,7 +11,6 @@ import { EntretienService } from 'src/app/shared/services/entretien.service';
 })
 export class CalendrierEntretienComponent implements OnInit {
 
-  date: Date = new Date();
   entretiens: Entretien[] = [
     {
       centre: 'Libreville',
@@ -44,9 +43,14 @@ export class CalendrierEntretienComponent implements OnInit {
     },
   ];
 
+  dateIndex: number = 0;
+  currentDate!: Date;
+  dates: number[] = [];
+
   constructor(private entretienSrv: EntretienService) { }
 
   ngOnInit(): void {
+    this.currentDate = new Date();
     this.getEntretiens();
   }
 
@@ -61,4 +65,7 @@ export class CalendrierEntretienComponent implements OnInit {
     });
   }
 
+  prochaineDate() {
+    this.currentDate = new Date(this.dates[this.dateIndex + 1]);
+  }
 }

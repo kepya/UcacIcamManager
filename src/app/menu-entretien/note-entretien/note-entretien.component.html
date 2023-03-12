@@ -69,10 +69,10 @@
                         </th>
                     </tr>
                     <tr *ngFor="let note of notes">
-                        <td>{{note.horaire}}</td>
-                        <td>{{note.centre}}</td>
-                        <td>{{note.compte.name}}</td>
-                        <td>{{note.compte.prenom}}</td>
+                        <td>{{getHoraire(note)}}</td>
+                        <td></td>
+                        <td>{{note.candidature?.compte?.name}}</td>
+                        <td>{{note.candidature?.compte?.prenom}}</td>
                         <td>{{note.note}}</td>
                         <td>
                             <button class="btn" (click)="updateNote(note)">

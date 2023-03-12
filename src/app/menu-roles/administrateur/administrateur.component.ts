@@ -196,8 +196,8 @@ export class AdministrateurComponent implements OnInit {
 
   getComptes() {
     this.compteSrv.liste().subscribe({
-      next: (value: Compte[]) => {
-        value = this.sort('nom', value);
+      next: (response: Compte[]) => {
+        let value = this.sort('nom', response.filter(x => x.role === Role.ADMIN));
         this.searchComptes = [];
         this.searchComptes = value;
         this.comptes = value

@@ -186,3 +186,68 @@ export const candidats: Candidature[] = [
         }
     }
 ]
+
+export const horaires: {
+    time: string,
+    date: Date,
+    interviewer: string[]
+}[] = [
+        {
+            date: new Date("2023-03-23"),
+            time: '8H30-12H00',
+            interviewer: [
+                "DIANA MENGUELE",
+                "AUBIN FOSSOUO"
+            ]
+        },
+        {
+            date: new Date("2023-03-23"),
+            time: '13H00-16H30',
+            interviewer: [
+                "AUBIN FOSSOUO"
+            ]
+        },
+
+        {
+            time: '8H30-12H00',
+            date: new Date("2023-03-24"),
+            interviewer: [
+                "DIANA MENGUELE",
+            ]
+        },
+        {
+            time: '13H00-16H30',
+            date: new Date("2023-03-24"),
+            interviewer: [
+                "AUBIN FOSSOUO"
+            ]
+        },
+        {
+            time: '8H30-12H00',
+            date: new Date("2023-03-25"),
+            interviewer: [
+                "AUBIN FOSSOUO"
+            ]
+        }, {
+            time: '13H00-16H30',
+            date: new Date("2023-03-25"),
+            interviewer: [
+                "DIANA MENGUELE",
+            ]
+        },
+        {
+            date: new Date("2023-03-26"),
+            time: '8H30-12H00',
+            interviewer: [
+                "DIANA MENGUELE",
+                "AUBIN FOSSOUO"
+            ]
+        },
+        {
+            date: new Date("2023-03-26"),
+            time: '13H00-16H30',
+            interviewer: [
+                "DIANA MENGUELE",
+            ]
+        },
+    ];

@@ -1,8 +1,11 @@
-import { Compte } from 'src/app/shared/models/compte';
+import { Candidature, Compte } from 'src/app/shared/models/compte';
 export class Note {
     id?: number;
     note!: number;
-    horaire!: string;
-    compte!: Compte;
-    centre!: string;
+    compte?: Compte;
+    compte_id!: number;
+    candidature_id!: number;
+    debut_entretien!: Date;
+    fin_entretien!: Date;
+    candidature?: Candidature;
 }
