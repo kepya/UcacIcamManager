@@ -20,7 +20,12 @@ export class CompteService {
 
   public liste(): Observable<Compte[]> {
     // return this.http.get<Compte[]>(this.url + "all");
-    return this.http.get<Compte[]>(this.url + "comptes");
+    return this.http.get<Compte[]>(this.url + "comptes", {
+      withCredentials: true,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
   }
 
   public listeCandidat(): Observable<Compte[]> {
