@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Role } from 'src/app/shared/enums/role.enum';
-import { Disponibility, Entretien } from 'src/app/shared/models/entretient';
-import { EntretienService } from 'src/app/shared/services/entretien.service';
+import { Disponibility } from 'src/app/shared/models/entretient';
 
 @Component({
   selector: 'app-calendrier-entretien',
@@ -11,7 +10,7 @@ import { EntretienService } from 'src/app/shared/services/entretien.service';
 })
 export class CalendrierEntretienComponent implements OnInit {
 
-  entretiens: Entretien[] = [
+  entretiens: any[] = [
     {
       centre: 'Libreville',
       interviewer: "DIANA MENGUELE",
@@ -47,7 +46,7 @@ export class CalendrierEntretienComponent implements OnInit {
   currentDate!: Date;
   dates: number[] = [];
 
-  constructor(private entretienSrv: EntretienService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.currentDate = new Date();
@@ -55,14 +54,14 @@ export class CalendrierEntretienComponent implements OnInit {
   }
 
   getEntretiens() {
-    this.entretienSrv.listeEntretien().subscribe({
-      next: (value: Entretien[]) => {
-        this.entretiens = value;
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
+    // this.entretienSrv.listeEntretien().subscribe({
+    //   next: (value: any[]) => {
+    //     this.entretiens = value;
+    //   },
+    //   error: (err) => {
+    //     console.log('error: ', err);
+    //   }
+    // });
   }
 
   prochaineDate() {

@@ -24,12 +24,20 @@ export class SessionExamenService {
     return this.http.get<Session>(this.url + id);
   }
 
+  public getActive(): Observable<Session> {
+    return this.http.get<Session>(this.url + "active");
+  }
+
   public create(session: Session): Observable<Session> {
     return this.http.post<Session>(this.url + "create", session);
   }
 
   public update(session: Session): Observable<Session> {
     return this.http.patch<Session>(this.url + session?.id, session);
+  }
+
+  public updateForEntretien(session: Session): Observable<Session> {
+    return this.http.patch<Session>(this.url + "date_entretiens/" + session?.id, session);
   }
 
   public delete(idSession: number): Observable<void> {

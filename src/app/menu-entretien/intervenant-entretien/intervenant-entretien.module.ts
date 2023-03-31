@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { IntervenantEntretienRoutingModule } from './intervenant-entretien-routing.module';
 import { IntervenantEntretienComponent } from './intervenant-entretien.component';
-
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,8 @@ import { IntervenantEntretienComponent } from './intervenant-entretien.component
     CommonModule,
     IntervenantEntretienRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MultiSelectModule
   ]
 })
 export class IntervenantEntretienModule { }

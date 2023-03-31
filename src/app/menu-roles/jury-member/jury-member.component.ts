@@ -196,17 +196,12 @@ export class JuryMemberComponent implements OnInit {
   }
 
   getComptes() {
-    this.compteSrv.liste().subscribe({
+    this.compteSrv.findByRole(Role.JURY).subscribe({
       next: (response: Compte[]) => {
-        let value = this.sort('nom', response.filter(x => x.role === Role.JURY));
+        let value = this.sort('nom', response);
         this.searchComptes = [];
         this.searchComptes = value;
-        this.comptes = value
-          .map((mis, i) => ({ id: i + 1, ...mis }))
-          .slice(
-            (this.page - 1) * this.pageSize,
-            (this.page - 1) * this.pageSize + this.pageSize
-          );
+        this.comptes = value;
         this.collectionSize = value.length;
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },

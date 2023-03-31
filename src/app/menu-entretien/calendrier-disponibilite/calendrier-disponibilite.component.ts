@@ -4,8 +4,6 @@ import { CompteDisponibiliteService } from './../../shared/services/compte-dispo
 import { Candidature, Compte } from './../../shared/models/compte';
 import { Component, OnInit } from '@angular/core';
 import { Role } from 'src/app/shared/enums/role.enum';
-import { Entretien } from 'src/app/shared/models/entretient';
-import { EntretienService } from 'src/app/shared/services/entretien.service';
 import { Cycle } from 'src/app/shared/enums/cycle.enum';
 import { Genre } from 'src/app/shared/enums/genre.enum';
 import { Langue } from 'src/app/shared/enums/langue.enum';
@@ -46,7 +44,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     "16h00 - 16h30",
   ];
 
-  entretiens: Entretien[] = [
+  entretiens: any[] = [
     {
       centre: 'Libreville',
       interviewer: "DIANA MENGUELE",
@@ -78,7 +76,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     },
   ];
 
-  entretien!: Entretien;
+  entretien!: any;
   candidats: Candidature[] = [];
 
 

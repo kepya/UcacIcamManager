@@ -14,12 +14,15 @@
             <div class="main">
                 <div class="row">
                     <div class="form-group">
-                        <label for="">Date *</label>
-                        <input type="date" formControlName="date_disponibilite" id="" rows="4"
-                            [ngClass]="{required: formDisponibility.get('date_disponibilite')!.invalid}" />
+                        <label for="">Session *</label>
+                        <select formControlName="session_id"
+                            [ngClass]="{required: formDisponibility.get('session_id')!.invalid}">
+                            <option value="">Session d'entretion</option>
+                            <option [value]="session.id" *ngFor="let session of sessions">{{session.nom}}</option>
+                        </select>
                     </div>
-                    <div class="alert" *ngIf="formDisponibilityControl['date_disponibilite'].errors">
-                        <div *ngIf="formDisponibilityControl['date_disponibilite'].errors['required']">
+                    <div class="alert" *ngIf="formDisponibilityControl['session_id'].errors">
+                        <div *ngIf="formDisponibilityControl['session_id'].errors['required']">
                             Veuillez s'il vous plait entrer une
                             valeur
                         </div>

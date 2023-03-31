@@ -35,6 +35,8 @@ export class SessionExamenPageComponent implements OnInit {
     date_debut: new FormControl(null, [Validators.required]),
     date_limite: new FormControl(null, [Validators.required]),
     date_examen: new FormControl(null, [Validators.required]),
+    date_debut_entretien: new FormControl(null),
+    date_fin_entretien: new FormControl(null),
     statut: new FormControl(true, [Validators.required]),
   });
 
@@ -256,6 +258,8 @@ export class SessionExamenPageComponent implements OnInit {
       date_debut: formatDate(session.date_debut, 'yyyy-MM-dd', "en"),
       date_limite: formatDate(session.date_limite, 'yyyy-MM-dd', "en"),
       date_examen: formatDate(session.date_examen, 'yyyy-MM-dd', "en"),
+      date_debut_entretien: session.date_debut_entretien ? formatDate(session.date_debut_entretien, 'yyyy-MM-dd', "en") : null,
+      date_fin_entretien: session.date_fin_entretien ? formatDate(session.date_fin_entretien, 'yyyy-MM-dd', "en") : null,
       statut: session.statut
     });
   }

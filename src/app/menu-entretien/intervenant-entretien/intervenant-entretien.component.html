@@ -1,68 +1,53 @@
-<section class="intervant-page page-content">
-    <h1 class="page-title">Entretiens <i class="pi pi-angle-right"></i>Selection des intervenants des entretiens</h1>
+<section class="calendrier-disponibilite-page calendrier-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des disponibilités</h1>
+
     <div class="card">
         <div class="header">
-            <h3 class="title">Intervenant des entretiens
-            </h3>
+            <h3 class="title">Veuillez selectionner vos horaires </h3>
         </div>
         <div class="line"></div>
-        <form class="form" [formGroup]="formCompteDisponibility" (ngSubmit)="createCompteDisponibility()">
-            <div class="header">
-                Veullez remplir les champs suivants
-                <div class="line"></div>
-            </div>
-            <div class="main">
-                <div class="row">
-                    <div class="form-group">
-                        <label for="">Intervenant *</label>
-                        <select name="" id="" formControlName="compte_id"
-                            [ngClass]="{required: formCompteDisponibility.get('compte_id')!.invalid}">
-                            <option value="" disabled>Choisir l'intervenant</option>
-                            <option [value]="compte.id" *ngFor="let compte of comptes">{{compte.name}}
-                                {{compte.prenom}}</option>
-                        </select>
-                    </div>
-                    <div class="alert" *ngIf="formCompteDisponibilityControl['compte_id'].errors">
-                        <div *ngIf="formCompteDisponibilityControl['compte_id'].errors['required']">
-                            Veuillez s'il vous plait entrer une
-                            valeur
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <label for="">Periode d'entretien *</label>
-                        <select name="" id="" formControlName="disponibilite_id"
-                            [ngClass]="{required: formCompteDisponibility.get('disponibilite_id')!.invalid}">
-                            <option value="" disabled>Choisir la periode</option>
-                            <option [value]="disponibility.id" *ngFor="let disponibility of disponibilities">
-                                {{disponibility.debut_disponibilite | date}} - {{disponibility.fin_disponibilite |
-                                date}}</option>
-                        </select>
-                    </div>
-                    <div class="alert" *ngIf="formCompteDisponibilityControl['disponibilite_id'].errors">
-                        <div *ngIf="formCompteDisponibilityControl['disponibilite_id'].errors['required']">
-                            Veuillez s'il vous plait entrer une
-                            valeur
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="footer">
-                <div class="line"></div>
-                <div class="btn-group">
-                    <button class="btn btn-info" [disabled]="formCompteDisponibility.invalid" type="submit">
-                        Soumettre
-                    </button>
+        <div class="calendrier">
+            <table id="table" *ngIf="datesOfDisponibilities.length > 0">
+                <thead>
+                    <th>Horaire</th>
+                    <th *ngFor="let date of datesOfDisponibilities">{{date | date}}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let horaire of horaires; let i = index">
+                        <td>{{horaire}} </td>
+                        <td *ngFor="let date of datesOfDisponibilities">
+                            <div class="d-flex flex" *ngIf="userConnected.role == 'ADMIN'">
+                                <p-multiSelect [options]="juries" [disabled]="disabledMap.get(i) || false"
+                                    (onChange)="selectJury($event, horaire, date)"
+                                    defaultLabel="Selectionner des membres" optionLabel="name"
+                                    display="chip"></p-multiSelect>
 
-                    <button class="btn btn-danger" (click)="formCompteDisponibility.reset()">
-                        Renitialiser
-                    </button>
-                </div>
+                                <button class="btn btn-info" (click)="validerJury($event, horaire, date, i)"
+                                    type="button">
+                                    Valider
+                                </button>
+                            </div>
+                            <input *ngIf="userConnected.role != 'ADMIN'" type="checkbox" id="checkbox{{i}}"
+                                (change)="validerJury($event, horaire, date, i)">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <section>
+                Veuillez definir des périodes de disponibilités afin de selectionner les horaires qui vous interessent
+            </section>
+        </div>
+
+        <div class="footer">
+            <div class="line"></div>
+            <div class="btn-group">
+                <button class="btn btn-info" (click)="enregistrerLesHoraires()" type="button">
+                    Soumettre
+                </button>
             </div>
-        </form>
-
+        </div>
 
     </div>
+
 </section>

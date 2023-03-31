@@ -207,6 +207,32 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="form-group">
+                            <label for="">Date début entretien</label>
+                            <input type="date" formControlName="date_debut_entretien" id="" rows="4"
+                                [ngClass]="{required: formSession.get('date_debut_entretien')!.invalid}" />
+                        </div>
+                        <div class="alert" *ngIf="formSessionControl['date_debut_entretien'].errors">
+                            <div *ngIf="formSessionControl['date_debut_entretien'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Date fin entretien</label>
+                            <input type="date" formControlName="date_fin_entretien" id="" rows="4"
+                                [ngClass]="{required: formSession.get('date_fin_entretien')!.invalid}" />
+                        </div>
+                        <div class="alert" *ngIf="formSessionControl['date_fin_entretien'].errors">
+                            <div *ngIf="formSessionControl['date_fin_entretien'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group justify-start">
                             <label for="">Status *</label>
                             <div class="statut">
