@@ -46,6 +46,8 @@ export class IntervenantEntretienComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.disponibilityMap = new Map<string, number>();
+    this.disabledMap = new Map<number, boolean>();
     this.getActiveSession();
     this.userConnected = this.storageService.getUserConnected();
     if (this.userConnected.role == Role.ADMIN) {
@@ -100,20 +102,33 @@ export class IntervenantEntretienComponent implements OnInit {
       next: (disponibilities: Disponibility[]) => {
         this.disponibilities = disponibilities;
         console.log('date', this.disponibilities)
+        let dates: number[] = [];
 
-        let datesSet = new Set(this.disponibilities.map(d => d.date_disponibilite.getTime()));
-        this.datesOfDisponibilities = [...datesSet] || [];
-        this.datesOfDisponibilities.sort();
-
-        for (let index = 0; index < disponibilities.length; index++) {
-          const disponibilite = disponibilities[index];
+        for (let index = 0; index < this.disponibilities.length; index++) {
+          const disponibilite = this.disponibilities[index];
+          let d = new Date(disponibilite.date_disponibilite).getTime();
+          dates.push(d);
 
           let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
           let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
           let horaire = startTime + ' - ' + endTime;
           this.horaires.push(horaire)
-          this.disponibilityMap.set(horaire + ' - ' + disponibilite.date_disponibilite.getTime(), disponibilite.id || 0)
+          this.disponibilityMap.set(horaire + ' - ' + d, disponibilite.id || 0)
         }
+
+        let datesSet = new Set(dates);
+        this.datesOfDisponibilities = [...datesSet] || [];
+        this.datesOfDisponibilities.sort();
+
+        // for (let index = 0; index < disponibilities.length; index++) {
+        //   const disponibilite = disponibilities[index];
+
+        //   let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
+        //   let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
+        //   let horaire = startTime + ' - ' + endTime;
+        //   this.horaires.push(horaire)
+        //   this.disponibilityMap.set(horaire + ' - ' + disponibilite.date_disponibilite.getTime(), disponibilite.id || 0)
+        // }
 
       },
       error: (err: any) => {

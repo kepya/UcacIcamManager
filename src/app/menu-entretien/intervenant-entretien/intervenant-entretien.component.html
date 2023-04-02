@@ -17,13 +17,13 @@
                     <tr *ngFor="let horaire of horaires; let i = index">
                         <td>{{horaire}} </td>
                         <td *ngFor="let date of datesOfDisponibilities">
-                            <div class="d-flex flex" *ngIf="userConnected.role == 'ADMIN'">
+                            <div class="v-center" *ngIf="userConnected.role == 'ADMIN'">
                                 <p-multiSelect [options]="juries" [disabled]="disabledMap.get(i) || false"
                                     (onChange)="selectJury($event, horaire, date)"
                                     defaultLabel="Selectionner des membres" optionLabel="name"
                                     display="chip"></p-multiSelect>
 
-                                <button class="btn btn-info" (click)="validerJury($event, horaire, date, i)"
+                                <button class="ml-2 btn btn-info" (click)="validerJury($event, horaire, date, i)"
                                     type="button">
                                     Valider
                                 </button>

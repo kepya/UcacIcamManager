@@ -59,7 +59,7 @@ export class PeriodeEntretienComponent implements OnInit {
       session.date_debut_entretien = this.formDisponibility.value.debut_disponibilite;
       session.date_fin_entretien = this.formDisponibility.value.fin_disponibilite;
 
-      this.sessionSrv.update({ ...session }).subscribe({
+      this.sessionSrv.updateForEntretien({ ...session }).subscribe({
         next: (value) => {
           this.messageService.add({ severity: 'success', summary: 'Modification de session', detail: 'Modification effectuée avec success' });
           this.disponibility = new Disponibility();
