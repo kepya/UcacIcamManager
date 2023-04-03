@@ -48,6 +48,8 @@ export class IntervenantEntretienComponent implements OnInit {
   ngOnInit(): void {
     this.disponibilityMap = new Map<string, number>();
     this.disabledMap = new Map<number, boolean>();
+    this.juriesByDispo = new Map<string, Compte[]>();
+
     this.getActiveSession();
     this.userConnected = this.storageService.getUserConnected();
     if (this.userConnected.role == Role.ADMIN) {
@@ -101,7 +103,6 @@ export class IntervenantEntretienComponent implements OnInit {
     this.disponibilitySrv.liste().subscribe({
       next: (disponibilities: Disponibility[]) => {
         this.disponibilities = disponibilities;
-        console.log('date', this.disponibilities)
         let dates: number[] = [];
 
         for (let index = 0; index < this.disponibilities.length; index++) {
@@ -119,17 +120,6 @@ export class IntervenantEntretienComponent implements OnInit {
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];
         this.datesOfDisponibilities.sort();
-
-        // for (let index = 0; index < disponibilities.length; index++) {
-        //   const disponibilite = disponibilities[index];
-
-        //   let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
-        //   let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
-        //   let horaire = startTime + ' - ' + endTime;
-        //   this.horaires.push(horaire)
-        //   this.disponibilityMap.set(horaire + ' - ' + disponibilite.date_disponibilite.getTime(), disponibilite.id || 0)
-        // }
-
       },
       error: (err: any) => {
 

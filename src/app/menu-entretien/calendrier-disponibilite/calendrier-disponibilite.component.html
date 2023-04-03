@@ -11,14 +11,14 @@
         <table id="table">
             <thead>
                 <th>Horaire</th>
-                <th *ngFor="let date of dates">{{date | date}}</th>
+                <th *ngFor="let date of datesOfDisponibilities">{{date | date}}</th>
             </thead>
             <tbody>
                 <tr *ngFor="let horaire of horaires">
                     <td>{{horaire}} </td>
-                    <td *ngFor="let date of dates"
-                        [ngClass]="{interviewer: (interverwerMap.get(date.toString() + '|' + horaire)?.length || 0 > 1)}">
-                        <div *ngFor="let interviewer of interverwerMap.get(date.toString() + '|' + horaire)">
+                    <td *ngFor="let date of datesOfDisponibilities"
+                        [ngClass]="{interviewer: (interverwerMap.get(horaire + ' - ' + date.toString())?.length || 0 > 1)}">
+                        <div *ngFor="let interviewer of interverwerMap.get(horaire + ' - ' + date.toString())">
                             {{interviewer}}
                         </div>
                     </td>
@@ -29,8 +29,8 @@
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Entretiens concours</h3>
-            <button class="btn btn-danger" (click)="prochaineDate()" *ngIf="dates.length > 0">
+            <h3 class="title">Entretiens concours, session du {{session.date_examen | date}}</h3>
+            <button class="btn btn-danger" (click)="prochaineDate()" *ngIf="datesOfDisponibilities.length > 0">
                 Prochaine Date
             </button>
         </div>
@@ -64,7 +64,7 @@
                             </select>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
-                            <td>{{entretien!?.centre || ''}}</td>
+                            <td>{{''}}</td>
                             <td>{{''}}</td>
                             <td>{{''}}</td>
                             <td>
