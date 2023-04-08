@@ -79,6 +79,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   getCandidatures() {
     this.candidatureSrv.liste().subscribe({
       next: (candidatures) => {
+        console.log('candidatures: ', candidatures);
         this.candidats = candidatures;
       }
     })
@@ -103,13 +104,25 @@ export class CalendrierDisponibiliteComponent implements OnInit {
 
         for (let compteDisponibilite of compteDisponibilites) {
           let d = new Date(compteDisponibilite!.disponibilite!.date_disponibilite).getTime();
-          dates.push(d);
+          let dateIndex = dates.findIndex(date => date == d);
+          if (dateIndex <= -1) {
+            dates.push(d);
+          }
+
           this.juries.push(compteDisponibilite.compte as Compte);
 
-          let startTime = this.commonService.formatDate(compteDisponibilite!.disponibilite!.debut_disponibilite);
-          let endTime = this.commonService.formatDate(compteDisponibilite!.disponibilite!.fin_disponibilite);
+          let date_debut = this.commonService.buildDateWithTime(compteDisponibilite!.disponibilite!.debut_disponibilite.toString());
+          let date_fin = this.commonService.buildDateWithTime(compteDisponibilite!.disponibilite!.fin_disponibilite.toString());
+
+          let startTime = this.commonService.formatDate(date_debut);
+          let endTime = this.commonService.formatDate(date_fin);
           let horaire = startTime + ' - ' + endTime;
-          this.horaires.push(horaire)
+
+          let index = this.horaires.findIndex(h => h == horaire);
+          if (index <= -1) {
+            this.horaires.push(horaire)
+          }
+
 
           let names: string[] = [];
           let name = compteDisponibilite.compte?.name + ' ' + compteDisponibilite.compte?.prenom;
@@ -122,12 +135,13 @@ export class CalendrierDisponibiliteComponent implements OnInit {
           this.interverwerMap.set(horaire + ' - ' + d, names);
         }
 
+
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];
         this.datesOfDisponibilities.sort();
+
         this.currentDate = new Date(this.datesOfDisponibilities[0]);
         this.interviewers = [...new Set(intervenants)];
-
       }
     })
   }

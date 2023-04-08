@@ -10,7 +10,7 @@ import { MessageService } from 'primeng/api';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
 
   constructor(
     private router: Router,
@@ -27,16 +27,14 @@ export class AuthGuard implements CanActivate {
     let token: string | null = this.storageService.getUserTokenConnected();
     if (token != null) {
       let role: string = this.tokenService.decodeToken(token).scope;
-      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN || role == Role.JURY)) {
+      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN)) {
         this.authService.isLogin.next(true);
         return true;
       }
     }
-    this.messageService.add({ severity: 'error', summary: `Erreur de connexion`, detail: `Veuillez les identifiants d'un administrateur ou d'un jury ou bien d'un super admin pour y avoir accèss à la plateforme` });
     this.authService.isLogin.next(false);
+    this.messageService.add({ severity: 'error', summary: `Erreur de connexion`, detail: `Veuillez les identifiants d'un administrateur ou bien d'un super admin pour y avoir accèss à la plateforme` });
     this.router.navigate(['login']);
     return false;
   }
-
-
 }

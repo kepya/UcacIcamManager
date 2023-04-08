@@ -14,6 +14,13 @@ export class CommonService {
     return times[0] + 'h' + times[1];
   }
 
+  buildDateWithTime(time: string) {
+    const current = new Date()
+    const dateTimeTwo = new Date(`${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${time}`)
+    console.log('time', dateTimeTwo);
+    return dateTimeTwo;
+  }
+
   buildDate(date: Date, time: string) {
     let dates = time.split('-');
     let startDate: number;

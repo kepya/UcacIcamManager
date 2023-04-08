@@ -19,7 +19,7 @@
     <!-- /menu profile quick info -->
     <div class="menu_section">
 
-        <ul class="nav side-menu">
+        <ul class="nav side-menu" *ngIf="!isJury else isJuryView;">
             <li [ngClass]="{'active-page': url.indexOf('home') > -1}" (click)="goToUrl('home')">
                 <a class="link"><i class="fa fa-home"></i> Accueil </a>
             </li>
@@ -60,6 +60,7 @@
                     <li><a class="sub-link" (click)="goToUrl('calendrier_disponibilites')">Calendrier des
                             disponibilités</a></li>
                     <li><a class="sub-link" (click)="goToUrl('periode_entretiens')">Définition période entretiens</a>
+                    </li>
                     <li><a class="sub-link" (click)="goToUrl('intervenant_entretiens')">Intervenants
                             entretiens</a>
                     </li>
@@ -86,5 +87,28 @@
 
         </ul>
 
+        <ng-template #isJuryView>
+            <ul class="nav side-menu">
+                <li [ngClass]="{'active-page': url.indexOf('home') > -1}" (click)="goToUrl('home')">
+                    <a class="link"><i class="fa fa-home"></i> Accueil </a>
+                </li>
+
+                <li [ngClass]="{'active-link': url.indexOf('entretien') > -1}" #interviews
+                    (click)="showMenuChild(interviews)">
+                    <a class="link"><i class="fa fa-microphone"></i> Entretiens <span
+                            class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu child_menu_one_line">
+                        <li><a class="sub-link" (click)="goToUrl('calendrier_entretiens')">Calendrier des entretiens</a>
+                        </li>
+                        <li><a class="sub-link" (click)="goToUrl('calendrier_disponibilites')">Calendrier des
+                                disponibilités</a></li>
+                        <li><a class="sub-link" (click)="goToUrl('intervenant_entretiens')">Intervenants
+                                entretiens</a>
+                        </li>
+                        <li><a class="sub-link" (click)="goToUrl('note_entretiens')">Notes entretiens</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </ng-template>
     </div>
 </div>
