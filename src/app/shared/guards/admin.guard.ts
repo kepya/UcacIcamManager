@@ -27,7 +27,7 @@ export class AdminGuard implements CanActivate {
     let token: string | null = this.storageService.getUserTokenConnected();
     if (token != null) {
       let role: string = this.tokenService.decodeToken(token).scope;
-      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN)) {
+      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN || role == Role.JURY)) {
         this.authService.isLogin.next(true);
         return true;
       }

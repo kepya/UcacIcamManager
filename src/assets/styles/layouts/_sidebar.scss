@@ -29,12 +29,8 @@
                 }
 
                 .child_menu {
-                    // transition: height 2s ease-out;
-                    // opacity: 0;
-                    // height: 0;
-                    // overflow: hidden;
                     li {
-                        transition: height 2s ease-out;
+                        transition: height 500ms ease-out;
                         opacity: 0;
                         height: 0;
                         overflow: hidden;
@@ -82,7 +78,7 @@
 }
 
 .extended {
-    width: 15.625rem;
+    width: 16.625rem;
 
     @include xs-only {
         width: 100vw;

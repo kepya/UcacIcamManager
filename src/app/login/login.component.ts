@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         this.storageService.storeUserToken(value.accessToken);
 
-        if (role == "ADMIN") {
+        if (role == "ADMIN" || role == "SUPER_ADMIN" || role == "JURY") {
           this.compteService.getOneByEmail(this.tokenService.decodeToken(value.accessToken).sub).subscribe({
             next: (compte: Compte) => {
               this.authService.isLogin.next(true);
