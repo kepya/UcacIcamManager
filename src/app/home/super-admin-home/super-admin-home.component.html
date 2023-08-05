@@ -1,0 +1,97 @@
+<section class=" grid stat-card-container">
+    <div class="col-9">
+        <section class="active_session">
+            <p>
+                Section en cours: <strong> session de mars</strong>
+            </p>
+        </section>
+        <section class="statistics">
+            <section class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="stat">
+                    <p class="label">Nombre d'inscriptions</p>
+                    <p class="value">16</p>
+                </div>
+            </section>
+            <section class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div class="stat">
+                    <p class="label">Nombre de zones</p>
+                    <p class="value">16</p>
+                </div>
+            </section>
+            <section class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-school-lock"></i>
+                </div>
+                <div class="stat">
+                    <p class="label">Candidature en attentes</p>
+                    <p class="value">16</p>
+                </div>
+            </section>
+        </section>
+    </div>
+    <div class="col-3">
+        <section>
+            <section class="information_card">
+                <div class="information">
+                    <p class="label">
+                        Prochaine Session
+                    </p>
+                    <p class="value">
+                        22 Juin 2025
+                    </p>
+                </div>
+                <div class="information">
+                    <p class="label">
+                        Compte à rebours
+                    </p>
+                    <p class="value">
+                        784
+                    </p>
+                </div>
+            </section>
+        </section>
+    </div>
+</section>
+
+<section class="charts-container">
+    <section>
+        <section class="information_card">
+            <div class="information">
+                <p class="label">
+                    Centre d'examen
+                </p>
+                <p class="value">
+                    22
+                </p>
+            </div>
+            <div class="information">
+                <p class="label">
+                    Sites
+                </p>
+                <p class="value">
+                    784
+                </p>
+            </div>
+        </section>
+    </section>
+    <section>
+        <h1 class="title">Candidats par sites</h1>
+        <app-pie-chart [datasets]="datasetsSite" [labels]="labelsSite"></app-pie-chart>
+    </section>
+    <section>
+        <h1 class="title">Candidats par zones</h1>
+        <app-bar-chart [datasets]="datasets" [labels]="labels"></app-bar-chart>
+    </section>
+    <section>
+        <h1 class="title">Nombre de candidats par type de concours</h1>
+        <div class="chart-container">
+            <canvas id="MyConcourChart"></canvas>
+        </div>
+    </section>
+</section>

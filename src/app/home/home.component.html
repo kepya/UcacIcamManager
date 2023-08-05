@@ -1,16 +1,13 @@
 <section class="home-page page-content">
+    <app-jury-home></app-jury-home>
 
-    <section class="accordions-group">
-        <p-accordion class="accordions" [multiple]="true">
-            <p-accordionTab header="Header 1">
-                Content 1
-            </p-accordionTab>
-            <p-accordionTab header="Header 2">
-                Content 2
-            </p-accordionTab>
-            <p-accordionTab header="Header 3">
-                Content 3
-            </p-accordionTab>
-        </p-accordion>
+    <!-- <section *ngIf="isAdmin">
+        <app-admin-home></app-admin-home>
     </section>
+    <section *ngIf="isJury">
+        <app-jury-home></app-jury-home>
+    </section>
+    <section *ngIf="isSuperAdmin">
+        <app-super-admin-home></app-super-admin-home>
+    </section> -->
 </section>

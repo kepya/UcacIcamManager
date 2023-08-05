@@ -14,13 +14,19 @@ export class SidebarComponent implements OnInit {
 
   @Input() url!: string;
   @Input() isExtended!: boolean;
+
   isJury: boolean = false;
+  isSuperAdmin: boolean = false;
+  isAdmin: boolean = false;
+
   compte!: Compte;
   constructor(private router: Router, private storageService: StorageService) { }
 
   ngOnInit(): void {
     this.compte = this.storageService.getUserConnected();
     this.isJury = this.compte.role == Role.JURY ? true : false;
+    this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
+    this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
   }
 
   showMenuChild(content: any) {
