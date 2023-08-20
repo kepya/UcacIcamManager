@@ -13,6 +13,8 @@ export class Compte {
     telephone!: string;
     role!: Role;
     id_disponibilite?: number;
+    idZone!: number;
+    zone?: Zone;
 }
 
 export class Candidature {

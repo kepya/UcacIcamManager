@@ -20,6 +20,14 @@ export class CentreExamenService {
     return this.http.get<Centre[]>(this.url + "all");
   }
 
+  public allByZone(idZone: number): Observable<Centre[]> {
+    return this.http.get<Centre[]>(this.url + "allbyzone/" + idZone);
+  }
+
+  public allBySite(idSite: number): Observable<Centre[]> {
+    return this.http.get<Centre[]>(this.url + "allbysite/" + idSite);
+  }
+
   public getOne(id: number): Observable<Centre> {
     return this.http.get<Centre>(this.url + id);
   }

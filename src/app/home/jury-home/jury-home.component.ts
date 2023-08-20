@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { Session } from 'src/app/shared/models/session';
+import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
 
 @Component({
   selector: 'app-jury-home',
@@ -10,6 +12,9 @@ import Chart from 'chart.js/auto';
 export class JuryHomeComponent implements OnInit {
 
   public chart: any;
+  @Input() statCandidatures!: StatCandidatures;
+  @Input() session!: Session;
+
 
   datasets!: {
     label?: string;

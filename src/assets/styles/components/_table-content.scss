@@ -28,7 +28,16 @@
             select {
                 padding: 0.25rem 0.5rem;
                 margin-inline: 0.5rem;
+                &:last-child {
+                    margin-left: 0.5rem;
+                }
             }
+        }
+
+        .search {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .search_value {
@@ -64,6 +73,18 @@
                         width: -webkit-fill-available;
                     }
                 }
+            }
+        }
+
+        .select-item {
+            margin-right: 1rem;
+            .label {
+            }
+
+            select {
+                min-width: 150px;
+                padding-block: 0.5rem;
+                margin-left: 0.5rem;
             }
         }
     }

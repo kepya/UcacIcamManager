@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { Session } from 'src/app/shared/models/session';
+import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
 
 @Component({
   selector: 'app-admin-home',
@@ -10,6 +12,9 @@ import Chart from 'chart.js/auto';
 export class AdminHomeComponent implements OnInit {
   public chart: any;
 
+  @Input() statCandidatures!: StatCandidatures;
+  @Input() session!: Session;
+
   datasets!: {
     label?: string;
     data: string[];
@@ -17,12 +22,12 @@ export class AdminHomeComponent implements OnInit {
   }[];
   labels!: string[];
 
-  datasetsSite!: {
+  @Input() datasetsSite!: {
     label?: string;
     data: number[];
     backgroundColor?: string;
   }[];
-  labelsSite!: string[];
+  @Input() labelsSite!: string[];
 
   datasetsConcour!: {
     label?: string;
@@ -34,14 +39,14 @@ export class AdminHomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.datasetsSite = [{
-      data: [10, 20, 30]
-    }];
-    this.labelsSite = [
-      'Site 1',
-      'Site 2',
-      'Site 3'
-    ];
+    // this.datasetsSite = [{
+    //   data: [10, 20, 30]
+    // }];
+    // this.labelsSite = [
+    //   'Site 1',
+    //   'Site 2',
+    //   'Site 3'
+    // ];
 
     this.labels = ['Candidats'];
     this.datasets = [

@@ -2,7 +2,7 @@
     <div class="col-9">
         <section class="active_session">
             <p>
-                Section en cours: <strong> session de mars</strong>
+                Section en cours: <strong> session de {{session.date_debut | date:'mmmm'}}</strong>
             </p>
         </section>
         <section class="statistics">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="stat">
                     <p class="label">Candidature en attentes</p>
-                    <p class="value">16</p>
+                    <p class="value">{{statCandidatures.nbCandidaturesEnAttente}}</p>
                 </div>
             </section>
         </section>

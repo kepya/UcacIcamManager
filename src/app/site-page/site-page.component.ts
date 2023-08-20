@@ -5,6 +5,9 @@ import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/shared/services/site.service';
 import { MessageService } from 'primeng/api';
+import { StorageService } from '../shared/services/storage.service';
+import { Compte } from '../shared/models/compte';
+import { Role } from '../shared/enums/role.enum';
 
 @Component({
   selector: 'app-site-page',
@@ -29,6 +32,7 @@ export class SitePageComponent implements OnInit {
   collectionSize!: number;
   nbrOfPage!: number;
   isFormSite!: boolean;
+  compte!: Compte;
 
   formSite: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
@@ -39,7 +43,7 @@ export class SitePageComponent implements OnInit {
     zone_id: new FormControl('', [Validators.required]),
   });
 
-  constructor(private siteSrv: SiteService, private zoneSrv: ZoneService, private messageService: MessageService) { }
+  constructor(private siteSrv: SiteService, private storageService: StorageService, private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -47,8 +51,14 @@ export class SitePageComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
-    this.getZones();
-    this.getSites();
+    this.compte = this.storageService.getUserConnected();
+    if (this.compte.role == Role.SUPER_ADMIN) {
+      this.getZones();
+      this.getSites();
+    } else {
+      this.getZonesById(this.compte.idZone);
+      this.getSitesByZone(this.compte.idZone);
+    }
   }
 
   sort(property: string, sites: Site[] = this.sites) {
@@ -218,12 +228,37 @@ export class SitePageComponent implements OnInit {
     });
   }
 
+  getSitesByZone(idZone: number) {
+    this.siteSrv.allByZone(idZone).subscribe({
+      next: (value: Site[]) => {
+        value = this.sort('nom', value);
+        this.searchSites = [];
+        this.searchSites = value;
+        this.sites = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
   viewSite(view: string = 'data') {
     if (view === 'data') {
       this.isFormSite = false;
     } else {
       this.isFormSite = true;
-      this.getZones();
+      if (this.compte.role == Role.SUPER_ADMIN) {
+        this.getZones();
+      } else {
+        this.getZonesById(this.compte.idZone);
+      }
     }
   }
 
@@ -231,8 +266,17 @@ export class SitePageComponent implements OnInit {
     this.zoneSrv.liste().subscribe({
       next: (value: Zone[]) => {
         this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 
-
+  getZonesById(idZone: number) {
+    this.zoneSrv.getOne(idZone).subscribe({
+      next: (value: Zone) => {
+        this.zones = [value];
       },
       error: (err) => {
         console.log('error: ', err);

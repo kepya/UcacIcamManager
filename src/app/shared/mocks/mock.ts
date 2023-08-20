@@ -115,6 +115,7 @@ export const candidats: Candidature[] = [
             telephone: "",
             role: Role.CANDIDAT,
             id_disponibilite: 0,
+            idZone: 0,
         }
     },
     {
@@ -148,6 +149,7 @@ export const candidats: Candidature[] = [
             email: "",
             telephone: "",
             role: Role.CANDIDAT,
+            idZone: 0,
             id_disponibilite: 0,
         }
     },
@@ -183,6 +185,7 @@ export const candidats: Candidature[] = [
             telephone: "",
             role: Role.CANDIDAT,
             id_disponibilite: 0,
+            idZone: 0,
         }
     }
 ]

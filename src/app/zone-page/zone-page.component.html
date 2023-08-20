@@ -4,7 +4,7 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des zones Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewZone('form')">
+            <button class="btn btn-danger" (click)="viewZone('form')" *ngIf="compte.role == 'SUPER_ADMIN'">
                 Ajouter une zone
             </button>
         </div>

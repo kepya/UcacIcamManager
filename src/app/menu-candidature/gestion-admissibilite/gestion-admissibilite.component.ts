@@ -9,6 +9,12 @@ import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Site } from 'src/app/shared/models/site';
 import { SiteService } from 'src/app/site-page/site.service';
 import { CandidatureService } from '../candidature.service';
+import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
+import { Centre } from 'src/app/shared/models/centre';
+import { ExportExcelService } from 'src/app/shared/services/export-excel.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { Zone } from 'src/app/shared/models/zone';
 
 @Component({
   selector: 'app-gestion-admissibilite',
@@ -21,7 +27,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
   candidatures: Candidature[] = [];
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
-  loading: boolean = true;
+  loading: boolean = false;
   sortIcon!: string;
   sortProperty!: string;
   isAsc!: boolean;
@@ -31,8 +37,19 @@ export class GestionAdmissibiliteComponent implements OnInit {
   pageSize!: number;
   collectionSize!: number;
   nbrOfPage!: number;
+  zones: Zone[] = [];
+  zone!: Zone;
+  sites: Site[] = [];
+  site!: Site;
+  centres: Centre[] = [];
+  centre!: Centre;
+  actifOption!: string;
+  searchOption!: string;
+  compte!: Compte;
 
-  constructor(private candidatureSrv: CandidatureService, private siteSrv: SiteService) { }
+  constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
+    private siteSrv: SiteService, private exportExcelService: ExportExcelService,
+    private centreSrv: CentreExamenService, private zoneService: ZoneService) { }
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -40,13 +57,14 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
-    this.getCandidatures();
+    this.compte = this.storageService.getUserConnected();
+    this.getZonesOfUser();
     this.candidatures = [{
       Lieu_de_naissance: "",
       Date_naissance: "",
       Nationalite: "",
       Dernier_Etablissement: "",
-      tel_parents	: "",
+      tel_parents: "",
       email_parents: "",
       Formation1: "",
       Formation2: "",
@@ -71,6 +89,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
         email: "",
         telephone: "",
         role: Role.CANDIDAT,
+        idZone: 1,
         id_disponibilite: 0,
       }
     }]
@@ -203,9 +222,58 @@ export class GestionAdmissibiliteComponent implements OnInit {
     return candidatures;
   }
 
+  exportToExcel() {
+    this.loading = true;
+    this.exportExcelService.downloadCandidatureExcel().subscribe(response => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    });
+  }
+
   handlePageSize(event: any) {
-    ;
-    this.getCandidatures();
+    if (this.actifOption == 'centre') {
+      this.getCandidaturesByCentre(this.centre.id ?? 0);
+
+    }
+
+    if (this.actifOption == 'site') {
+      this.getCandidaturesBySite(this.site.id ?? 0);
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.getCandidaturesByZone(this.zone.id ?? 0);
+    }
+  }
+
+  handleCentreSelect(event: any) {
+    this.getCandidaturesByCentre(this.centre.id ?? 0);
+  }
+
+  handleCategorieSelect(event: any) {
+    if (this.compte.role == Role.SUPER_ADMIN) {
+      if (event.target.value == 'centre') {
+        this.getCentres();
+      }
+
+      if (event.target.value == 'site') {
+        this.getSites();
+      }
+    }
+  }
+
+  handleZoneSelect(event: any) {
+    this.getCandidaturesByZone(this.zone.id ?? 0);
+  }
+
+  handleSiteSelect(event: any) {
+    this.getCandidaturesBySite(this.site.id ?? 0);
   }
 
   handleSearchValue(event: any) {
@@ -233,16 +301,40 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   next() {
     this.page++;
-    this.getCandidatures();
+    if (this.actifOption == 'centre') {
+      this.getCandidaturesByCentre(this.centre.id ?? 0);
+
+    }
+
+    if (this.actifOption == 'site') {
+      this.getCandidaturesBySite(this.site.id ?? 0);
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.getCandidaturesByZone(this.zone.id ?? 0);
+    }
   }
 
   previous() {
     this.page--;
-    this.getCandidatures();
+    if (this.actifOption == 'centre') {
+      this.getCandidaturesByCentre(this.centre.id ?? 0);
+    }
+
+    if (this.actifOption == 'site') {
+      this.getCandidaturesBySite(this.site.id ?? 0);
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.getCandidaturesByZone(this.zone.id ?? 0);
+    }
   }
 
-  getCandidatures() {
-    this.candidatureSrv.liste().subscribe({
+  getCandidaturesByZone(idZone: number) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -261,4 +353,127 @@ export class GestionAdmissibiliteComponent implements OnInit {
       }
     });
   }
+
+  getCandidaturesByCentre(idCentre: number) {
+    this.actifOption = 'centre';
+    this.candidatureSrv.allByCentre(idCentre).subscribe({
+      next: (value: Candidature[]) => {
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesBySite(idSite: number) {
+    this.actifOption = 'site';
+    this.candidatureSrv.allBySite(idSite).subscribe({
+      next: (value: Candidature[]) => {
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getZonesOfUser() {
+    if (this.compte.role == Role.SUPER_ADMIN) {
+      this.zoneService.liste().subscribe({
+        next: (value: Zone[]) => {
+          this.zone = value[0];
+          this.zones = value;
+          this.getCandidaturesByZone(this.zone.id ?? 0);
+          this.getSitesByZone(this.zone.id ?? 0);
+          this.getCentreByZone(this.zone.id ?? 0);
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+    if (this.compte.role == Role.ADMIN || this.compte.role == Role.JURY) {
+      this.zoneService.getOne(this.compte.idZone ?? 0).subscribe({
+        next: (value: Zone) => {
+          this.zone = value;
+          this.zones = [value];
+          this.getCandidaturesByZone(value.id ?? 0);
+          this.getSitesByZone(value.id ?? 0);
+          this.getCentreByZone(value.id ?? 0);
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+  }
+
+  getCentreByZone(idZone: number) {
+    this.centreSrv.allByZone(idZone).subscribe({
+      next: (value: Centre[]) => {
+        this.centres = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+
+  getSitesByZone(idZone: number) {
+    this.siteSrv.allByZone(idZone).subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCentres() {
+    this.centreSrv.liste().subscribe({
+      next: (value: Centre[]) => {
+        this.centres = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+
+  getSites() {
+    this.siteSrv.liste().subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
 }

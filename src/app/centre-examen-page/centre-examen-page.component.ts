@@ -6,6 +6,9 @@ import { Site } from '../shared/models/site';
 import { CentreExamenService } from './centre-examen.service';
 import { SiteService } from 'src/app/shared/services/site.service';
 import { MessageService } from 'primeng/api';
+import { Compte } from '../shared/models/compte';
+import { StorageService } from '../shared/services/storage.service';
+import { Role } from '../shared/enums/role.enum';
 
 @Component({
   selector: 'app-centre-examen-page',
@@ -30,6 +33,7 @@ export class CentreExamenPageComponent implements OnInit {
   collectionSize!: number;
   nbrOfPage!: number;
   isFormCentre!: boolean;
+  compte!: Compte;
 
   formCentre: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
@@ -39,7 +43,7 @@ export class CentreExamenPageComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private centreSrv: CentreExamenService, private siteSrv: SiteService, private messageService: MessageService) { }
+  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -47,8 +51,15 @@ export class CentreExamenPageComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
-    this.getCentres();
-    this.getSites();
+
+    this.compte = this.storageService.getUserConnected();
+    if (this.compte.role == Role.SUPER_ADMIN) {
+      this.getCentres();
+      this.getSites();
+    } else {
+      this.getCentreByZone(this.compte.idZone);
+      this.getSitesByZone(this.compte.idZone);
+    }
   }
 
   sort(property: string, centres: Centre[] = this.centres) {
@@ -223,14 +234,52 @@ export class CentreExamenPageComponent implements OnInit {
     });
   }
 
+  getCentreByZone(idZone: number) {
+    this.centreSrv.allByZone(idZone).subscribe({
+      next: (value: Centre[]) => {
+        value = this.sort('nom', value);
+        this.searchCentres = [];
+        this.searchCentres = value;
+        this.centres = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
   viewCentre(view: string = 'data') {
     if (view === 'data') {
       this.isFormCentre = false;
     } else {
       this.isFormCentre = true;
-      this.getSites();
+      this.compte = this.storageService.getUserConnected();
+      if (this.compte.role == Role.SUPER_ADMIN) {
+        this.getSites();
+      } else {
+        this.getSitesByZone(this.compte.idZone);
+      }
     }
   }
+
+  getSitesByZone(idZone: number) {
+    this.siteSrv.allByZone(idZone).subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
 
   getSites() {
     this.siteSrv.liste().subscribe({

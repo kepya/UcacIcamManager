@@ -20,6 +20,10 @@ export class SiteService {
     return this.http.get<Site[]>(this.url + "all");
   }
 
+  public allByZone(idZone: number): Observable<Site[]> {
+    return this.http.get<Site[]>(this.url + "allbyzone/" + idZone);
+  }
+
   public getOne(id: number): Observable<Site> {
     return this.http.get<Site>(this.url + id);
   }

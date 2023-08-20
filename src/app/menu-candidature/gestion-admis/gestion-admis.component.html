@@ -23,12 +23,39 @@
                     </select>
                     <span>entrées</span>
                 </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+                <div class="search">
+                    <div class="select-item">
+                        <span class="label">Categories</span>
+                        <select [(ngModel)]="searchOption" (change)="handleCategorieSelect($event)"
+                            class="form form-control">
+                            <option value="centre">Centre</option>
+                            <option value="site">Site</option>
+                            <option value="zone">Zone</option>
+                        </select>
+
+                        <select [(ngModel)]="zone" class="form form-control"
+                            *ngIf="searchOption && searchOption == 'zone'" (change)="handleZoneSelect($event)">
+                            <option [value]="zone" *ngFor="let zone of zones">{{zone.nom}}</option>
+                        </select>
+
+                        <select [(ngModel)]="site" class="form form-control"
+                            *ngIf="searchOption && searchOption == 'site'" (change)="handleSiteSelect($event)">
+                            <option [value]="site" *ngFor="let site of sites">{{site.nom}}</option>
+                        </select>
+
+                        <select [(ngModel)]="centre" class="form form-control"
+                            *ngIf="searchOption && searchOption == 'centre'" (change)="handleCentreSelect($event)">
+                            <option [value]="centre" *ngFor="let centre of centres">{{centre.nom}}</option>
+                        </select>
+                    </div>
+
+                    <div class="search_value">
+                        <span>Rechercher</span>
+                        <div>
+                            <input type="text" name="value" id="value" [(ngModel)]="searchValue"
+                                (keyup)="handleSearchValue($event)">
+                            <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+                        </div>
                     </div>
                 </div>
             </div>

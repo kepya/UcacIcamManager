@@ -1,13 +1,13 @@
 <section class="home-page page-content">
-    <app-jury-home></app-jury-home>
-
-    <!-- <section *ngIf="isAdmin">
-        <app-admin-home></app-admin-home>
+    <section *ngIf="isAdmin">
+        <app-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [statCandidatures]="statCandidatures"
+            [session]="session"></app-admin-home>
     </section>
     <section *ngIf="isJury">
-        <app-jury-home></app-jury-home>
+        <app-jury-home [statCandidatures]="statCandidatures" [session]="session"></app-jury-home>
     </section>
     <section *ngIf="isSuperAdmin">
-        <app-super-admin-home></app-super-admin-home>
-    </section> -->
+        <app-super-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite"
+            [statCandidatures]="statCandidatures" [session]="session"></app-super-admin-home>
+    </section>
 </section>
