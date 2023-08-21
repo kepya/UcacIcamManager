@@ -1,13 +1,20 @@
 <section class="home-page page-content">
     <section *ngIf="isAdmin">
-        <app-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [statCandidatures]="statCandidatures"
-            [session]="session"></app-admin-home>
+        <app-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [datasetsConcour]="datasetsConcour"
+            [labelsConcour]="labelsConcour" [statCandidatures]="statCandidatures" [session]="session"></app-admin-home>
     </section>
     <section *ngIf="isJury">
-        <app-jury-home [statCandidatures]="statCandidatures" [session]="session"></app-jury-home>
+        <app-jury-home [datasetsCandidatEntretenuParSite]="datasetsCandidatEntretenuParSite"
+            [labelsCandidatEntretenuParSite]="labelsCandidatEntretenuParSite"
+            [datasetsCandidatEntretenuParConcour]="datasetsCandidatEntretenuParConcour"
+            [labelsCandidatEntretenuParConcour]="labelsCandidatEntretenuParConcour"
+            [datasetsCandidatEntretenuParZone]="datasetsCandidatEntretenuParZone"
+            [labelsCandidatEntretenuParZone]="labelsCandidatEntretenuParZone" [statCandidatures]="statCandidatures"
+            [session]="session"></app-jury-home>
     </section>
     <section *ngIf="isSuperAdmin">
         <app-super-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite"
-            [statCandidatures]="statCandidatures" [session]="session"></app-super-admin-home>
+            [datasetsConcour]="datasetsConcour" [labelsConcour]="labelsConcour" [datasetsZone]="datasetsZone"
+            [labelsZone]="labelsZone" [statCandidatures]="statCandidatures" [session]="session"></app-super-admin-home>
     </section>
 </section>

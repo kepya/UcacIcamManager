@@ -56,40 +56,6 @@ export class ListeAdmissibiliteComponent implements OnInit {
     this.page = 1;
     this.compte = this.storageService.getUserConnected();
     this.getZonesOfUser();
-    this.candidatures = [{
-      Lieu_de_naissance: "",
-      Date_naissance: "",
-      Nationalite: "",
-      Dernier_Etablissement: "",
-      tel_parents: "",
-      email_parents: "",
-      Formation1: "",
-      Formation2: "",
-      Formation3: "",
-      centre: "Centre de Douala",
-      Paiement: "",
-      Reference_paiement: "",
-      Image: "",
-      telephone_paiement: "",
-      ville: "",
-      code_examen: 0,
-      nombre_choix: 0,
-      CompteID: 0,
-      cycle: Cycle.premier,
-      statut: Statut.En_Attente,
-      Genre: Genre.M,
-      langue: Langue.Francais,
-      compte: {
-        name: "Christian",
-        prenom: "kepya",
-        password: "",
-        email: "",
-        telephone: "",
-        idZone: 1,
-        role: Role.CANDIDAT,
-        id_disponibilite: 0,
-      }
-    }]
   }
 
   sort(property: string, candidatures: Candidature[] = this.candidatures) {
@@ -271,7 +237,7 @@ export class ListeAdmissibiliteComponent implements OnInit {
 
   getCandidaturesByZone(idZone: number) {
     this.actifOption = 'zone';
-    this.candidatureSrv.allByZone(idZone).subscribe({
+    this.candidatureSrv.allAdmissibleByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -293,7 +259,7 @@ export class ListeAdmissibiliteComponent implements OnInit {
 
   getCandidaturesByCentre(idCentre: number) {
     this.actifOption = 'centre';
-    this.candidatureSrv.allByCentre(idCentre).subscribe({
+    this.candidatureSrv.allAdmissibleByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -315,7 +281,7 @@ export class ListeAdmissibiliteComponent implements OnInit {
 
   getCandidaturesBySite(idSite: number) {
     this.actifOption = 'site';
-    this.candidatureSrv.allBySite(idSite).subscribe({
+    this.candidatureSrv.allAdmissibleBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];

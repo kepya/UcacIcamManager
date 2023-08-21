@@ -4,9 +4,9 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des candidatures et notes entretiens</h3>
-            <button class="btn btn-danger" (click)="file.click()">
-                <input type="file" name="" id="" #file hidden>
-                Importer la liste des canditats
+            <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
+                <!-- <input type="file" name="" id="" #file hidden> -->
+                Exporter la liste des canditats
             </button>
         </div>
         <div class="line"></div>
@@ -156,7 +156,8 @@
 
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
-                        <td><input class="checkbox" type="checkbox" name="validate" /></td>
+                        <td><input class="checkbox" type="checkbox" name="validate"
+                                (change)="validateCandidats($event, candidature)" /></td>
                         <td>{{'Pays'}}</td>
                         <td>{{candidature.centre}}</td>
                         <td>{{candidature.Formation1}}, {{candidature.Formation2}}, {{candidature.Formation3}}</td>

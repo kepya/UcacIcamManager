@@ -11,7 +11,7 @@ export class BarChartComponent implements OnInit {
   public chart: any;
   @Input() datasets!: {
     label?: string;
-    data: string[];
+    data: number[];
     backgroundColor?: string;
   }[];
   @Input() labels!: string[];

@@ -23,6 +23,7 @@
                 <div class="stat">
                     <p class="label">Candidats entretenus</p>
                     <p class="value">16</p>
+                    <p class="value">{{statCandidatures.nbEntretenusTotal}}</p>
                 </div>
             </section>
 
@@ -69,27 +70,25 @@
                 <p class="label">
                     Centre d'examen
                 </p>
-                <p class="value">
-                    22
-                </p>
+                <p class="value">{{statCandidatures.nbCentreExamenParticipant}}</p>
             </div>
             <div class="information">
                 <p class="label">
                     Sites
                 </p>
-                <p class="value">
-                    784
-                </p>
+                <p class="value">{{statCandidatures.nbSiteParticipant}}</p>
             </div>
         </section>
     </section>
     <section>
         <h1 class="title">Candidats entrenu par sites</h1>
-        <app-pie-chart [datasets]="datasetsSite" [labels]="labelsSite"></app-pie-chart>
+        <app-pie-chart [datasets]="datasetsCandidatEntretenuParSite"
+            [labels]="labelsCandidatEntretenuParSite"></app-pie-chart>
     </section>
     <section>
         <h1 class="title">Candidats entrenu par zones</h1>
-        <app-bar-chart [datasets]="datasets" [labels]="labels"></app-bar-chart>
+        <app-bar-chart [datasets]="datasetsCandidatEntretenuParZone"
+            [labels]="labelsCandidatEntretenuParZone"></app-bar-chart>
     </section>
     <section>
         <h1 class="title">Nombre de candidats entrenu par type de concours</h1>

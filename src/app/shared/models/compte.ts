@@ -19,6 +19,7 @@ export class Compte {
 
 export class Candidature {
     id?: number;
+    centreExamenId!: number;
     Lieu_de_naissance!: string;
     Date_naissance!: string;
     Nationalite!: string;

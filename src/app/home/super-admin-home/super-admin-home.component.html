@@ -12,7 +12,7 @@
                 </div>
                 <div class="stat">
                     <p class="label">Nombre d'inscriptions</p>
-                    <p class="value">16</p>
+                    <p class="value">{{statCandidatures.nbCandidaturesTotal}}</p>
                 </div>
             </section>
             <section class="stat-card">
@@ -21,7 +21,8 @@
                 </div>
                 <div class="stat">
                     <p class="label">Nombre de zones</p>
-                    <p class="value">16</p>
+                    <p class="value">{{statCandidatures.nbZoneParticipant}}</p>
+
                 </div>
             </section>
             <section class="stat-card">
@@ -66,17 +67,13 @@
                 <p class="label">
                     Centre d'examen
                 </p>
-                <p class="value">
-                    22
-                </p>
+                <p class="value">{{statCandidatures.nbCentreExamenParticipant}}</p>
             </div>
             <div class="information">
                 <p class="label">
                     Sites
                 </p>
-                <p class="value">
-                    784
-                </p>
+                <p class="value">{{statCandidatures.nbSiteParticipant}}</p>
             </div>
         </section>
     </section>
@@ -86,7 +83,7 @@
     </section>
     <section>
         <h1 class="title">Candidats par zones</h1>
-        <app-bar-chart [datasets]="datasets" [labels]="labels"></app-bar-chart>
+        <app-bar-chart [datasets]="datasetsZone" [labels]="labelsZone"></app-bar-chart>
     </section>
     <section>
         <h1 class="title">Nombre de candidats par type de concours</h1>

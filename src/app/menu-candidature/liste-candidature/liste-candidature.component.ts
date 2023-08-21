@@ -12,6 +12,7 @@ import { Zone } from 'src/app/shared/models/zone';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-liste-candidature',
@@ -439,4 +440,14 @@ export class ListeCandidatureComponent implements OnInit {
     });
   }
 
+  downloadCandidatureFile() {
+    this.candidatureSrv.downloadCandidatureFile().subscribe({
+      next: (value) => {
+        saveAs(value, 'liste_candidat.pdf');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 }

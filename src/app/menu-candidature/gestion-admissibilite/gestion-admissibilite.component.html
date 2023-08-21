@@ -4,7 +4,7 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des candidatures et notes associées</h3>
-            <button class="btn btn-danger">
+            <button class="btn btn-danger" (click)="downloadAdmissibleCandidatureFile()">
                 Exporter la liste des canditats
             </button>
         </div>
@@ -122,7 +122,8 @@
 
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
-                        <td><input class="checkbox" type="checkbox" name="validate" /></td>
+                        <td><input class="checkbox" type="checkbox" name="validate"
+                                (change)="validateAdmissibilityOfCandidats($event, candidature)" /></td>
                         <td>{{candidature.code_examen}}</td>
                         <td>{{candidature.cycle}}</td>
                         <td>{{candidature.centre}}</td>

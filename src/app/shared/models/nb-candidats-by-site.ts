@@ -1,5 +1,21 @@
+import { Site } from "./site";
+import { Zone } from "./zone";
+
 export class NbCandidatsBySite {
-    site_id!: number;
     nbCandidats!: number;
-    nom_site!: string;
+    nbParticipations!: number;
+    nbEntretenus!: number;
+    site!: Site;
+}
+
+export class NbCandidatsByZone {
+    nbCandidats!: number;
+    nbEntretenus!: number;
+    zone!: Zone;
+}
+
+export class NbCandidatsByFormation {
+    nbCandidats!: number;
+    nbEntretenus!: number;
+    formation!: string;
 }

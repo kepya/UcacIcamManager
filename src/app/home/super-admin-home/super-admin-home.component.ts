@@ -14,12 +14,12 @@ export class SuperAdminHomeComponent implements OnInit {
   @Input() statCandidatures!: StatCandidatures;
   @Input() session!: Session;
 
-  datasets!: {
+  @Input() datasetsZone!: {
     label?: string;
-    data: string[];
+    data: number[];
     backgroundColor?: string;
   }[];
-  labels!: string[];
+  @Input() labelsZone!: string[];
 
   @Input() datasetsSite!: {
     label?: string;
@@ -28,48 +28,16 @@ export class SuperAdminHomeComponent implements OnInit {
   }[];
   @Input() labelsSite!: string[];
 
-  datasetsConcour!: {
+  @Input() datasetsConcour!: {
     label?: string;
-    data: string[];
+    data: number[];
     backgroundColor?: string;
   }[];
-  labelsConcour!: string[];
+  @Input() labelsConcour!: string[];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.labels = ['Candidats'];
-    this.datasets = [
-      {
-        label: 'Zone 1',
-        data: ['467'],
-      },
-      {
-        label: 'Zone 2',
-        data: ['576'],
-      },
-      {
-        label: 'Zone 3',
-        data: ['572'],
-      },
-    ];
-
-    this.labelsConcour = ['Candidats'];
-    this.datasetsConcour = [
-      {
-        label: 'Concour 1: OP',
-        data: ['467'],
-      },
-      {
-        label: 'Concour 2: X',
-        data: ['576'],
-      },
-      {
-        label: 'Concour 3: IP',
-        data: ['572'],
-      },
-    ];
-
     this.createChartCandidatByConcour();
   }
 

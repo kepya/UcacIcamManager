@@ -14,6 +14,7 @@ import { ExportExcelService } from 'src/app/shared/services/export-excel.service
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-gestion-admis',
@@ -299,7 +300,7 @@ export class GestionAdmisComponent implements OnInit {
 
   getCandidaturesByZone(idZone: number) {
     this.actifOption = 'zone';
-    this.candidatureSrv.allByZone(idZone).subscribe({
+    this.candidatureSrv.allAdmissibleByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -321,7 +322,7 @@ export class GestionAdmisComponent implements OnInit {
 
   getCandidaturesByCentre(idCentre: number) {
     this.actifOption = 'centre';
-    this.candidatureSrv.allByCentre(idCentre).subscribe({
+    this.candidatureSrv.allAdmissibleByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -343,7 +344,7 @@ export class GestionAdmisComponent implements OnInit {
 
   getCandidaturesBySite(idSite: number) {
     this.actifOption = 'site';
-    this.candidatureSrv.allBySite(idSite).subscribe({
+    this.candidatureSrv.allAdmissibleBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -406,7 +407,6 @@ export class GestionAdmisComponent implements OnInit {
     });
   }
 
-
   getSitesByZone(idZone: number) {
     this.siteSrv.allByZone(idZone).subscribe({
       next: (value: Site[]) => {
@@ -429,7 +429,6 @@ export class GestionAdmisComponent implements OnInit {
     });
   }
 
-
   getSites() {
     this.siteSrv.liste().subscribe({
       next: (value: Site[]) => {
@@ -439,6 +438,42 @@ export class GestionAdmisComponent implements OnInit {
         console.log('error: ', err);
       }
     });
+  }
+
+  downloadAdmissCandidatureFile() {
+    this.candidatureSrv.downloadAdmissCandidatureFile().subscribe({
+      next: (value) => {
+        saveAs(value, 'liste_candidat_admiss.pdf');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  validateCandidats(event: any, candidat: Candidature) {
+    if (event.target.checked) {
+      candidat.statut = Statut.Admis;
+      this.candidatureSrv.update(candidat.CompteID, candidat).subscribe({
+        next: (value: Candidature) => {
+          if (this.actifOption == 'centre') {
+            this.getCandidaturesByCentre(this.centre.id ?? 0);
+          }
+
+          if (this.actifOption == 'site') {
+            this.getCandidaturesBySite(this.site.id ?? 0);
+          }
+
+
+          if (this.actifOption == 'zone') {
+            this.getCandidaturesByZone(this.zone.id ?? 0);
+          }
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
   }
 
 }

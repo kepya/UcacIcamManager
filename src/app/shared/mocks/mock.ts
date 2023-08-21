@@ -101,6 +101,7 @@ export const candidats: Candidature[] = [
         telephone_paiement: "",
         ville: "",
         code_examen: 0,
+        centreExamenId: 1,
         nombre_choix: 0,
         CompteID: 0,
         cycle: Cycle.premier,
@@ -140,6 +141,7 @@ export const candidats: Candidature[] = [
         CompteID: 0,
         cycle: Cycle.premier,
         statut: Statut.En_Attente,
+        centreExamenId: 1,
         Genre: Genre.M,
         langue: Langue.Francais,
         compte: {
@@ -157,6 +159,8 @@ export const candidats: Candidature[] = [
         id: 3,
         Lieu_de_naissance: "",
         Date_naissance: "",
+        centreExamenId: 1,
+
         Nationalite: "",
         Dernier_Etablissement: "",
         email_parents: "",

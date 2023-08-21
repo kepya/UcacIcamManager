@@ -15,72 +15,30 @@ export class JuryHomeComponent implements OnInit {
   @Input() statCandidatures!: StatCandidatures;
   @Input() session!: Session;
 
-
-  datasets!: {
-    label?: string;
-    data: string[];
-    backgroundColor?: string;
-  }[];
-  labels!: string[];
-
-  datasetsSite!: {
+  @Input() datasetsCandidatEntretenuParZone!: {
     label?: string;
     data: number[];
     backgroundColor?: string;
   }[];
-  labelsSite!: string[];
+  @Input() labelsCandidatEntretenuParZone!: string[];
 
-  datasetsConcour!: {
+  @Input() datasetsCandidatEntretenuParSite!: {
     label?: string;
-    data: string[];
+    data: number[];
     backgroundColor?: string;
   }[];
-  labelsConcour!: string[];
+  @Input() labelsCandidatEntretenuParSite!: string[];
+
+  @Input() datasetsCandidatEntretenuParConcour!: {
+    label?: string;
+    data: number[];
+    backgroundColor?: string;
+  }[];
+  @Input() labelsCandidatEntretenuParConcour!: string[];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.datasetsSite = [{
-      data: [10, 20, 30]
-    }];
-    this.labelsSite = [
-      'Site 1',
-      'Site 2',
-      'Site 3'
-    ];
-
-    this.labels = ['Candidats'];
-    this.datasets = [
-      {
-        label: 'Zone 1',
-        data: ['467'],
-      },
-      {
-        label: 'Zone 2',
-        data: ['576'],
-      },
-      {
-        label: 'Zone 3',
-        data: ['572'],
-      },
-    ];
-
-    this.labelsConcour = ['Candidats'];
-    this.datasetsConcour = [
-      {
-        label: 'Concour 1: OP',
-        data: ['467'],
-      },
-      {
-        label: 'Concour 2: X',
-        data: ['576'],
-      },
-      {
-        label: 'Concour 3: IP',
-        data: ['572'],
-      },
-    ];
-
     this.createChartCandidatByConcour();
   }
 
@@ -89,8 +47,8 @@ export class JuryHomeComponent implements OnInit {
       type: 'bar', //this denotes tha type of chart
 
       data: {// values on X-Axis
-        labels: this.labelsConcour,
-        datasets: this.datasetsConcour
+        labels: this.labelsCandidatEntretenuParConcour,
+        datasets: this.datasetsCandidatEntretenuParConcour
       },
       options: {
         aspectRatio: 2.5

@@ -15,6 +15,7 @@ import { ExportExcelService } from 'src/app/shared/services/export-excel.service
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-gestion-admissibilite',
@@ -59,40 +60,6 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.page = 1;
     this.compte = this.storageService.getUserConnected();
     this.getZonesOfUser();
-    this.candidatures = [{
-      Lieu_de_naissance: "",
-      Date_naissance: "",
-      Nationalite: "",
-      Dernier_Etablissement: "",
-      tel_parents: "",
-      email_parents: "",
-      Formation1: "",
-      Formation2: "",
-      Formation3: "",
-      centre: "",
-      Paiement: "",
-      Reference_paiement: "",
-      Image: "",
-      telephone_paiement: "",
-      ville: "",
-      code_examen: 0,
-      nombre_choix: 0,
-      CompteID: 0,
-      cycle: Cycle.premier,
-      statut: Statut.En_Attente,
-      Genre: Genre.M,
-      langue: Langue.Francais,
-      compte: {
-        name: "Christian",
-        prenom: "kepya",
-        password: "",
-        email: "",
-        telephone: "",
-        role: Role.CANDIDAT,
-        idZone: 1,
-        id_disponibilite: 0,
-      }
-    }]
   }
 
   sort(property: string, candidatures: Candidature[] = this.candidatures) {
@@ -336,6 +303,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'zone';
     this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -358,6 +327,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'centre';
     this.candidatureSrv.allByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -380,6 +351,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'site';
     this.candidatureSrv.allBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -474,6 +447,43 @@ export class GestionAdmissibiliteComponent implements OnInit {
         console.log('error: ', err);
       }
     });
+  }
+
+
+  downloadAdmissibleCandidatureFile() {
+    this.candidatureSrv.downloadAdmissibleCandidatureFile().subscribe({
+      next: (value) => {
+        saveAs(value, 'liste_candidat_admissible.pdf');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  validateAdmissibilityOfCandidats(event: any, candidat: Candidature) {
+    if (event.target.checked) {
+      candidat.statut = Statut.Admissible;
+      this.candidatureSrv.update(candidat.CompteID, candidat).subscribe({
+        next: (value: Candidature) => {
+          if (this.actifOption == 'centre') {
+            this.getCandidaturesByCentre(this.centre.id ?? 0);
+          }
+
+          if (this.actifOption == 'site') {
+            this.getCandidaturesBySite(this.site.id ?? 0);
+          }
+
+
+          if (this.actifOption == 'zone') {
+            this.getCandidaturesByZone(this.zone.id ?? 0);
+          }
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
   }
 
 }
