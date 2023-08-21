@@ -14,6 +14,8 @@ export class JuryHomeComponent implements OnInit {
   public chart: any;
   @Input() statCandidatures!: StatCandidatures;
   @Input() session!: Session;
+  @Input() nextSession!: Session;
+  @Input() compteARebour!: number;
 
   @Input() datasetsCandidatEntretenuParZone!: {
     label?: string;

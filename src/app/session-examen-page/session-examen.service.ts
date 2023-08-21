@@ -28,6 +28,10 @@ export class SessionExamenService {
     return this.http.get<Session>(this.url + "active");
   }
 
+  public getNext(): Observable<Session> {
+    return this.http.get<Session>(this.url + "next");
+  }
+
   public create(session: Session): Observable<Session> {
     return this.http.post<Session>(this.url + "create", session);
   }

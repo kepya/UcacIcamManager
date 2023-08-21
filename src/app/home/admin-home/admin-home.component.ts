@@ -13,6 +13,8 @@ export class AdminHomeComponent implements OnInit {
   public chart: any;
   @Input() statCandidatures!: StatCandidatures;
   @Input() session!: Session;
+  @Input() nextSession!: Session;
+  @Input() compteARebour!: number;
 
   @Input() datasetsSite!: {
     label?: string;

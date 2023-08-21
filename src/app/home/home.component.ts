@@ -74,6 +74,8 @@ export class HomeComponent implements OnInit {
 
   statCandidatures!: StatCandidatures;
   session!: Session;
+  nextSession!: Session;
+  compteARebour!: number;
 
   compte!: Compte;
   constructor(private router: Router, private sessionSrv: SessionExamenService, private storageService: StorageService, private candidatureSrv: CandidatureService,) { }
@@ -86,7 +88,15 @@ export class HomeComponent implements OnInit {
 
     this.getStatistics();
     this.getSession();
+    this.getNextSession();
   }
+
+  daysBetween(date1: Date, date2: Date): number {
+    const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+    return diffInDays;
+  }
+
 
   getStatistics() {
     this.candidatureSrv.getStatistics().subscribe({
@@ -230,6 +240,18 @@ export class HomeComponent implements OnInit {
     this.sessionSrv.getActive().subscribe({
       next: (value: Session) => {
         this.session = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getNextSession() {
+    this.sessionSrv.getNext().subscribe({
+      next: (value: Session) => {
+        this.nextSession = value;
+        this.compteARebour = this.daysBetween(new Date(), value.date_debut);
       },
       error: (err) => {
         console.log('error: ', err);
