@@ -139,20 +139,20 @@ export class ListeCandidatureComponent implements OnInit {
     if (property === 'nationalite') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
+          if (a.nationalite > b.nationalite) {
             return 1;
           }
-          if (b.Nationalite > a.Nationalite) {
+          if (b.nationalite > a.nationalite) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
+          if (a.nationalite > b.nationalite) {
             return -1;
           }
-          if (b.Nationalite > a.Nationalite) {
+          if (b.nationalite > a.nationalite) {
             return 1;
           }
           return 0;
@@ -163,20 +163,20 @@ export class ListeCandidatureComponent implements OnInit {
     if (property === 'photo') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
+          if (a.image > b.image) {
             return 1;
           }
-          if (b.Image > a.Image) {
+          if (b.image > a.image) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
+          if (a.image > b.image) {
             return -1;
           }
-          if (b.Image > a.Image) {
+          if (b.image > a.image) {
             return 1;
           }
           return 0;
@@ -443,7 +443,7 @@ export class ListeCandidatureComponent implements OnInit {
   downloadCandidatureFile() {
     this.candidatureSrv.downloadCandidatureFile().subscribe({
       next: (value) => {
-        saveAs(value, 'liste_candidat.pdf');
+        saveAs(value, 'liste_candidat.xlsx');
       },
       error: (err) => {
         console.log('error: ', err);

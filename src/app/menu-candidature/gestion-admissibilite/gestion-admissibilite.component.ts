@@ -142,20 +142,20 @@ export class GestionAdmissibiliteComponent implements OnInit {
     if (property === 'nationalite') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
+          if (a.nationalite > b.nationalite) {
             return 1;
           }
-          if (b.Nationalite > a.Nationalite) {
+          if (b.nationalite > a.nationalite) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.Nationalite > b.Nationalite) {
+          if (a.nationalite > b.nationalite) {
             return -1;
           }
-          if (b.Nationalite > a.Nationalite) {
+          if (b.nationalite > a.nationalite) {
             return 1;
           }
           return 0;
@@ -166,20 +166,20 @@ export class GestionAdmissibiliteComponent implements OnInit {
     if (property === 'photo') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
+          if (a.image > b.image) {
             return 1;
           }
-          if (b.Image > a.Image) {
+          if (b.image > a.image) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.Image > b.Image) {
+          if (a.image > b.image) {
             return -1;
           }
-          if (b.Image > a.Image) {
+          if (b.image > a.image) {
             return 1;
           }
           return 0;
@@ -453,7 +453,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
   downloadAdmissibleCandidatureFile() {
     this.candidatureSrv.downloadAdmissibleCandidatureFile().subscribe({
       next: (value) => {
-        saveAs(value, 'liste_candidat_admissible.pdf');
+        saveAs(value, 'liste_candidat_admissible.xlsx');
       },
       error: (err) => {
         console.log('error: ', err);
@@ -464,7 +464,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
   validateAdmissibilityOfCandidats(event: any, candidat: Candidature) {
     if (event.target.checked) {
       candidat.statut = Statut.Admissible;
-      this.candidatureSrv.update(candidat.CompteID, candidat).subscribe({
+      this.candidatureSrv.update(candidat.compteID, candidat).subscribe({
         next: (value: Candidature) => {
           if (this.actifOption == 'centre') {
             this.getCandidaturesByCentre(this.centre.id ?? 0);
