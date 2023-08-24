@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
   statCandidatures!: StatCandidatures;
   session!: Session;
   nextSession!: Session;
-  compteARebour!: number;
+  compteARebour: number = 0;
 
   compte!: Compte;
   constructor(private router: Router, private sessionSrv: SessionExamenService, private storageService: StorageService, private candidatureSrv: CandidatureService,) { }
@@ -251,7 +251,9 @@ export class HomeComponent implements OnInit {
     this.sessionSrv.getNext().subscribe({
       next: (value: Session) => {
         this.nextSession = value;
-        this.compteARebour = this.daysBetween(new Date(), value.date_debut);
+        if (value != null) {
+          this.compteARebour = this.daysBetween(new Date(), value.date_debut);
+        }
       },
       error: (err) => {
         console.log('error: ', err);

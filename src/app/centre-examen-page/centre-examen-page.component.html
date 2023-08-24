@@ -67,10 +67,10 @@
                         </th>
                     </tr>
                     <tr *ngFor="let centre of centres">
-                        <td>{{centre.site.nom}}</td>
-                        <td>{{centre.nom}}</td>
-                        <td>{{centre.contacts}}</td>
-                        <td>{{centre.ville}}</td>
+                        <td>{{centre?.site?.nom}}</td>
+                        <td>{{centre?.nom}}</td>
+                        <td>{{centre?.contacts}}</td>
+                        <td>{{centre?.ville}}</td>
                         <td>
                             <button class="btn" (click)="updateCentre(centre)">
                                 <div>

@@ -2,7 +2,7 @@
     <div class="col-9">
         <section class="active_session">
             <p>
-                Section en cours: <strong> session de {{session.date_debut | date:'mmmm'}}</strong>
+                Section en cours: <strong>{{session.nom}}</strong>
             </p>
         </section>
         <section class="statistics">
@@ -44,7 +44,7 @@
                         Prochaine Session
                     </p>
                     <p class="value">
-                        {{nextSession.date_debut}}
+                        {{nextSession!= null ? (nextSession.date_debut | date) : 'Non defini'}}
                     </p>
                 </div>
                 <div class="information">
