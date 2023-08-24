@@ -30,11 +30,11 @@ export class CandidatureService {
   }
 
   public allAdmissibleByZone(idZone: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissiblebyzone/" + idZone);
+    return this.http.get<Candidature[]>(this.url + "admissiblebyzone/" + idZone);
   }
 
   public allAdmissByZone(idZone: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissbyzone/" + idZone);
+    return this.http.get<Candidature[]>(this.url + "admisbyzone/" + idZone);
   }
 
   public allByCentre(idCentre: number): Observable<Candidature[]> {
@@ -42,11 +42,11 @@ export class CandidatureService {
   }
 
   public allAdmissibleByCentre(idCentre: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissiblebycentreexamen/" + idCentre);
+    return this.http.get<Candidature[]>(this.url + "admissiblebycentreexamen/" + idCentre);
   }
 
   public allAdmissByCentre(idCentre: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissbycentreexamen/" + idCentre);
+    return this.http.get<Candidature[]>(this.url + "admisbycentreexamen/" + idCentre);
   }
 
   public allBySite(idSite: number): Observable<Candidature[]> {
@@ -54,11 +54,11 @@ export class CandidatureService {
   }
 
   public allAdmissibleBySite(idSite: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissibleBySite/" + idSite);
+    return this.http.get<Candidature[]>(this.url + "admissiblebysite/" + idSite);
   }
 
   public allAdmissBySite(idSite: number): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allAdmissBySite/" + idSite);
+    return this.http.get<Candidature[]>(this.url + "admisbysite/" + idSite);
   }
 
   public getOne(id: number): Observable<Candidature> {
