@@ -78,15 +78,15 @@ export class CandidatureService {
   }
 
   public downloadAdmissibleCandidatureFileByZone(idZone: number) {
-    return this.http.get(this.url + 'candidature/download/admissiblebyzone/' + idZone, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admissiblebyzone/' + idZone, { responseType: 'blob' });
   }
 
   public downloadAdmissibleCandidatureFileByCentre(idCentre: number) {
-    return this.http.get(this.url + 'candidature/download/admissiblebycentreexamen/' + idCentre, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admissiblebycentreexamen/' + idCentre, { responseType: 'blob' });
   }
 
   public downloadAdmissibleCandidatureFileBySite(idSite: number) {
-    return this.http.get(this.url + 'candidature/download/admissiblebysite/' + idSite, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admissiblebysite/' + idSite, { responseType: 'blob' });
   }
 
   public downloadAdmissCandidatureFile() {
@@ -94,15 +94,15 @@ export class CandidatureService {
   }
 
   public downloadAdmisCandidatureFileByZone(idZone: number) {
-    return this.http.get(this.url + 'candidature/download/admisbyzone/' + idZone, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admisbyzone/' + idZone, { responseType: 'blob' });
   }
 
   public downloadAdmisCandidatureFileByCentre(idCentre: number) {
-    return this.http.get(this.url + 'candidature/download/admisbycentreexamen/' + idCentre, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admisbycentreexamen/' + idCentre, { responseType: 'blob' });
   }
 
   public downloadAdmisCandidatureFileBySite(idSite: number) {
-    return this.http.get(this.url + 'candidature/download/admisbyste/' + idSite, { responseType: 'blob' });
+    return this.http.get(this.url + 'download/admisbyste/' + idSite, { responseType: 'blob' });
   }
 
   public delete(idCandidature: number): Observable<void> {
