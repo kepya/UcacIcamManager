@@ -441,20 +441,46 @@ export class GestionAdmisComponent implements OnInit {
   }
 
   downloadAdmissCandidatureFile() {
-    this.candidatureSrv.downloadAdmissCandidatureFile().subscribe({
-      next: (value) => {
-        saveAs(value, 'liste_candidat_admiss.xlsx');
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
+    if (this.actifOption == 'centre') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByCentre(this.centre.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_centre_' + this.centre.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+    if (this.actifOption == 'site') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileBySite(this.site.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_site_' + this.site.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByZone(this.zone.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_zone_' + this.zone.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
   }
+
 
   validateCandidats(event: any, candidat: Candidature) {
     if (event.target.checked) {
       candidat.statut = Statut.Admis;
-      this.candidatureSrv.update(candidat.compteID, candidat).subscribe({
+      this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
           if (this.actifOption == 'centre') {
             this.getCandidaturesByCentre(this.centre.id ?? 0);

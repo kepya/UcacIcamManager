@@ -77,8 +77,32 @@ export class CandidatureService {
     return this.http.get(this.url + 'candidatures/download', { responseType: 'blob' });
   }
 
+  public downloadAdmissibleCandidatureFileByZone(idZone: number) {
+    return this.http.get(this.url + 'candidature/download/admissiblebyzone/' + idZone, { responseType: 'blob' });
+  }
+
+  public downloadAdmissibleCandidatureFileByCentre(idCentre: number) {
+    return this.http.get(this.url + 'candidature/download/admissiblebycentreexamen/' + idCentre, { responseType: 'blob' });
+  }
+
+  public downloadAdmissibleCandidatureFileBySite(idSite: number) {
+    return this.http.get(this.url + 'candidature/download/admissiblebysite/' + idSite, { responseType: 'blob' });
+  }
+
   public downloadAdmissCandidatureFile() {
     return this.http.get(this.url + 'candidatures/download', { responseType: 'blob' });
+  }
+
+  public downloadAdmisCandidatureFileByZone(idZone: number) {
+    return this.http.get(this.url + 'candidature/download/admisbyzone/' + idZone, { responseType: 'blob' });
+  }
+
+  public downloadAdmisCandidatureFileByCentre(idCentre: number) {
+    return this.http.get(this.url + 'candidature/download/admisbycentreexamen/' + idCentre, { responseType: 'blob' });
+  }
+
+  public downloadAdmisCandidatureFileBySite(idSite: number) {
+    return this.http.get(this.url + 'candidature/download/admisbyste/' + idSite, { responseType: 'blob' });
   }
 
   public delete(idCandidature: number): Observable<void> {

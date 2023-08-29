@@ -13,6 +13,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/site-page/site.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-liste-admis',
@@ -374,6 +375,43 @@ export class ListeAdmisComponent implements OnInit {
         console.log('error: ', err);
       }
     });
+  }
+
+
+  downloadAdmissCandidatureFile() {
+    if (this.actifOption == 'centre') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByCentre(this.centre.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_centre_' + this.centre.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+    if (this.actifOption == 'site') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileBySite(this.site.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_site_' + this.site.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByZone(this.zone.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admiss_zone_' + this.zone.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
   }
 
 }

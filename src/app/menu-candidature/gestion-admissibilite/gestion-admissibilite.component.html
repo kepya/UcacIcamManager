@@ -124,11 +124,11 @@
                     <tr *ngFor="let candidature of candidatures">
                         <td><input class="checkbox" type="checkbox" name="validate"
                                 (change)="validateAdmissibilityOfCandidats($event, candidature)" /></td>
-                        <td>{{candidature.code_examen}}</td>
-                        <td>{{candidature.cycle}}</td>
-                        <td>{{candidature.centre}}</td>
-                        <td>{{candidature.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
-                        <td>{{candidature.statut}}</td>
+                        <td>{{candidature?.code_examen}}</td>
+                        <td>{{candidature?.cycle}}</td>
+                        <td>{{candidature?.centre}}</td>
+                        <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
+                        <td>{{candidature?.statut}}</td>
                         <td>{{"20"}}</td>
                         <td>{{"20"}}</td>
                         <td>{{"16"}}</td>

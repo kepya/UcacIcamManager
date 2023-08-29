@@ -1,6 +1,6 @@
 export enum Statut {
-    Echec,
-    En_Attente,
-    Admissible,
-    Admis
+    Echec = "Echec",
+    En_Attente = "En_Attente",
+    Admissible = "Admissible",
+    Admis = "Admis"
 }

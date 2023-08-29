@@ -304,16 +304,21 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
         value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
-
+        console.log('candidatures: ', value);
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
+
         this.candidatures = value
           .map((mis, i) => ({ id: i + 1, ...mis }))
           .slice(
             (this.page - 1) * this.pageSize,
             (this.page - 1) * this.pageSize + this.pageSize
           );
+
+        console.log('c: ', value);
+        console.log('candidatures: ', value);
+
         this.collectionSize = value.length;
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
@@ -451,20 +456,47 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
 
   downloadAdmissibleCandidatureFile() {
-    this.candidatureSrv.downloadAdmissibleCandidatureFile().subscribe({
-      next: (value) => {
-        saveAs(value, 'liste_candidat_admissible.xlsx');
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
+    if (this.actifOption == 'centre') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByCentre(this.centre.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admissible_centre_' + this.centre.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+    if (this.actifOption == 'site') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileBySite(this.site.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admissible_site_' + this.site.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+
+    if (this.actifOption == 'zone') {
+      this.candidatureSrv.downloadAdmissibleCandidatureFileByZone(this.zone.id ?? 0).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_admissible_zone_' + this.zone.id + '.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
   }
 
   validateAdmissibilityOfCandidats(event: any, candidat: Candidature) {
+    console.log(candidat);
+
     if (event.target.checked) {
       candidat.statut = Statut.Admissible;
-      this.candidatureSrv.update(candidat.compteID, candidat).subscribe({
+      this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
           if (this.actifOption == 'centre') {
             this.getCandidaturesByCentre(this.centre.id ?? 0);
