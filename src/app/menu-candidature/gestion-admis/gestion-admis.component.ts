@@ -15,6 +15,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
 import { saveAs } from "file-saver";
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-gestion-admis',
@@ -23,7 +24,7 @@ import { saveAs } from "file-saver";
   ]
 })
 export class GestionAdmisComponent implements OnInit {
-
+  admisCandidats: Candidature[] = [];
   candidatures: Candidature[] = [];
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
@@ -49,7 +50,9 @@ export class GestionAdmisComponent implements OnInit {
 
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
     private siteSrv: SiteService, private exportExcelService: ExportExcelService,
-    private centreSrv: CentreExamenService, private zoneService: ZoneService) { }
+    private centreSrv: CentreExamenService, private zoneService: ZoneService,
+    private messageService: MessageService, private confirmationService: ConfirmationService,
+  ) { }
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -479,9 +482,24 @@ export class GestionAdmisComponent implements OnInit {
 
   validateCandidats(event: any, candidat: Candidature) {
     if (event.target.checked) {
+      this.admisCandidats.push(candidat);
+    } else {
+      let index = this.admisCandidats.findIndex(c => c.id == candidat.id);
+      if (index > -1) {
+        this.admisCandidats.splice(index);
+      }
+    }
+  }
+
+
+  validateAdmisCandidats() {
+    for (let index = 0; index < this.admisCandidats.length; index++) {
+      const candidat = this.admisCandidats[index];
       candidat.statut = Statut.Admis;
       this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
+          this.messageService.add({ severity: 'success', summary: 'Passé en admis', detail: 'Le candidat ' + candidat.compte.name + ' est passé en admis' });
+
           if (this.actifOption == 'centre') {
             this.getCandidaturesByCentre(this.centre.id ?? 0);
           }
@@ -500,6 +518,23 @@ export class GestionAdmisComponent implements OnInit {
         }
       });
     }
+
+  }
+
+  confirm(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.validateAdmisCandidats();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la validation' });
+      }
+    });
   }
 
 }

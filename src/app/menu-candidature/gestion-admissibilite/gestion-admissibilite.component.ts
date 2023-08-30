@@ -16,6 +16,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
 import { saveAs } from "file-saver";
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-gestion-admissibilite',
@@ -26,6 +27,7 @@ import { saveAs } from "file-saver";
 export class GestionAdmissibiliteComponent implements OnInit {
 
   candidatures: Candidature[] = [];
+  admissiblesCandidats: Candidature[] = [];
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
   loading: boolean = false;
@@ -50,7 +52,9 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
     private siteSrv: SiteService, private exportExcelService: ExportExcelService,
-    private centreSrv: CentreExamenService, private zoneService: ZoneService) { }
+    private centreSrv: CentreExamenService, private zoneService: ZoneService,
+    private messageService: MessageService, private confirmationService: ConfirmationService,
+  ) { }
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -492,12 +496,24 @@ export class GestionAdmissibiliteComponent implements OnInit {
   }
 
   validateAdmissibilityOfCandidats(event: any, candidat: Candidature) {
-    console.log(candidat);
-
     if (event.target.checked) {
+      this.admissiblesCandidats.push(candidat);
+    } else {
+      let index = this.admissiblesCandidats.findIndex(c => c.id == candidat.id);
+      if (index > -1) {
+        this.admissiblesCandidats.splice(index);
+      }
+    }
+  }
+
+  validateAdmissibleCandidats() {
+    for (let index = 0; index < this.admissiblesCandidats.length; index++) {
+      const candidat = this.admissiblesCandidats[index];
       candidat.statut = Statut.Admissible;
       this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
+          this.messageService.add({ severity: 'success', summary: 'Passé en admissible', detail: 'Le candidat ' + candidat.compte.name + ' est passé en admissible' });
+
           if (this.actifOption == 'centre') {
             this.getCandidaturesByCentre(this.centre.id ?? 0);
           }
@@ -516,6 +532,22 @@ export class GestionAdmissibiliteComponent implements OnInit {
         }
       });
     }
+
   }
 
+  confirm(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.validateAdmissibleCandidats();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la validation' });
+      }
+    });
+  }
 }

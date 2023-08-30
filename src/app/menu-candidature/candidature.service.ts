@@ -22,7 +22,7 @@ export class CandidatureService {
   }
 
   public update(idCandidature: number, candidat: Candidature): Observable<Candidature> {
-    return this.http.put<Candidature>(this.url + "candidats/update/" + idCandidature, candidat);
+    return this.http.patch<Candidature>(this.url + "candidats/update/" + idCandidature, candidat);
   }
 
   public allByZone(idZone: number): Observable<Candidature[]> {

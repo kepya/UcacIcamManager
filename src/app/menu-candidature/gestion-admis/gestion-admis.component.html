@@ -4,10 +4,16 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des candidatures et notes entretiens</h3>
-            <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
-                <!-- <input type="file" name="" id="" #file hidden> -->
-                Exporter la liste des canditats
-            </button>
+            <div>
+                <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
+                    <!-- <input type="file" name="" id="" #file hidden> -->
+                    Exporter la liste des canditats
+                </button>
+                &nbsp;
+                <button class="btn btn-primary" (click)="confirm($event)">
+                    valider
+                </button>
+            </div>
         </div>
         <div class="line"></div>
 
@@ -203,4 +209,8 @@
         </div>
     </div>
 
+    <div class="card flex justify-content-center gap-2">
+        <p-toast></p-toast>
+        <p-confirmPopup></p-confirmPopup>
+    </div>
 </section>
