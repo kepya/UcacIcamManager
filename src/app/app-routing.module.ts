@@ -50,6 +50,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-candidature/gestion-admissibilite/gestion-admissibilite.module').then(s => s.GestionAdmissibiliteModule),
   },
   {
+    path: 'gestion_solvabilite',
+    data: { title: `Candidature` },
+    loadChildren: () => import('./menu-candidature/gestion-solvable/gestion-solvable.module').then(s => s.GestionSolvableModule),
+  },
+  {
     path: 'gestion_admis',
     data: { title: `Candidature` },
     loadChildren: () => import('./menu-candidature/gestion-admis/gestion-admis.module').then(s => s.GestionAdmisModule),
@@ -58,6 +63,11 @@ const routes: Routes = [
     path: 'liste_admissibilite',
     data: { title: `Liste admissibilite` },
     loadChildren: () => import('./menu-liste/liste-admissibilite/liste-admissibilite.module').then(s => s.ListeAdmissibiliteModule),
+  },
+  {
+    path: 'liste_solvable',
+    data: { title: `Liste solvable` },
+    loadChildren: () => import('./menu-liste/liste-solvable/liste-solvable.module').then(s => s.ListeSolvableModule),
   },
   {
     path: 'liste_admis',

@@ -44,4 +44,5 @@ export class Candidature {
     langue!: Langue;
     compte!: Compte;
     candidatureActif?: boolean;
+    solvable?: boolean;
 }

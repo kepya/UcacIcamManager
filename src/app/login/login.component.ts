@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     var oldToken = this.storageService.getUserTokenConnected();
 
     if (this.tokenService.isLogged()) {
-      this.router.navigate(['/zones']);
+      this.router.navigate(['/home']);
     } else if (oldToken == undefined || oldToken == null) {
       this.storageService.clear();
     }
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
             next: (compte: Compte) => {
               this.authService.isLogin.next(true);
               this.storageService.storeUserConnected(compte);
-              this.router.navigate(['/zones']);
+              this.router.navigate(['/home']);
               this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec success' });
             },
             error: (err) => {

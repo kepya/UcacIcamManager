@@ -122,16 +122,16 @@ export class HomeComponent implements OnInit {
 
           if (this.isJury) {
             dataEntretenu.push(element.nbEntretenus);
-            labelsEntretenu.push(element.site.nom);
+            labelsEntretenu.push(element.site?.nom || ' ');
             data1Entretenu.push({
-              label: element.site.nom,
+              label: element.site?.nom || ' ',
               data: [element.nbEntretenus]
             });
           } else {
             data.push(element.nbCandidats);
-            labels.push(element.site.nom);
+            labels.push(element.site?.nom || ' ');
             data1.push({
-              label: element.site.nom,
+              label: element.site?.nom || ' ',
               data: [element.nbCandidats]
             });
           }
@@ -162,16 +162,16 @@ export class HomeComponent implements OnInit {
 
           if (this.isJury) {
             dataEntretenu.push(element.nbEntretenus);
-            labelsEntretenu.push(element.zone.nom);
+            labelsEntretenu.push(element.zone?.nom || ' ');
             data1Entretenu.push({
-              label: element.zone.nom,
+              label: element.zone?.nom || ' ',
               data: [element.nbEntretenus]
             });
           } else {
             data.push(element.nbCandidats);
-            labels.push(element.zone.nom);
+            labels.push(element.zone?.nom || ' ');
             data1.push({
-              label: element.zone.nom,
+              label: element.zone?.nom || ' ',
               data: [element.nbCandidats]
             });
           }
