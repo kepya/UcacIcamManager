@@ -1,0 +1,9 @@
+@use "../abstracts/index" as *;
+
+.zone-page {
+    @include flex-column;
+    height: 100%;
+
+    .card {
+    }
+}

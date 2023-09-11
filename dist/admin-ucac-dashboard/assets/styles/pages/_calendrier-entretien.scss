@@ -1,0 +1,11 @@
+@use "../abstracts/index" as *;
+
+.calendrier-entretien-page {
+    & > .card {
+        & > .sub-header {
+        }
+
+        & > .calendrier {
+        }
+    }
+}
