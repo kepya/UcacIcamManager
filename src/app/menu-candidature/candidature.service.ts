@@ -30,7 +30,7 @@ export class CandidatureService {
   }
 
   public allSolvableByZone(idZone: number, solvable: boolean): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allbysolvabiitezone/" + idZone + '/' + solvable);
+    return this.http.get<Candidature[]>(this.url + "allbysolvabilitezone/" + idZone + '/' + solvable);
   }
 
   public allAdmissibleByZone(idZone: number): Observable<Candidature[]> {
@@ -46,7 +46,7 @@ export class CandidatureService {
   }
 
   public allSolvableByCentre(idCentre: number, solvable: boolean): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allbysolvabiitecentreexamen/" + idCentre + '/' + solvable);
+    return this.http.get<Candidature[]>(this.url + "allbysolvabilitecentreexamen/" + idCentre + '/' + solvable);
   }
 
   public allAdmissibleByCentre(idCentre: number): Observable<Candidature[]> {
@@ -62,7 +62,7 @@ export class CandidatureService {
   }
 
   public allSolvableBySite(idSite: number, solvable: boolean): Observable<Candidature[]> {
-    return this.http.get<Candidature[]>(this.url + "allbysolvabiitesite/" + idSite + '/' + solvable);
+    return this.http.get<Candidature[]>(this.url + "allbysolvabilitesite/" + idSite + '/' + solvable);
   }
 
   public allAdmissibleBySite(idSite: number): Observable<Candidature[]> {
