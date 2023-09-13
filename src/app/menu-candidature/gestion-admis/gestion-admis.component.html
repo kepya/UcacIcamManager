@@ -39,19 +39,20 @@
                             <option value="zone">Zone</option>
                         </select>
 
-                        <select [(ngModel)]="zone" class="form form-control"
-                            *ngIf="searchOption && searchOption == 'zone'" (change)="handleZoneSelect($event)">
-                            <option [value]="zone" *ngFor="let zone of zones">{{zone.nom}}</option>
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'zone'"
+                            (change)="handleZoneSelect($event)">
+                            <option [value]="">Select zones</option>
+                            <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
                         </select>
 
-                        <select [(ngModel)]="site" class="form form-control"
-                            *ngIf="searchOption && searchOption == 'site'" (change)="handleSiteSelect($event)">
-                            <option [value]="site" *ngFor="let site of sites">{{site.nom}}</option>
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'site'"
+                            (change)="handleSiteSelect($event)">
+                            <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
                         </select>
 
-                        <select [(ngModel)]="centre" class="form form-control"
-                            *ngIf="searchOption && searchOption == 'centre'" (change)="handleCentreSelect($event)">
-                            <option [value]="centre" *ngFor="let centre of centres">{{centre.nom}}</option>
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'centre'"
+                            (change)="handleCentreSelect($event)">
+                            <option [value]="centre.id" *ngFor="let centre of centres">{{centre.nom}}</option>
                         </select>
                     </div>
 

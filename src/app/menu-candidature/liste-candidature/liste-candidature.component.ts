@@ -216,10 +216,6 @@ export class ListeCandidatureComponent implements OnInit {
     }
   }
 
-  handleCentreSelect(event: any) {
-    this.getCandidaturesByCentre(this.centre.id ?? 0);
-  }
-
   handleCategorieSelect(event: any) {
     if (this.compte.role == Role.SUPER_ADMIN) {
       if (event.target.value == 'centre') {
@@ -233,12 +229,20 @@ export class ListeCandidatureComponent implements OnInit {
   }
 
   handleZoneSelect(event: any) {
-    this.getCandidaturesByZone(this.zone.id ?? 0);
+    this.zone = this.zones.find(s => s.id == event.target.value) as unknown as Zone;
+    this.getCandidaturesByZone(event.target.value ?? 0);
+  }
+
+  handleCentreSelect(event: any) {
+    this.centre = this.centres.find(s => s.id == event.target.value) as unknown as Centre;
+    this.getCandidaturesByCentre(event.target.value ?? 0);
   }
 
   handleSiteSelect(event: any) {
-    this.getCandidaturesBySite(this.site.id ?? 0);
+    this.site = this.sites.find(s => s.id == event.target.value) as unknown as Site;
+    this.getCandidaturesBySite(event.target.value ?? 0);
   }
+
 
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
