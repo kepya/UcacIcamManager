@@ -12,9 +12,11 @@ import { Role } from "../enums/role.enum";
 })
 export class CompteService {
   url = '';
+  url1 = '';
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService, private storageService: StorageService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.accountPath}`;
+    this.url1 = this.url;
     this.url += 'api/';
     // this.url += 'compte/';
   }
@@ -44,7 +46,7 @@ export class CompteService {
   }
 
   public create(compte: Compte): Observable<Compte> {
-    return this.http.post<Compte>(this.url + "compte", compte);
+    return this.http.post<Compte>(this.url1 + "register", compte);
     // return this.http.post<Compte>(this.url + "create", compte);
   }
 

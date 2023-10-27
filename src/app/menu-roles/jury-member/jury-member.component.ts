@@ -30,7 +30,7 @@ export class JuryMemberComponent implements OnInit {
 
   formCompte: FormGroup = new FormGroup({
     prenom: new FormControl('', [Validators.required]),
-    nom: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     confirm_password: new FormControl('', [Validators.required]),
@@ -40,7 +40,7 @@ export class JuryMemberComponent implements OnInit {
   constructor(private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.sortProperty = "nom";
+    this.sortProperty = "name";
     this.sortIcon = "fa-solid fa-arrow-down-short-wide";
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
@@ -54,7 +54,7 @@ export class JuryMemberComponent implements OnInit {
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
 
-    if (property === 'nom') {
+    if (property === 'name') {
       if (this.isAsc) {
         comptes.sort((a, b) => {
           if (a.name > b.name) {
@@ -198,7 +198,7 @@ export class JuryMemberComponent implements OnInit {
   getComptes() {
     this.compteSrv.findByRole(Role.JURY).subscribe({
       next: (response: Compte[]) => {
-        let value = this.sort('nom', response);
+        let value = this.sort('name', response);
         this.searchComptes = [];
         this.searchComptes = value;
         this.comptes = value;
@@ -223,7 +223,7 @@ export class JuryMemberComponent implements OnInit {
     this.isFormCompte = true;
     this.compte = compte;
     this.formCompte.setValue({
-      nom: compte.name,
+      name: compte.name,
       prenom: compte.prenom,
       telephone: compte.telephone,
       email: compte.email
@@ -232,7 +232,7 @@ export class JuryMemberComponent implements OnInit {
 
   createOrUpdateCompte() {
     if (this.compte?.id || 0 > 0) {
-      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id }).subscribe({
+      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id, role: Role.JURY }).subscribe({
         next: (value) => {
           this.getComptes();
           this.compte = new Compte();

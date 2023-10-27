@@ -231,7 +231,7 @@ export class AdministrateurComponent implements OnInit {
 
   createOrUpdateCompte() {
     if (this.compte?.id || 0 > 0) {
-      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id }).subscribe({
+      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id, role: Role.ADMIN }).subscribe({
         next: (value) => {
           this.getComptes();
           this.compte = new Compte();
@@ -250,7 +250,7 @@ export class AdministrateurComponent implements OnInit {
           this.getComptes();
           this.compte = new Compte();
           this.formCompte.reset();
-          this.messageService.add({ severity: 'success', summary: 'Création de compte jury', detail: 'Création effectuée avec success' });
+          this.messageService.add({ severity: 'success', summary: 'Création de compte administrateur', detail: 'Création effectuée avec success' });
 
           this.isFormCompte = false;
         },
