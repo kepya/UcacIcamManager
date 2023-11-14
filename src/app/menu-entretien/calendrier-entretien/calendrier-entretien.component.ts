@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Session } from 'inspector';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Disponibility } from 'src/app/shared/models/entretient';
+import { Note } from 'src/app/shared/models/note';
+import { NoteService } from 'src/app/shared/services/note.service';
 
 @Component({
   selector: 'app-calendrier-entretien',
@@ -46,7 +49,7 @@ export class CalendrierEntretienComponent implements OnInit {
   currentDate!: Date;
   dates: number[] = [];
 
-  constructor() { }
+  constructor(private noteService: NoteService) { }
 
   ngOnInit(): void {
     this.currentDate = new Date();
@@ -54,14 +57,14 @@ export class CalendrierEntretienComponent implements OnInit {
   }
 
   getEntretiens() {
-    // this.entretienSrv.listeEntretien().subscribe({
-    //   next: (value: any[]) => {
-    //     this.entretiens = value;
-    //   },
-    //   error: (err) => {
-    //     console.log('error: ', err);
-    //   }
-    // });
+    this.noteService.liste().subscribe({
+      next: (value: Note[]) => {
+
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 
   prochaineDate() {
