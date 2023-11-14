@@ -3,13 +3,13 @@
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Entretiens concours</h3>
+            <h3 class="title">Calendrier final des entretiens</h3>
         </div>
         <div class="line"></div>
 
         <div class="sub-header">
             <h3 class="title">Entretiens concours Ucac-Icam</h3>
-            <h3 class="title">{{currentDate | date}}</h3>
+            <h3 class="title" *ngIf="currentDate">{{currentDate | date}}</h3>
         </div>
 
         <div class="calendrier">
@@ -18,8 +18,8 @@
                     <th>Horaire</th>
                     <th>Centre d'examen</th>
                     <th>Noms</th>
-                    <th>Prénoms</th>
-                    <th>Interviewer</th>
+                    <th>Prénom</th>
+                    <th>Intervenants</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let entretien of entretiens; let i = index">

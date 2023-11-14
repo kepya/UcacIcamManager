@@ -13,7 +13,7 @@
                 <th>Horaire</th>
                 <th *ngFor="let date of datesOfDisponibilities">{{date | date}}</th>
             </thead>
-            <tbody>
+            <tbody *ngIf="datesOfDisponibilities.length > 0">
                 <tr *ngFor="let horaire of horaires">
                     <td>{{horaire}} </td>
                     <td *ngFor="let date of datesOfDisponibilities"
@@ -24,13 +24,18 @@
                     </td>
                 </tr>
             </tbody>
+            <tbody *ngIf="datesOfDisponibilities.length == 0">
+                <tr>
+                    <td>Aucun membre du jury n'a encore de periode disponible pour les entretiens</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
     <div class="card">
         <div class="header">
             <h3 class="title">Entretiens concours, session du {{session?.date_examen | date}}</h3>
-            <button class="btn btn-danger" (click)="prochaineDate()" *ngIf="datesOfDisponibilities.length > 1">
+            <button class="btn btn-danger" (click)="prochaineDate()" *ngIf="datesOfEntretiens.length > 1">
                 Prochaine Date
             </button>
         </div>
@@ -38,7 +43,7 @@
 
         <div class="sub-header">
             <h3 class="title">Entretiens concours Ucac-Icam</h3>
-            <h3 class="title" *ngIf="currentDate != undefined && currentDate != null">{{currentDate | date}}</h3>
+            <h3 class="title" *ngIf="currentDate">{{currentDate | date}}</h3>
         </div>
 
         <div class="calendrier" *ngIf="currentDate != undefined && currentDate != null">
@@ -48,7 +53,7 @@
                     <th>Centre d'examen</th>
                     <th>Noms</th>
                     <th>Prénoms</th>
-                    <th>Interviewer</th>
+                    <th>Intervenant</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let time of entretienTimes; let i = index">

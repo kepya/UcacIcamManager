@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Note } from '../models/note';
+import { Note, NoteRequest } from '../models/note';
 import { BaseUrlService } from './base-url.service';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class NoteService {
     return this.http.get<Note>(this.url + id);
   }
 
-  public create(note: Note): Observable<Note> {
+  public create(note: NoteRequest): Observable<Note> {
     return this.http.post<Note>(this.url + "create", note);
   }
 

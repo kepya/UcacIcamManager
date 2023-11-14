@@ -8,7 +8,6 @@ import { Cycle } from 'src/app/shared/enums/cycle.enum';
 import { Genre } from 'src/app/shared/enums/genre.enum';
 import { Langue } from 'src/app/shared/enums/langue.enum';
 import { Statut } from 'src/app/shared/enums/statut.enum';
-import { candidats } from 'src/app/shared/mocks/mock';
 import { Note } from 'src/app/shared/models/note';
 import { CandidatureService } from 'src/app/menu-candidature/candidature.service';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -46,8 +45,9 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     "16h00 - 16h30",
   ];
   interviewers: string[] = [];
-
+  indexCurrentDate: number = 0;
   datesOfDisponibilities: number[] = [];
+  datesOfEntretiens: Date[] = [];
   currentDate!: Date;
   horaires: string[] = []
 
@@ -72,29 +72,49 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.sessionSrv.getActive().subscribe({
       next: (value) => {
         this.session = value;
+
+        let d = new Date(this.session.date_debut_entretien!);
+        let d2 = new Date(this.session.date_fin_entretien!);
+
+        this.datesOfEntretiens = this.genererDates(d.getTime(), d2.getTime());
+
+        this.indexCurrentDate = 0;
+        this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
       },
     })
+  }
+
+  calculerJours(dateDebut: number, dateFin: number) {
+    // Calculer la différence en millisecondes
+    var differenceMs = Math.abs(dateFin - dateDebut);
+
+    // Convertir en jours
+    var jours = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+    return jours;
+  }
+
+  genererDates(dateDebut: number, dateFin: number): Date[] {
+    let nbreJr = this.calculerJours(dateDebut, dateFin);
+    console.log("Nombre de jours : " + nbreJr);
+    var dates = [];
+    let date = new Date(dateDebut);
+
+    for (let index = 0; index < nbreJr; index++) {
+      date.setDate(date.getDate() + index);
+      dates.push(new Date(date));
+    }
+
+    return dates;
   }
 
   getCandidatures() {
     this.candidatureSrv.liste().subscribe({
       next: (candidatures) => {
-        console.log('candidatures: ', candidatures);
         this.candidats = candidatures;
       }
     })
   }
-
-  // getJuryComptes() {
-  //   this.compteSrv.findByRole(Role.JURY).subscribe({
-  //     next: (value: Compte[]) => {
-  //       this.juries = value;
-  //     },
-  //     error: (err) => {
-  //       console.log('error: ', err);
-  //     }
-  //   });
-  // }
 
   getCompteDisponibilite() {
     this.compteDisponibiliteService.liste().subscribe({
@@ -135,12 +155,10 @@ export class CalendrierDisponibiliteComponent implements OnInit {
           this.interverwerMap.set(horaire + ' - ' + d, names);
         }
 
-
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];
         this.datesOfDisponibilities.sort();
 
-        this.currentDate = new Date(this.datesOfDisponibilities[0]);
         this.interviewers = [...new Set(intervenants)];
       }
     })
@@ -154,7 +172,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     note.debut_entretien = new Date(dates.startDate);
     note.fin_entretien = new Date(dates.endDate);
 
-    let candidat = candidats.find(c => c.compte.email == candidatEmail)
+    let candidat = this.candidats.find(c => c.compte.email == candidatEmail)
+
     note.candidature_id = candidat!.id || 0;
     note.candidature = candidat;
 
@@ -195,9 +214,20 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   addNote() {
+    console.log('entretienNoteMap: ', this.entretienNoteMap);
+
     this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
+      console.log('map: ', map);
+      console.log('\n');
+
       let note: Note = value;
-      this.noteService.create(note).subscribe({
+      this.noteService.create({
+        candidature_id: value.candidature_id,
+        compte_id: value.candidature!.compte.id || 0,
+        debut_entretien: value.debut_entretien,
+        fin_entretien: value.fin_entretien,
+        note: 0,
+      }).subscribe({
         next: (value) => {
           this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + note.compte?.name + ' ' + note.compte?.prenom + ' à ' + note.candidature?.compte.name + ' ' + note.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
         },
@@ -207,14 +237,12 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         }
       })
     });
-    this.router.navigate(['/calendrier_entretiens']);
+    // this.router.navigate(['/calendrier_entretiens']);
   }
 
   prochaineDate() {
-    let index = this.datesOfDisponibilities.findIndex(d => d == this.currentDate.getTime());
-    if (index > -1) {
-      this.currentDate = new Date(this.datesOfDisponibilities[index >= (this.datesOfDisponibilities.length - 1) ? 0 : (index + 1)]);
-    }
+    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
+    this.indexCurrentDate = this.indexCurrentDate + 1;
   }
 
   reset() {

@@ -5,10 +5,18 @@
             <h3 class="title">Période des entretiens
             </h3>
         </div>
-        <div class="line"></div>
+        <!-- <div class="line"></div> -->
         <form class="form" [formGroup]="formDisponibility" (ngSubmit)="createDisponibility()">
             <div class="header">
                 Veullez remplir les champs suivants
+                <ul style="margin-bottom: 1em;margin-left: 3em;">
+                    <li>
+                        Date début correspond à la date de début des entretiens.
+                    </li>
+                    <li>
+                        Date fin correspond à la date de fin des entretiens.
+                    </li>
+                </ul>
                 <div class="line"></div>
             </div>
             <div class="main">
@@ -31,7 +39,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="">Date de début *</label>
-                        <input type="datetime-local" formControlName="debut_disponibilite" id=""
+                        <input type="date" formControlName="debut_disponibilite" id=""
                             [ngClass]="{required: formDisponibility.get('debut_disponibilite')!.invalid}" />
                     </div>
                     <div class="alert" *ngIf="formDisponibilityControl['debut_disponibilite'].errors">
@@ -44,7 +52,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="">Date de fin *</label>
-                        <input type="datetime-local" [value]="formDisponibility.get('fin_disponibilite')?.value"
+                        <input type="date" [value]="formDisponibility.get('fin_disponibilite')?.value"
                             formControlName="fin_disponibilite" id=""
                             [ngClass]="{required: formDisponibility.get('fin_disponibilite')!.invalid}" />
                     </div>

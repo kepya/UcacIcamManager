@@ -61,7 +61,7 @@ export class PeriodeEntretienComponent implements OnInit {
 
       this.sessionSrv.updateForEntretien({ ...session }).subscribe({
         next: (value) => {
-          this.messageService.add({ severity: 'success', summary: 'Modification de session', detail: 'Modification effectuée avec success' });
+          this.messageService.add({ severity: 'success', summary: 'Modification de session', detail: 'Modification de la période des entretiens effectuée avec success' });
           this.disponibility = new Disponibility();
           this.formDisponibility.reset();
         },
