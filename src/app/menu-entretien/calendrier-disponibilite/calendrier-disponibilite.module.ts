@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CalendrierDisponibiliteRoutingModule } from './calendrier-disponibilite-routing.module';
 import { CalendrierDisponibiliteComponent } from './calendrier-disponibilite.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     CalendrierDisponibiliteRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DropdownModule
   ]
 })
 export class CalendrierDisponibiliteModule { }

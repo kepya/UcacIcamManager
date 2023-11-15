@@ -165,14 +165,14 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   handleCandidatSelect(event: any, time: string) {
-    let candidatEmail = event.target.value;
+    let candidat = event.value;
     let note: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);
     note.debut_entretien = new Date(dates.startDate);
     note.fin_entretien = new Date(dates.endDate);
 
-    let candidat = this.candidats.find(c => c.compte.email == candidatEmail)
+    // let candidat = this.candidats.find(c => c.compte.email == candidatEmail)
 
     note.candidature_id = candidat!.id || 0;
     note.candidature = candidat;
@@ -190,7 +190,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   handleInterviewerSelect(event: any, time: string) {
-    let interviewer = event.target.value;
+    let interviewer = event.value;
+
     let note: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);
@@ -198,6 +199,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     note.fin_entretien = new Date(dates.endDate);
 
     let jury = this.juries.find(j => (j?.name + ' ' + j?.prenom) == interviewer);
+
     note.compte_id = jury!.id || 0;
     note.compte = jury;
 
@@ -214,22 +216,17 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   addNote() {
-    console.log('entretienNoteMap: ', this.entretienNoteMap);
 
     this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
-      console.log('map: ', map);
-      console.log('\n');
-
-      let note: Note = value;
       this.noteService.create({
         candidature_id: value.candidature_id,
-        compte_id: value.candidature!.compte.id || 0,
+        compte_id: value.compte!.id || 0,
         debut_entretien: value.debut_entretien,
         fin_entretien: value.fin_entretien,
         note: 0,
       }).subscribe({
         next: (value) => {
-          this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + note.compte?.name + ' ' + note.compte?.prenom + ' à ' + note.candidature?.compte.name + ' ' + note.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
+          this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + value.compte?.name + ' ' + value.compte?.prenom + ' à ' + value.candidature?.compte.name + ' ' + value.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: err.message });

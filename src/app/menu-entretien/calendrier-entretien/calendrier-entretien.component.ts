@@ -14,35 +14,7 @@ import { NoteService } from 'src/app/shared/services/note.service';
 export class CalendrierEntretienComponent implements OnInit {
 
   entretiens: any[] = [
-    {
-      centre: 'Libreville',
-      interviewer: "DIANA MENGUELE",
-      disponibility: {
-        date_disponibilite: new Date(),
-        debut_disponibilite: new Date(),
-        fin_disponibilite: new Date(),
-      }
-    },
-    {
-      centre: 'Libreville',
-      interviewer: "DIANA MENGUELE",
-      disponibility: {
-        date_disponibilite: new Date(),
-        debut_disponibilite: new Date(),
-        fin_disponibilite: new Date(),
 
-      }
-    },
-    {
-      centre: 'Libreville',
-      interviewer: "DIANA MENGUELE",
-      disponibility: {
-        date_disponibilite: new Date(),
-        debut_disponibilite: new Date(),
-        fin_disponibilite: new Date(),
-
-      }
-    },
   ];
 
   dateIndex: number = 0;
@@ -59,7 +31,18 @@ export class CalendrierEntretienComponent implements OnInit {
   getEntretiens() {
     this.noteService.liste().subscribe({
       next: (value: Note[]) => {
-
+        this.entretiens = value.map((v) => {
+          return {
+            centre: v.candidature?.centre || '',
+            interviewer: v.compte?.name + ' ' + v.compte?.prenom,
+            candidat: v.candidature,
+            disponibility: {
+              date_disponibilite: v.debut_entretien,
+              debut_disponibilite: v.debut_entretien,
+              fin_disponibilite: v.fin_entretien,
+            }
+          };
+        });
       },
       error: (err) => {
         console.log('error: ', err);

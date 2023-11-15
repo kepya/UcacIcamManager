@@ -59,26 +59,17 @@
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <select *ngIf="time != '12h00 - 13h00'" name="candidat" id="candidat"
-                                (change)="handleCandidatSelect($event, time)">
-                                <option value="" disabled>Choisir un candidat</option>
-
-                                <option [value]="candidat.compte.email" *ngFor="let candidat of candidats">
-                                    {{candidat.compte.name
-                                    + ' ' + candidat.compte.prenom}}</option>
-                            </select>
+                            <p-dropdown optionLabel="compte.email" *ngIf="time != '12h00 - 13h00'" name="candidat"
+                                id="candidat" [options]="candidats" (onChange)="handleCandidatSelect($event, time)"
+                                [showClear]="true" placeholder="Choisir un candidat"></p-dropdown>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
                             <td>{{''}}</td>
                             <td>{{''}}</td>
                             <td>{{''}}</td>
                             <td>
-                                <select name="interviewer" id="interviewer"
-                                    (change)="handleInterviewerSelect($event, time)">
-                                    <option value="" disabled>Choisir un interviewer</option>
-                                    <option [value]="interviewer" *ngFor="let interviewer of interviewers">
-                                        {{interviewer}}</option>
-                                </select>
+                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
+                                    [showClear]="true" placeholder="Choisir un intervenant"></p-dropdown>
                             </td>
                         </ng-container>
                         <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
