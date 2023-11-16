@@ -8,6 +8,30 @@ export class CommonService {
 
   constructor() { }
 
+  calculerJours(dateDebut: number, dateFin: number) {
+    // Calculer la différence en millisecondes
+    var differenceMs = Math.abs(dateFin - dateDebut);
+
+    // Convertir en jours
+    var jours = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+    return jours;
+  }
+
+  genererDates(dateDebut: number, dateFin: number): Date[] {
+    let nbreJr = this.calculerJours(dateDebut, dateFin);
+    console.log("Nombre de jours : " + nbreJr);
+    var dates = [];
+    let date = new Date(dateDebut);
+
+    for (let index = 0; index < nbreJr; index++) {
+      date.setDate(date.getDate() + index);
+      dates.push(new Date(date));
+    }
+
+    return dates;
+  }
+
   formatDate(date: Date): string {
     let time = formatDate(date, 'shortTime', 'fr-FR');
     let times = time.split(':');

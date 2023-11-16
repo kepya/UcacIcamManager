@@ -4,6 +4,14 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Calendrier final des entretiens</h3>
+            <div>
+                <button class="btn btn-danger mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
+                    Precedent Date
+                </button>
+                <button class="btn btn-primary" (click)="prochaineDate()" *ngIf="datesOfEntretiens.length > 1">
+                    Prochaine Date
+                </button>
+            </div>
         </div>
         <div class="line"></div>
 
@@ -22,20 +30,31 @@
                     <th>Intervenants</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let entretien of entretiens; let i = index">
+                    <tr *ngFor="let entretien of entretiensBeforeBreak; let i = index">
                         <td>{{(entretien.disponibility.debut_disponibilite | date:'H:mm') + ' - ' +
                             (entretien.disponibility.fin_disponibilite|
                             date:'H:mm')}} </td>
                         <td>{{entretien.centre}}</td>
                         <td>{{''}}</td>
                         <td>{{''}}</td>
-                        <td class="rowspan" [attr.rowspan]="entretiens.length + 1" *ngIf="i == 0">
+                        <td class="rowspan" [attr.rowspan]="entretiensBeforeBreak.length + 1" *ngIf="i == 0">
                             <div>{{entretien.interviewer}}</div>
                         </td>
                     </tr>
                     <tr>
                         <td>12h00 - 13h00</td>
-                        <td colspan="3" class="pause">Pause</td>
+                        <td colspan="4" class="pause">Pause</td>
+                    </tr>
+                    <tr *ngFor="let entretien of entretiensAfterBreak; let i = index">
+                        <td>{{(entretien.disponibility.debut_disponibilite | date:'H:mm') + ' - ' +
+                            (entretien.disponibility.fin_disponibilite|
+                            date:'H:mm')}} </td>
+                        <td>{{entretien.centre}}</td>
+                        <td>{{''}}</td>
+                        <td>{{''}}</td>
+                        <td class="rowspan" [attr.rowspan]="entretiensAfterBreak.length + 1" *ngIf="i == 0">
+                            <div>{{entretien.interviewer}}</div>
+                        </td>
                     </tr>
                 </tbody>
             </table>

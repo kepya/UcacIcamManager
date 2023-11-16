@@ -45,6 +45,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     "16h00 - 16h30",
   ];
   interviewers: string[] = [];
+  interviewer!: string;
+  selectCandidat!: any;
   indexCurrentDate: number = 0;
   datesOfDisponibilities: number[] = [];
   datesOfEntretiens: Date[] = [];
@@ -76,36 +78,12 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         let d = new Date(this.session.date_debut_entretien!);
         let d2 = new Date(this.session.date_fin_entretien!);
 
-        this.datesOfEntretiens = this.genererDates(d.getTime(), d2.getTime());
+        this.datesOfEntretiens = this.commonService.genererDates(d.getTime(), d2.getTime());
 
         this.indexCurrentDate = 0;
         this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
       },
     })
-  }
-
-  calculerJours(dateDebut: number, dateFin: number) {
-    // Calculer la différence en millisecondes
-    var differenceMs = Math.abs(dateFin - dateDebut);
-
-    // Convertir en jours
-    var jours = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-
-    return jours;
-  }
-
-  genererDates(dateDebut: number, dateFin: number): Date[] {
-    let nbreJr = this.calculerJours(dateDebut, dateFin);
-    console.log("Nombre de jours : " + nbreJr);
-    var dates = [];
-    let date = new Date(dateDebut);
-
-    for (let index = 0; index < nbreJr; index++) {
-      date.setDate(date.getDate() + index);
-      dates.push(new Date(date));
-    }
-
-    return dates;
   }
 
   getCandidatures() {
@@ -216,7 +194,6 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   addNote() {
-
     this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
       this.noteService.create({
         candidature_id: value.candidature_id,
@@ -240,9 +217,18 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   prochaineDate() {
     this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
     this.indexCurrentDate = this.indexCurrentDate + 1;
+    this.reset();
+  }
+
+  previousDate() {
+    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate - 1];
+    this.indexCurrentDate = this.indexCurrentDate - 1;
+    this.reset();
   }
 
   reset() {
+    this.interviewer = "";
+    this.selectCandidat = {};
     this.entretienNoteMap = new Map<string, Note>();
   }
 
