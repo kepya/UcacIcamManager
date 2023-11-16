@@ -35,8 +35,8 @@
                             (entretien.disponibility.fin_disponibilite|
                             date:'H:mm')}} </td>
                         <td>{{entretien.centre}}</td>
-                        <td>{{''}}</td>
-                        <td>{{''}}</td>
+                        <td>{{entretien.candidat.compte.name}}</td>
+                        <td>{{entretien.candidat.compte.prenom}}</td>
                         <td class="rowspan" [attr.rowspan]="entretiensBeforeBreak.length + 1" *ngIf="i == 0">
                             <div>{{entretien.interviewer}}</div>
                         </td>
@@ -50,8 +50,8 @@
                             (entretien.disponibility.fin_disponibilite|
                             date:'H:mm')}} </td>
                         <td>{{entretien.centre}}</td>
-                        <td>{{''}}</td>
-                        <td>{{''}}</td>
+                        <td>{{entretien.candidat.compte.name}}</td>
+                        <td>{{entretien.candidat.compte.prenom}}</td>
                         <td class="rowspan" [attr.rowspan]="entretiensAfterBreak.length + 1" *ngIf="i == 0">
                             <div>{{entretien.interviewer}}</div>
                         </td>
