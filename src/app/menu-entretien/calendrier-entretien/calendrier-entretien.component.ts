@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Session } from 'inspector';
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
-import { Disponibility } from 'src/app/shared/models/entretient';
+import { CompteDisponibilite, Disponibility } from 'src/app/shared/models/entretient';
 import { Note } from 'src/app/shared/models/note';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
 import { NoteService } from 'src/app/shared/services/note.service';
 
 @Component({
@@ -14,18 +15,33 @@ import { NoteService } from 'src/app/shared/services/note.service';
   ]
 })
 export class CalendrierEntretienComponent implements OnInit {
-
+  interviewers: string[] = [];
+  interviewer!: string;
   entretiensBeforeBreak: any[] = [];
   entretiensAfterBreak: any[] = [];
   datesOfEntretiens: Date[] = [];
   currentDate!: Date;
   indexCurrentDate: number = 0;
 
-  constructor(private noteService: NoteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
+  constructor(private noteService: NoteService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
     this.currentDate = new Date();
     this.getActiveSession();
+    this.getCompteDisponibilite();
+  }
+
+
+  getCompteDisponibilite() {
+    this.compteDisponibiliteService.liste().subscribe({
+      next: (compteDisponibilites: CompteDisponibilite[]) => {
+        let intervenants: string[] = [];
+        for (let compteDisponibilite of compteDisponibilites) {
+          intervenants.push(compteDisponibilite.compte?.name + ' ' + compteDisponibilite.compte?.prenom);
+        }
+        this.interviewers = [...new Set(intervenants)];
+      }
+    })
   }
 
   getActiveSession() {
@@ -40,15 +56,19 @@ export class CalendrierEntretienComponent implements OnInit {
 
         this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
 
-        this.getEntretiens();
+        // this.getEntretiens();
       },
     })
+  }
+
+  handleInterviewerSelect(event: any) {
+    this.getEntretiens();
   }
 
   getEntretiens() {
     this.noteService.liste().subscribe({
       next: (result: Note[]) => {
-        let value = result.filter((v) => new Date(v.debut_entretien).getDate() === this.currentDate.getDate());
+        let value = result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === this.interviewer);
 
         value.sort((a, b) => new Date(a.fin_entretien).getTime() - new Date(b.fin_entretien).getTime());
 

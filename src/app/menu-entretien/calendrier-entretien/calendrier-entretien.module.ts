@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CalendrierEntretienRoutingModule } from './calendrier-entretien-routing.module';
 import { CalendrierEntretienComponent } from './calendrier-entretien.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     CalendrierEntretienRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DropdownModule
   ]
 })
 export class CalendrierEntretienModule { }

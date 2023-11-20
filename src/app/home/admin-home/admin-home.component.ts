@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { Session } from 'src/app/shared/models/session';
 import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
@@ -9,7 +9,7 @@ import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
   styles: [
   ]
 })
-export class AdminHomeComponent implements OnInit {
+export class AdminHomeComponent implements OnInit, AfterViewInit {
   public chart: any;
   @Input() statCandidatures!: StatCandidatures;
   @Input() session!: Session;
@@ -31,8 +31,10 @@ export class AdminHomeComponent implements OnInit {
   @Input() labelsConcour!: string[];
 
   constructor() { }
-
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
     this.createChartCandidatByConcour();
   }
 

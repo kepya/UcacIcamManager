@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { Note } from 'src/app/shared/models/note';
 import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -38,7 +39,13 @@ export class NoteEntretienComponent implements OnInit {
     note: new FormControl(0, [Validators.required]),
   });
 
-  constructor(private noteSrv: NoteService, private commonService: CommonService, private siteSrv: SiteService) { }
+  updateFormNote: FormGroup = new FormGroup({
+    nom: new FormControl('', [Validators.required]),
+    prenom: new FormControl('', [Validators.required]),
+    note: new FormControl(0, [Validators.required]),
+  });
+
+  constructor(private noteSrv: NoteService, private messageService: MessageService, private commonService: CommonService, private siteSrv: SiteService) { }
 
   ngOnInit(): void {
     this.sortProperty = "horaire";
@@ -46,6 +53,7 @@ export class NoteEntretienComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
+    this.getSites();
     this.getNotes();
   }
 
@@ -133,8 +141,11 @@ export class NoteEntretienComponent implements OnInit {
     return this.formNote.controls;
   }
 
+  get updateFormNoteControl(): { [key: string]: AbstractControl } {
+    return this.updateFormNote.controls;
+  }
+
   handlePageSize(event: any) {
-    ;
     this.getNotes();
   }
 
@@ -169,6 +180,17 @@ export class NoteEntretienComponent implements OnInit {
   previous() {
     this.page--;
     this.getNotes();
+  }
+
+  getSites() {
+    this.siteSrv.liste().subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 
   getNotes() {
@@ -209,48 +231,45 @@ export class NoteEntretienComponent implements OnInit {
   updateNote(note: Note) {
     this.isFormNote = true;
     this.note = note;
-    this.formNote.setValue({
+    this.updateFormNote.patchValue({
       nom: note.candidature?.compte?.name,
       prenom: note.candidature?.compte?.prenom,
       note: note.note,
     });
   }
 
-  createOrUpdateNote() {
+  createNote() {
+    let d = { ...this.formNote.value };
+    delete d.note;
+    d = { ...d, note: parseInt(this.formNote.value.note, 10) };
 
-    let site: Site = new Site();
-    if (this.note?.id || 0 > 0) {
-      let d = { ...this.formNote.value };
-      delete d.note;
-      d = { ...d, note: parseInt(this.formNote.value.note, 10) };
+    this.noteSrv.create(d).subscribe({
+      next: (value) => {
+        this.getNotes();
+        this.note = new Note();
+        this.formNote.reset();
+        this.isFormNote = false;
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+      }
+    });
+  }
 
-      this.noteSrv.update({ ...d, site, id: this.note.id }).subscribe({
-        next: (value) => {
-          this.getNotes();
-          this.note = new Note();
-          this.formNote.reset();
-          this.isFormNote = false;
-        },
-        error: (err) => {
-          console.log("Error: ", err);
-        }
-      })
-    } else {
-      let d = { ...this.formNote.value };
-      delete d.note;
-      d = { ...d, note: parseInt(this.formNote.value.note, 10) };
-
-      this.noteSrv.create(d).subscribe({
-        next: (value) => {
-          this.getNotes();
-          this.note = new Note();
-          this.formNote.reset();
-          this.isFormNote = false;
-        },
-        error: (err) => {
-          console.log("Error: ", err);
-        }
-      })
-    }
+  updateNoteObjet() {
+    this.note.note = parseInt(this.updateFormNote.value.note, 10);
+    this.noteSrv.update({ ...this.note }).subscribe({
+      next: (value) => {
+        this.getNotes();
+        this.note = new Note();
+        this.updateFormNote.reset();
+        this.isFormNote = false;
+        this.messageService.add({ severity: 'success', summary: 'Modification de la note', detail: 'Modification de la note des entretiens effectuée avec success' });
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
+        console.log("Error: ", err);
+      }
+    })
   }
 }

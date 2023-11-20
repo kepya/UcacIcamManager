@@ -102,6 +102,8 @@ export class HomeComponent implements OnInit {
     this.candidatureSrv.getStatistics().subscribe({
       next: (value: StatCandidatures) => {
         this.statCandidatures = value;
+        console.log('statCandidatures:', value);
+
 
         let data = [];
         let data1: {
@@ -222,6 +224,9 @@ export class HomeComponent implements OnInit {
         // this.labelsConcour = ['Candidats'];
         // this.datasetsConcour = data1;
         this.labelsConcour = labels;
+
+        console.log("labelsConcour: ", this.labelsConcour);
+        console.log("datasetsConcour: ", this.datasetsConcour);
 
 
         this.datasetsCandidatEntretenuParConcour = [{

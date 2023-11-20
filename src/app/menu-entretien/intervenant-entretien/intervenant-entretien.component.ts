@@ -57,26 +57,6 @@ export class IntervenantEntretienComponent implements OnInit {
     }
 
     this.getDisponibilities();
-    // this.juries = [
-    //   {
-    //     name: "Arthur",
-    //     prenom: "Scoty",
-    //     password: "",
-    //     email: "",
-    //     telephone: "",
-    //     role: Role.CANDIDAT,
-    //     id_disponibilite: 0,
-    //   },
-    //   {
-    //     name: "Darryl",
-    //     prenom: "Leon",
-    //     password: "",
-    //     email: "",
-    //     telephone: "",
-    //     role: Role.CANDIDAT,
-    //     id_disponibilite: 0,
-    //   }
-    // ]
   }
 
   getActiveSession() {
@@ -108,14 +88,19 @@ export class IntervenantEntretienComponent implements OnInit {
         for (let index = 0; index < this.disponibilities.length; index++) {
           const disponibilite = this.disponibilities[index];
           let d = new Date(disponibilite.date_disponibilite).getTime();
-          dates.push(d);
+          if (!dates.includes(d)) {
+            dates.push(d);
+          }
 
           let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
           let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
           let horaire = startTime + ' - ' + endTime;
-          this.horaires.push(horaire)
+          if (!this.horaires.includes(horaire)) {
+            this.horaires.push(horaire)
+          }
           this.disponibilityMap.set(horaire + ' - ' + d, disponibilite.id || 0)
         }
+        console.log('horaires: ', horaires);
 
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];

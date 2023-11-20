@@ -1,4 +1,4 @@
-<section class="note-page page-content" *ngIf="!isFormNote else addNote">
+<section class="note-page page-content" *ngIf="!isFormNote else updateNoteForm">
     <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Notes entretiens</h1>
 
     <div class="card">
@@ -119,7 +119,7 @@
 </section>
 
 <ng-template #addNote>
-    <!-- <section class="Note-page page-content">
+    <section class="Note-page page-content">
         <h1 class="page-title"><img (click)="viewNote()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
                 srcset=""> notes d'examen <i class="pi pi-angle-right"></i> Ajouter un note d'examen</h1>
         <div class="card">
@@ -128,7 +128,7 @@
                 </h3>
             </div>
             <div class="line"></div>
-            <form class="form" [formGroup]="formNote" (ngSubmit)="createOrUpdateNote()">
+            <form class="form" [formGroup]="formNote" (ngSubmit)="createNote()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
@@ -137,8 +137,7 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="">Site d'appartenance *</label>
-                            <select formControlName="siteid"
-                                [ngClass]="{required: formNote.get('siteid')!.invalid}">
+                            <select formControlName="siteid" [ngClass]="{required: formNote.get('siteid')!.invalid}">
                                 <option value="">Site d'appartenance</option>
                                 <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
                             </select>
@@ -160,7 +159,7 @@
                             <div *ngIf="formNoteControl['nom'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
-                            </div>c:\Users\GLC\Documents\Projets\frontAdminInscription\production\superadmin\session_examen.html
+                            </div>
                             <div *ngIf="formNoteControl['nom'].errors['minlength']">
                                 Nom doit avoir au minimun 4 charactères
                             </div>
@@ -216,5 +215,69 @@
 
 
         </div>
-    </section> -->
+    </section>
+</ng-template>
+
+<ng-template #updateNoteForm>
+    <section class="Note-page page-content">
+        <h1 class="page-title"><img (click)="viewNote()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
+                srcset=""> notes d'entretien <i class="pi pi-angle-right"></i> Modification d'une note</h1>
+        <div class="card">
+            <div class="header">
+                <h3 class="title">Modification de la note d'entretien
+                </h3>
+            </div>
+            <div class="line"></div>
+            <form class="form" [formGroup]="updateFormNote" (ngSubmit)="updateNoteObjet()">
+                <div class="header">
+                    Veullez remplir les champs suivants
+                    <div class="line"></div>
+                </div>
+                <div class="main">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Nom *</label>
+                            <input type="text" formControlName="nom"
+                                [ngClass]="{required: updateFormNote.get('nom')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="updateFormNoteControl['nom'].errors">
+                            <div *ngIf="updateFormNoteControl['nom'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="updateFormNoteControl['nom'].errors['minlength']">
+                                Nom doit avoir au minimun 4 charactères
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Note *</label>
+                            <input type="number" formControlName="note"
+                                [ngClass]="{required: updateFormNote.get('note')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="updateFormNoteControl['note'].errors">
+                            <div *ngIf="updateFormNoteControl['note'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="line"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-info" [disabled]="updateFormNote.invalid" type="submit">
+                            Soumettre
+                        </button>
+
+                        <button class="btn btn-danger" (click)="updateFormNote.reset()">
+                            Renitialiser
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
 </ng-template>
