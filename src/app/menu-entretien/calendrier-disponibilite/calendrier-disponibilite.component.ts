@@ -202,8 +202,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         fin_entretien: value.fin_entretien,
         note: 0,
       }).subscribe({
-        next: (value) => {
-          this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + value.compte?.name + ' ' + value.compte?.prenom + ' à ' + value.candidature?.compte.name + ' ' + value.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
+        next: (res) => {
+          this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + value.compte?.name + ' ' + value.compte?.prenom + ' pour un entretien avec le candidat ' + value.candidature?.compte.name + ' ' + value.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: err.message });
