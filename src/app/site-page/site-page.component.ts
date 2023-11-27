@@ -251,6 +251,7 @@ export class SitePageComponent implements OnInit {
 
   viewSite(view: string = 'data') {
     if (view === 'data') {
+      this.site = new Site();
       this.isFormSite = false;
     } else {
       this.isFormSite = true;
@@ -289,8 +290,10 @@ export class SitePageComponent implements OnInit {
     this.site = site;
     this.formSite.setValue({
       nom: site.nom,
+      zone_id: site.zoneid,
       description: site.description,
-      zone_id: site.zone?.id,
+      msgPaiement: site.msgPaiement,
+      indicatif: site.indicatif,
       pays: site.pays
     });
   }

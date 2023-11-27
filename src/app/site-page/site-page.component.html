@@ -127,21 +127,15 @@
 <ng-template #addSite>
     <section class="site-page page-content">
         <h1 class="page-title"><img (click)="viewSite()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> sites <i class="pi pi-angle-right"></i> Ajouter une site</h1>
+                srcset=""> sites <i class="pi pi-angle-right"></i> {{ !isFormSite ? "Ajouter un site" :
+            "Modification des informations d'un site" }} </h1>
         <div class="card">
-            <div class="header">
-                <h3 class="title">Liste des sites Ucac-Icam</h3>
-                <button class="btn btn-danger" (click)="viewSite('form')">
-                    Ajouter une site
-                </button>
-            </div>
-            <div class="line"></div>
             <form class="form" [formGroup]="formSite" (ngSubmit)="createOrUpdateSite()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
                 </div>
-                <div class="main">
+                <div class="main" style="height: 25em;">
                     <div class="row">
                         <div class="form-group">
                             <label for="">Zone d'appartenance *</label>

@@ -120,21 +120,15 @@
 <ng-template #addZone>
     <section class="zone-page page-content">
         <h1 class="page-title"><img (click)="viewZone()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> Zones <i class="pi pi-angle-right"></i> Ajouter une zone</h1>
+                srcset=""> Zones <i class="pi pi-angle-right"></i> {{ isFormZone ? "Modification des informations d'une
+            zone": 'Ajouter une zone'}}</h1>
         <div class="card">
-            <div class="header">
-                <h3 class="title">Liste des zones Ucac-Icam</h3>
-                <button class="btn btn-danger" (click)="viewZone('form')">
-                    Ajouter une zone
-                </button>
-            </div>
-            <div class="line"></div>
             <form class="form" [formGroup]="formZone" (ngSubmit)="createOrUpdateZone()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
                 </div>
-                <div class="main">
+                <div class="main" style="height: 25em;">
                     <div class="row">
                         <div class="form-group">
                             <label for="">Nom *</label>

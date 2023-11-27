@@ -39,8 +39,7 @@ export class CentreExamenPageComponent implements OnInit {
     nom: new FormControl('', [Validators.required]),
     contacts: new FormControl('', [Validators.required]),
     siteid: new FormControl('', [Validators.required]),
-    ville: new FormControl('', []),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.email]),
   });
 
   constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
@@ -258,6 +257,7 @@ export class CentreExamenPageComponent implements OnInit {
   viewCentre(view: string = 'data') {
     if (view === 'data') {
       this.isFormCentre = false;
+      this.centre = new Centre();
     } else {
       this.isFormCentre = true;
       this.compte = this.storageService.getUserConnected();
@@ -295,8 +295,9 @@ export class CentreExamenPageComponent implements OnInit {
   updateCentre(centre: Centre) {
     this.isFormCentre = true;
     this.centre = centre;
-    this.formCentre.setValue({
+    this.formCentre.patchValue({
       nom: centre.nom,
+      email: centre.email,
       contacts: centre.contacts,
       ville: centre.ville,
       siteid: centre.siteid

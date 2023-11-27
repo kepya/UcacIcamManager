@@ -126,19 +126,15 @@
 <ng-template #addCentre>
     <section class="Centre-page page-content">
         <h1 class="page-title"><img (click)="viewCentre()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> centres d'examen <i class="pi pi-angle-right"></i> Ajouter un centre d'examen</h1>
+                srcset=""> centres d'examen <i class="pi pi-angle-right"></i>{{ isFormCentre ? "Modification des
+            informations d'un centre d'examen": "Ajouter un centre d'examen"}} </h1>
         <div class="card">
-            <div class="header">
-                <h3 class="title">Ajouter un centre d'examen
-                </h3>
-            </div>
-            <div class="line"></div>
             <form class="form" [formGroup]="formCentre" (ngSubmit)="createOrUpdateCentre()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
                 </div>
-                <div class="main">
+                <div class="main" style="height: 25em;">
                     <div class="row">
                         <div class="form-group">
                             <label for="">Site d'appartenance *</label>

@@ -219,6 +219,7 @@ export class ZonePageComponent implements OnInit {
 
   viewZone(view: string = 'data') {
     if (view === 'data') {
+      this.zone = new Zone();
       this.isFormZone = false;
     } else {
       this.isFormZone = true;
