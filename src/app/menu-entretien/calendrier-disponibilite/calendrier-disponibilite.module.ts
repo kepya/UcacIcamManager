@@ -5,6 +5,7 @@ import { CalendrierDisponibiliteRoutingModule } from './calendrier-disponibilite
 import { CalendrierDisponibiliteComponent } from './calendrier-disponibilite.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { TreeSelectModule } from 'primeng/treeselect';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CalendrierDisponibiliteRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    DropdownModule
+    DropdownModule,
+    TreeSelectModule
   ]
 })
 export class CalendrierDisponibiliteModule { }

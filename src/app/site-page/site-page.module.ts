@@ -8,7 +8,8 @@ import { SitePageComponent } from './site-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
-
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,8 @@ import { SharedModule } from 'primeng/api';
     SharedModule,
     FormsModule,
     HttpClientModule,
+    ConfirmPopupModule,
+    ToastModule,
     ReactiveFormsModule
   ]
 })

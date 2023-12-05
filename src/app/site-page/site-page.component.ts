@@ -4,7 +4,7 @@ import { Site } from '../shared/models/site';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/shared/services/site.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { StorageService } from '../shared/services/storage.service';
 import { Compte } from '../shared/models/compte';
 import { Role } from '../shared/enums/role.enum';
@@ -43,7 +43,7 @@ export class SitePageComponent implements OnInit {
     zone_id: new FormControl('', [Validators.required]),
   });
 
-  constructor(private siteSrv: SiteService, private storageService: StorageService, private zoneSrv: ZoneService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private siteSrv: SiteService, private storageService: StorageService, private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -167,6 +167,23 @@ export class SitePageComponent implements OnInit {
 
   get formSiteControl(): { [key: string]: AbstractControl } {
     return this.formSite.controls;
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteSite(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   handleSearchValue(event: any) {
@@ -303,7 +320,7 @@ export class SitePageComponent implements OnInit {
     if (this.site?.id || 0 > 0) {
       let d = { ...this.formSite.value };
       delete d.zone_id;
-      d = { ...d, zone_id: parseInt(this.formSite.value.zone_id, 10) };
+      d = { ...d, zoneid: parseInt(this.formSite.value.zone_id, 10) };
 
       this.siteSrv.update({ ...d, image: this.site.image, zone, id: this.site.id }).subscribe({
         next: (value) => {
@@ -323,14 +340,14 @@ export class SitePageComponent implements OnInit {
     } else {
       let d = { ...this.formSite.value };
       delete d.zone_id;
-      d = { ...d, zone_id: parseInt(this.formSite.value.zone_id, 10) };
+      d = { ...d, zoneid: parseInt(this.formSite.value.zone_id, 10) };
 
       this.siteSrv.create({ ...d, zone }).subscribe({
         next: (value) => {
           this.getSites();
           this.site = new Site();
           this.formSite.reset();
-          this.messageService.add({ severity: 'success', summary: 'Création de zone', detail: 'Création effectuée avec success' });
+          this.messageService.add({ severity: 'success', summary: 'Création de site', detail: 'Création effectuée avec success' });
 
           this.isFormSite = false;
         },

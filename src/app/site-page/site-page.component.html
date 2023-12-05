@@ -81,7 +81,7 @@
                                     Modifier
                                 </span>
                             </button>
-                            <button class="btn mt-2" (click)="deleteSite(site.id || 0)">
+                            <button class="btn mt-2" (click)="confirm($event, site.id || 0)">
                                 <div>
                                     <i class="fa-solid fa-trash"></i>
                                 </div>
@@ -127,8 +127,9 @@
 <ng-template #addSite>
     <section class="site-page page-content">
         <h1 class="page-title"><img (click)="viewSite()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> sites <i class="pi pi-angle-right"></i> {{ !isFormSite ? "Ajouter un site" :
-            "Modification des informations d'un site" }} </h1>
+                srcset=""> sites <i class="pi pi-angle-right"></i> {{ site?.zoneid || 0 > 0 ? "Modification des
+            informations d'un site" : "Ajouter un site"
+            }} </h1>
         <div class="card">
             <form class="form" [formGroup]="formSite" (ngSubmit)="createOrUpdateSite()">
                 <div class="header">
@@ -240,7 +241,7 @@
                             Soumettre
                         </button>
 
-                        <button class="btn btn-danger" (click)="formSite.reset()">
+                        <button class="btn btn-danger" type="reset" (click)="formSite.reset()">
                             Renitialiser
                         </button>
                     </div>
@@ -251,3 +252,7 @@
         </div>
     </section>
 </ng-template>
+<div class="card flex justify-content-center gap-2">
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
+</div>

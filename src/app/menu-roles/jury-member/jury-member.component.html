@@ -247,7 +247,7 @@
                             Soumettre
                         </button>
 
-                        <button class="btn btn-danger" (click)="formCompte.reset()">
+                        <button class="btn btn-danger" type="reset" (click)="formCompte.reset()">
                             Renitialiser
                         </button>
                     </div>
@@ -258,3 +258,7 @@
         </div>
     </section>
 </ng-template>
+<div class="card flex justify-content-center gap-2">
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
+</div>

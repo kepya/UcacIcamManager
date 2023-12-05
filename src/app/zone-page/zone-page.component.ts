@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { zones } from '../shared/mocks/mock';
 import { Zone } from "../shared/models/zone";
 import { ZoneService } from 'src/app/shared/services/zone.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Compte } from '../shared/models/compte';
 import { StorageService } from '../shared/services/storage.service';
 import { Role } from '../shared/enums/role.enum';
@@ -37,7 +37,7 @@ export class ZonePageComponent implements OnInit {
     description: new FormControl('', [Validators.required])
   });
 
-  constructor(private zoneSrv: ZoneService, private storageService: StorageService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private zoneSrv: ZoneService, private storageService: StorageService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -268,6 +268,22 @@ export class ZonePageComponent implements OnInit {
     }
   }
 
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteZone(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
+  }
 
   deleteZone(id: number) {
     this.zoneSrv.delete(id || 0).subscribe({

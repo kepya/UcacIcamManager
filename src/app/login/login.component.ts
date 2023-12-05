@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   showMsgError: boolean = false;
   isLoading: boolean = false;
   msgError: string = "";
+  date = new Date();
 
   loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),

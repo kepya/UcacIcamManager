@@ -12,7 +12,7 @@ import { Note } from 'src/app/shared/models/note';
 import { CandidatureService } from 'src/app/menu-candidature/candidature.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { NoteService } from 'src/app/shared/services/note.service';
-import { MessageService } from 'primeng/api';
+import { MessageService, TreeNode } from 'primeng/api';
 import { Router } from '@angular/router';
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Session } from 'src/app/shared/models/session';
@@ -56,6 +56,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   juries: Compte[] = [];
 
   candidats: Candidature[] = [];
+  candidatNodes: TreeNode[] = [];
   session!: Session;
 
   constructor(private candidatureSrv: CandidatureService, private commonService: CommonService, private noteService: NoteService,
@@ -90,6 +91,98 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.candidatureSrv.liste().subscribe({
       next: (candidatures) => {
         this.candidats = candidatures;
+        let faCandidats = candidatures.filter(v => v.formation1 === "FA").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+        let ipCandidats = candidatures.filter(v => v.formation1 === "IP").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+        let iCandidats = candidatures.filter(v => v.formation1 === "I").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+        let xCandidats = candidatures.filter(v => v.formation1 === "X").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+        let lCandidats = candidatures.filter(v => v.formation1 === "L").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+        let opCandidats = candidatures.filter(v => v.formation1 === "OP").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          data: r,
+          selectable: true,
+        }) as unknown as TreeNode);
+
+        if (xCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation X",
+            draggable: true,
+            selectable: false,
+            expanded: true,
+            children: xCandidats,
+          });
+        }
+
+
+        if (faCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation FA",
+            draggable: true,
+            expanded: true,
+            selectable: false,
+            children: faCandidats,
+          });
+        }
+
+        if (iCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation I",
+            draggable: true,
+            expanded: true,
+            selectable: false,
+            children: iCandidats,
+          });
+        }
+
+        if (ipCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation IP",
+            draggable: true,
+            expanded: true,
+            selectable: false,
+            children: ipCandidats,
+          });
+        }
+
+        if (lCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation L",
+            draggable: true,
+            expanded: true,
+            selectable: false,
+            children: lCandidats,
+          });
+        }
+
+        if (opCandidats.length > 0) {
+          this.candidatNodes.push({
+            label: "Formation Op",
+            draggable: true,
+            selectable: false,
+            expanded: true,
+            children: opCandidats,
+          });
+
+        }
       }
     })
   }
@@ -143,7 +236,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   handleCandidatSelect(event: any, time: string) {
-    let candidat = event.value;
+    let candidat = event.node.data;
+
     let note: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);

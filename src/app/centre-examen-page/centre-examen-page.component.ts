@@ -5,7 +5,7 @@ import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
 import { CentreExamenService } from './centre-examen.service';
 import { SiteService } from 'src/app/shared/services/site.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Compte } from '../shared/models/compte';
 import { StorageService } from '../shared/services/storage.service';
 import { Role } from '../shared/enums/role.enum';
@@ -42,7 +42,7 @@ export class CentreExamenPageComponent implements OnInit {
     email: new FormControl('', [Validators.email]),
   });
 
-  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -59,6 +59,23 @@ export class CentreExamenPageComponent implements OnInit {
       this.getCentreByZone(this.compte.idZone);
       this.getSitesByZone(this.compte.idZone);
     }
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteCentre(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, centres: Centre[] = this.centres) {

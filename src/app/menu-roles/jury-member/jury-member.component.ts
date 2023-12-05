@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-jury-member',
@@ -37,7 +37,7 @@ export class JuryMemberComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private compteSrv: CompteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "name";
@@ -46,6 +46,23 @@ export class JuryMemberComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getComptes();
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteCompte(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, comptes: Compte[] = this.comptes) {

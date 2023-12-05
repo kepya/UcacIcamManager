@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Session } from '../shared/models/session';
 import { SessionExamenService } from './session-examen.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-session-examen-page',
@@ -40,7 +40,7 @@ export class SessionExamenPageComponent implements OnInit {
     statut: new FormControl(true, [Validators.required]),
   });
 
-  constructor(private sessionSrv: SessionExamenService, private zoneSrv: ZoneService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private sessionSrv: SessionExamenService, private zoneSrv: ZoneService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -49,6 +49,23 @@ export class SessionExamenPageComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getSessions();
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteSession(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, sessions: Session[] = this.sessions) {
@@ -245,6 +262,7 @@ export class SessionExamenPageComponent implements OnInit {
   viewSession(view: string = 'data') {
     if (view === 'data') {
       this.isFormSession = false;
+      this.session = new Session();
     } else {
       this.isFormSession = true;
     }
