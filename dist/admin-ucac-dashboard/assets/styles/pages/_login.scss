@@ -16,6 +16,39 @@
         display: grid;
         align-content: center;
 
+        .left_absolute_img {
+            position: absolute;
+            top: 0;
+        }
+
+        .rigth_absolute_img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .time {
+            color: #c10927;
+            // font-size: 24px;
+            font-size: 1.5em;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            position: absolute;
+            right: 4em;
+            top: 2em;
+            background: gainsboro;
+            padding-inline: 3em;
+            padding-block: 0.5em;
+            border-radius: 2em;
+        }
+
+        .rigth_absolute_img,
+        .left_absolute_img {
+            z-index: 10;
+            height: 16em;
+        }
+
         & > .card {
             margin: auto;
             padding: 0;
