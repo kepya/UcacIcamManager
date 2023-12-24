@@ -44,7 +44,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     "15h30 - 16h00",
     "16h00 - 16h30",
   ];
-  interviewers: string[] = [];
+  interviewers: { name: string }[] = [];
   interviewer!: string;
   selectCandidat!: any;
   indexCurrentDate: number = 0;
@@ -191,7 +191,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.compteDisponibiliteService.liste().subscribe({
       next: (compteDisponibilites: CompteDisponibilite[]) => {
         let dates: number[] = [];
-        let intervenants: string[] = [];
+        let intervenants: { name: string }[] = [];
 
         for (let compteDisponibilite of compteDisponibilites) {
           let d = new Date(compteDisponibilite!.disponibilite!.date_disponibilite).getTime();
@@ -222,15 +222,17 @@ export class CalendrierDisponibiliteComponent implements OnInit {
             names.push(...lastnames);
           }
           names.push(name);
-          intervenants.push(name);
+          intervenants.push({ name: name });
           this.interverwerMap.set(horaire + ' - ' + d, names);
         }
 
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];
         this.datesOfDisponibilities.sort();
+        console.log("intervenants: ", intervenants);
 
-        this.interviewers = [...new Set(intervenants)];
+        this.interviewers = intervenants;
+
       }
     })
   }

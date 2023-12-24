@@ -9,6 +9,7 @@ import { TokenService } from '../shared/services/token.service';
 import { UserService } from '../shared/services/user.service';
 import { Compte } from '../shared/models/compte';
 import { MessageService } from 'primeng/api';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   isLoading: boolean = false;
   msgError: string = "";
   date = new Date();
+  counterSubscription!: Subscription;
 
   loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     var oldToken = this.storageService.getUserTokenConnected();
+    this.notification();
 
     if (this.tokenService.isLogged()) {
       this.router.navigate(['/home']);
@@ -88,6 +91,21 @@ export class LoginComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  notification() {
+    const counter = interval(1000);
+    this.counterSubscription = counter.subscribe(
+      {
+        next: (cal) => {
+          this.date = new Date();
+        },
+        error: (error: any) => { },
+        complete: () => {
+        },
+      }
+    );
   }
 
 }

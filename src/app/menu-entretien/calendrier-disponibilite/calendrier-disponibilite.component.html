@@ -36,6 +36,9 @@
         <div class="header">
             <h3 class="title">Entretiens concours, session du {{session?.date_examen | date}}</h3>
             <div>
+                <!-- <button class="btn btn-danger mr-1" (click)="previousDate()">
+                    Precedent Date
+                </button> -->
                 <button class="btn btn-danger mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
                     Precedent Date
                 </button>
@@ -78,9 +81,10 @@
                             <td>{{''}}</td>
                             <td>{{''}}</td>
                             <td>
-                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
-                                    [showClear]="true" [(ngModel)]="interviewer"
-                                    placeholder="Choisir un intervenant"></p-dropdown>
+                                <p-multiSelect [showClear]="true" [virtualScroll]="true" [filter]="true"
+                                    class="multiselect-custom-virtual-scroll" placeholder="Choisir les intervenants"
+                                    [options]="interviewers" [selectionLimit]="2" optionLabel="name"
+                                    (onChange)="handleInterviewerSelect($event, time)"></p-multiSelect>
                             </td>
                         </ng-container>
                         <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>

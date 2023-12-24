@@ -29,7 +29,7 @@
 
         .time {
             color: #c10927;
-            // font-size: 24px;
+            z-index: 100;
             font-size: 1.5em;
             font-style: normal;
             font-weight: 600;
@@ -45,7 +45,7 @@
 
         .rigth_absolute_img,
         .left_absolute_img {
-            z-index: 10;
+            z-index: 0;
             height: 16em;
         }
 
