@@ -44,9 +44,17 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     "15h30 - 16h00",
     "16h00 - 16h30",
   ];
-  interviewers: { name: string }[] = [];
+  values!: TreeNode[];;
+
+  value = {
+    label: "test",
+    data: "view",
+    selectable: true,
+  };
+  interviewers: string[] = [];
   interviewer!: string;
   selectCandidat!: any;
+  selectCandidatMap: Map<string, any> = new Map<string, any>();
   indexCurrentDate: number = 0;
   datesOfDisponibilities: number[] = [];
   datesOfEntretiens: Date[] = [];
@@ -64,6 +72,10 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     private messageService: MessageService, private router: Router, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
+    this.entretienTimes.forEach((value: string, index: number, array: string[]) => {
+      // this.selectCandidatMap.set(value, "");
+      // this.values[index] = "teste";
+    });
     this.entretienNoteMap = new Map<string, Note>();
     this.interverwerMap = new Map<string, string[]>();
     this.getActiveSession();
@@ -191,7 +203,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.compteDisponibiliteService.liste().subscribe({
       next: (compteDisponibilites: CompteDisponibilite[]) => {
         let dates: number[] = [];
-        let intervenants: { name: string }[] = [];
+        let intervenants: string[] = [];
 
         for (let compteDisponibilite of compteDisponibilites) {
           let d = new Date(compteDisponibilite!.disponibilite!.date_disponibilite).getTime();
@@ -222,24 +234,29 @@ export class CalendrierDisponibiliteComponent implements OnInit {
             names.push(...lastnames);
           }
           names.push(name);
-          intervenants.push({ name: name });
+          intervenants.push(name);
           this.interverwerMap.set(horaire + ' - ' + d, names);
         }
 
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];
         this.datesOfDisponibilities.sort();
-        console.log("intervenants: ", intervenants);
 
-        this.interviewers = intervenants;
-
+        this.interviewers = [...new Set(intervenants)];
       }
     })
   }
 
-  handleCandidatSelect(event: any, time: string) {
+  handleCandidatSelect(event: any, time: string, index: number) {
     let candidat = event.node.data;
+    let node = {
+      label: candidat.compte.name + " " + candidat.compte.prenom,
+      data: candidat,
+      selectable: true,
+    };
 
+    this.selectCandidatMap.set(time, node);
+    this.selectCandidatMap.set(this.entretienTimes[index + 1], node);
     let note: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);
@@ -261,6 +278,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     }
 
     this.entretienNoteMap.set(time + ' - ' + this.currentDate.getTime().toString(), note);
+    this.entretienNoteMap.set(this.entretienTimes[index + 1] + ' - ' + this.currentDate.getTime().toString(), note);
   }
 
   handleInterviewerSelect(event: any, time: string) {
@@ -313,12 +331,14 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   prochaineDate() {
     this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
     this.indexCurrentDate = this.indexCurrentDate + 1;
+    this.selectCandidatMap = new Map<string, any>();
     this.reset();
   }
 
   previousDate() {
     this.currentDate = this.datesOfEntretiens[this.indexCurrentDate - 1];
     this.indexCurrentDate = this.indexCurrentDate - 1;
+    this.selectCandidatMap = new Map<string, any>();
     this.reset();
   }
 

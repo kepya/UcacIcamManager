@@ -13,10 +13,10 @@
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
     @include flex-column;
-    height: 94%;
+    // min-height: 94%;
 
     @include xxl-only {
-        height: 92%;
+        // min-height: 92%;
     }
 
     @include xs-only {

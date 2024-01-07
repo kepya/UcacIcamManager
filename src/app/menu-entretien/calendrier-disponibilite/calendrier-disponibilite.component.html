@@ -36,9 +36,6 @@
         <div class="header">
             <h3 class="title">Entretiens concours, session du {{session?.date_examen | date}}</h3>
             <div>
-                <!-- <button class="btn btn-danger mr-1" (click)="previousDate()">
-                    Precedent Date
-                </button> -->
                 <button class="btn btn-danger mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
                     Precedent Date
                 </button>
@@ -54,13 +51,10 @@
             <h3 class="title" *ngIf="currentDate">{{currentDate | date}}</h3>
         </div>
 
-        <div class="calendrier" *ngIf="currentDate != undefined && currentDate != null">
+        <div class="calendrier vh-space-between" *ngIf="currentDate != undefined && currentDate != null">
             <table id="table">
                 <thead>
                     <th>Horaire</th>
-                    <th>Centre d'examen</th>
-                    <th>Noms</th>
-                    <th>Prénoms</th>
                     <th>Intervenant</th>
                 </thead>
                 <tbody>
@@ -72,19 +66,44 @@
                                 (onChange)="handleCandidatSelect($event, time)" [showClear]="true"
                                 placeholder="Choisir un candidat"></p-dropdown> -->
                             <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full"
-                                *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidat"
-                                (onNodeSelect)="handleCandidatSelect($event, time)" [showClear]="true"
+                                *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidatMap.get(time)"
+                                (onNodeSelect)="handleCandidatSelect($event, time, i)" [showClear]="true"
                                 [options]="candidatNodes" placeholder="Choisir un candidat"></p-treeSelect>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
-                            <td>{{''}}</td>
-                            <td>{{''}}</td>
-                            <td>{{''}}</td>
                             <td>
-                                <p-multiSelect [showClear]="true" [virtualScroll]="true" [filter]="true"
-                                    class="multiselect-custom-virtual-scroll" placeholder="Choisir les intervenants"
-                                    [options]="interviewers" [selectionLimit]="2" optionLabel="name"
-                                    (onChange)="handleInterviewerSelect($event, time)"></p-multiSelect>
+                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
+                                    [showClear]="true" [ngModel]="interviewer"
+                                    placeholder="Choisir un intervenant"></p-dropdown>
+                            </td>
+                        </ng-container>
+                        <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="table">
+                <thead>
+                    <th>Horaire</th>
+                    <th>Intervenant</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let time of entretienTimes; let i = index">
+                        <td>
+                            <p>{{time}}</p>
+                            <!-- <p-dropdown optionLabel="compte.email" *ngIf="time != '12h00 - 13h00'" name="candidat"
+                                id="candidat" [options]="candidats" [(ngModel)]="selectCandidat"
+                                (onChange)="handleCandidatSelect($event, time)" [showClear]="true" [ngModel]="selectCandidatMap.get(time)"
+                                placeholder="Choisir un candidat"></p-dropdown> -->
+                            <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full"
+                                *ngIf="time != '12h00 - 13h00'" (onNodeSelect)="handleCandidatSelect($event, time, i)"
+                                [showClear]="true" [options]="candidatNodes"
+                                placeholder="Choisir un candidat"></p-treeSelect>
+                        </td>
+                        <ng-container *ngIf="time != '12h00 - 13h00'">
+                            <td>
+                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
+                                    [showClear]="true" [ngModel]="interviewer"
+                                    placeholder="Choisir un intervenant"></p-dropdown>
                             </td>
                         </ng-container>
                         <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
