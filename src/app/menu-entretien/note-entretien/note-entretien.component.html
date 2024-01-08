@@ -29,19 +29,12 @@
                 </div>
             </div>
             <div class="row">
-                <table id="table">
+                <table id="table" *ngIf="isJury">
                     <tr>
                         <th>
                             <div>
                                 Horaires <i class="icon-sort {{this.sortProperty == 'horaire' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'horaire'}" (click)="sort('horaire')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Note d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'note'}" (click)="sort('note')"></i>
                             </div>
                         </th>
                         <th>
@@ -58,8 +51,20 @@
                         </th>
                         <th>
                             <div>
-                                Note <i class="icon-sort {{this.sortProperty == 'note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'note'}" (click)="sort('note')"></i>
+                                Note X <i class="icon-sort {{this.sortProperty == 'noteX' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteX'}" (click)="sort('noteX')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Note OP <i class="icon-sort {{this.sortProperty == 'noteOP' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteOP'}" (click)="sort('noteOP')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Note L <i class="icon-sort {{this.sortProperty == 'noteL' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteL'}" (click)="sort('noteL')"></i>
                             </div>
                         </th>
                         <th>
@@ -70,10 +75,11 @@
                     </tr>
                     <tr *ngFor="let note of notes">
                         <td>{{getHoraire(note)}}</td>
-                        <td></td>
                         <td>{{note.candidature?.compte?.name}}</td>
                         <td>{{note.candidature?.compte?.prenom}}</td>
-                        <td>{{note.note}}</td>
+                        <td>{{note.noteX}}</td>
+                        <td>{{note.noteOP}}</td>
+                        <td>{{note.noteL}}</td>
                         <td>
                             <button class="btn" (click)="updateNote(note)">
                                 <div>
@@ -86,12 +92,79 @@
                         </td>
                     </tr>
                     <tr *ngIf="searchValue && notes.length === 0">
-                        <td colspan="6"><span class="vh-center">
-                                Aucune notes trouvées avec ces lettres dans son nom
+                        <td colspan="7"><span class="vh-center">
+                                Aucune notes trouvées avec ces elements de recherche
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && notes.length === 0">
-                        <td colspan="6"><span class="vh-center">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune notes presentent dans la base
+                            </span></td>
+                    </tr>
+                </table>
+                <table id="table" *ngIf="!isJury">
+                    <tr>
+                        <th>
+                            <div>
+                                Horaires <i class="icon-sort {{this.sortProperty == 'horaire' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'horaire'}" (click)="sort('horaire')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Intervenant <i
+                                    class="icon-sort {{this.sortProperty == 'intervenant' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'intervenant'}"
+                                    (click)="sort('intervenant')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Note X <i class="icon-sort {{this.sortProperty == 'noteX' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteX'}" (click)="sort('noteX')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Note OP <i class="icon-sort {{this.sortProperty == 'noteOP' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteOP'}" (click)="sort('noteOP')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Note L <i class="icon-sort {{this.sortProperty == 'noteL' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'noteL'}" (click)="sort('noteL')"></i>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr *ngFor="let note of notes">
+                        <td>{{getHoraire(note)}}</td>
+                        <td>{{note.candidature?.compte?.name}}</td>
+                        <td>{{note.candidature?.compte?.prenom}}</td>
+                        <td>{{note.compte?.name}} {{note.compte?.prenom}}</td>
+                        <td>{{note.noteX}}</td>
+                        <td>{{note.noteOP}}</td>
+                        <td>{{note.noteL}}</td>
+                    </tr>
+                    <tr *ngIf="searchValue && notes.length === 0">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune notes trouvées avec ces elements de recherche
+                            </span></td>
+                    </tr>
+                    <tr *ngIf="!searchValue && notes.length === 0">
+                        <td colspan="7"><span class="vh-center">
                                 Aucune notes presentent dans la base
                             </span></td>
                     </tr>
@@ -252,12 +325,38 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Note *</label>
-                            <input type="number" formControlName="note"
-                                [ngClass]="{required: updateFormNote.get('note')!.invalid}">
+                            <label for="">Note X *</label>
+                            <input type="number" formControlName="noteX"
+                                [ngClass]="{required: updateFormNote.get('noteX')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="updateFormNoteControl['note'].errors">
-                            <div *ngIf="updateFormNoteControl['note'].errors['required']">
+                        <div class="alert" *ngIf="updateFormNoteControl['noteX'].errors">
+                            <div *ngIf="updateFormNoteControl['noteX'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Note OP *</label>
+                            <input type="number" formControlName="noteOP"
+                                [ngClass]="{required: updateFormNote.get('noteOP')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="updateFormNoteControl['noteOP'].errors">
+                            <div *ngIf="updateFormNoteControl['noteOP'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Note L *</label>
+                            <input type="number" formControlName="noteL"
+                                [ngClass]="{required: updateFormNote.get('noteL')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="updateFormNoteControl['noteL'].errors">
+                            <div *ngIf="updateFormNoteControl['noteL'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>

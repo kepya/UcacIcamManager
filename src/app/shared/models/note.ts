@@ -1,7 +1,9 @@
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 export class Note {
     id?: number;
-    note!: number;
+    noteL!: number;
+    noteOP!: number;
+    noteX!: number;
     compte?: Compte;
     compte_id!: number;
     candidature_id!: number;
@@ -11,7 +13,9 @@ export class Note {
 }
 
 export class NoteRequest {
-    note!: number;
+    noteL!: number;
+    noteOP!: number;
+    noteX!: number;
     compte_id!: number;
     candidature_id!: number;
     debut_entretien!: Date;

@@ -26,7 +26,7 @@ import { Session } from 'src/app/shared/models/session';
 export class CalendrierDisponibiliteComponent implements OnInit {
   entretienNoteMap!: Map<string, Note>;
   interverwerMap!: Map<string, string[]>;
-
+  loading = false;
   entretienTimes: string[] = [
     "08h30 - 09h00",
     "09h00 - 09h30",
@@ -55,6 +55,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   interviewer!: string;
   selectCandidat!: any;
   selectCandidatMap: Map<string, any> = new Map<string, any>();
+  candidatsMap: Map<string, any> = new Map<string, any>();
   indexCurrentDate: number = 0;
   datesOfDisponibilities: number[] = [];
   datesOfEntretiens: Date[] = [];
@@ -72,10 +73,6 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     private messageService: MessageService, private router: Router, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
-    this.entretienTimes.forEach((value: string, index: number, array: string[]) => {
-      // this.selectCandidatMap.set(value, "");
-      // this.values[index] = "teste";
-    });
     this.entretienNoteMap = new Map<string, Note>();
     this.interverwerMap = new Map<string, string[]>();
     this.getActiveSession();
@@ -255,8 +252,18 @@ export class CalendrierDisponibiliteComponent implements OnInit {
       selectable: true,
     };
 
+    if (this.entretienTimes[index + 1].includes('12h00 - 13h00')) {
+      this.selectCandidatMap.set(this.entretienTimes[index + 2], node);
+      this.candidatsMap.set(this.entretienTimes[index + 2] + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
+    } else {
+      this.selectCandidatMap.set(this.entretienTimes[index + 1], node);
+      this.candidatsMap.set(this.entretienTimes[index + 1] + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
+    }
+
     this.selectCandidatMap.set(time, node);
-    this.selectCandidatMap.set(this.entretienTimes[index + 1], node);
+
+    this.candidatsMap.set(time + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
+
     let note: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);
@@ -304,22 +311,29 @@ export class CalendrierDisponibiliteComponent implements OnInit {
       note = n;
     }
 
+    this.candidatsMap.set(time + 'intervenant', interviewer);
     this.entretienNoteMap.set(time + ' - ' + this.currentDate.getTime().toString(), note);
   }
 
   addNote() {
+    this.loading = true;
+
     this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
       this.noteService.create({
         candidature_id: value.candidature_id,
         compte_id: value.compte!.id || 0,
         debut_entretien: value.debut_entretien,
         fin_entretien: value.fin_entretien,
-        note: 0,
+        noteL: 0,
+        noteOP: 0,
+        noteX: 0,
       }).subscribe({
         next: (res) => {
+          this.loading = false;
           this.messageService.add({ severity: 'success', summary: 'Assignation du jury ', detail: 'Assignation du jury ' + value.compte?.name + ' ' + value.compte?.prenom + ' pour un entretien avec le candidat ' + value.candidature?.compte.name + ' ' + value.candidature?.compte.prenom + ' effectuée avec success pour la date du ' + this.currentDate.toString() });
         },
         error: (err) => {
+          this.loading = false;
           this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: err.message });
           console.log("Error: ", err);
         }
@@ -331,6 +345,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   prochaineDate() {
     this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
     this.indexCurrentDate = this.indexCurrentDate + 1;
+    this.candidatsMap = new Map<string, any>();
     this.selectCandidatMap = new Map<string, any>();
     this.reset();
   }
@@ -338,6 +353,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   previousDate() {
     this.currentDate = this.datesOfEntretiens[this.indexCurrentDate - 1];
     this.indexCurrentDate = this.indexCurrentDate - 1;
+    this.candidatsMap = new Map<string, any>();
     this.selectCandidatMap = new Map<string, any>();
     this.reset();
   }
@@ -345,6 +361,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   reset() {
     this.interviewer = "";
     this.selectCandidat = {};
+    this.candidatsMap = new Map<string, any>();
     this.entretienNoteMap = new Map<string, Note>();
   }
 

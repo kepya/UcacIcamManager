@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { Compte } from 'src/app/shared/models/compte';
 import { Note } from 'src/app/shared/models/note';
 import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { NoteService } from 'src/app/shared/services/note.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
 import { SiteService } from 'src/app/site-page/site.service';
 
 @Component({
@@ -14,7 +17,7 @@ import { SiteService } from 'src/app/site-page/site.service';
   ]
 })
 export class NoteEntretienComponent implements OnInit {
-
+  compte!: Compte;
   notes: Note[] = [];
   note!: Note;
   sites: Site[] = [];
@@ -31,21 +34,29 @@ export class NoteEntretienComponent implements OnInit {
   nbrOfPage!: number;
   isFormNote!: boolean;
 
+  isJury: boolean = false;
+  isSuperAdmin: boolean = false;
+  isAdmin: boolean = false;
+
   formNote: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     horaire: new FormControl('', [Validators.required]),
     centre: new FormControl('', [Validators.required]),
-    note: new FormControl(0, [Validators.required]),
+    noteL: new FormControl(0, [Validators.required]),
+    noteX: new FormControl(0, [Validators.required]),
+    noteOP: new FormControl(0, [Validators.required]),
   });
 
   updateFormNote: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
-    note: new FormControl(0, [Validators.required]),
+    noteOP: new FormControl(0, [Validators.required]),
+    noteL: new FormControl(0, [Validators.required]),
+    noteX: new FormControl(0, [Validators.required]),
   });
 
-  constructor(private noteSrv: NoteService, private messageService: MessageService, private commonService: CommonService, private siteSrv: SiteService) { }
+  constructor(private noteSrv: NoteService, private storageService: StorageService, private messageService: MessageService, private commonService: CommonService, private siteSrv: SiteService) { }
 
   ngOnInit(): void {
     this.sortProperty = "horaire";
@@ -53,6 +64,10 @@ export class NoteEntretienComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
+    this.compte = this.storageService.getUserConnected();
+    this.isJury = this.compte.role == Role.JURY ? true : false;
+    this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
+    this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
     this.getSites();
     this.getNotes();
   }
@@ -109,24 +124,71 @@ export class NoteEntretienComponent implements OnInit {
       }
     }
 
-
-    if (property === 'note') {
+    if (property === 'noteL') {
       if (this.isAsc) {
         notes.sort((a, b) => {
-          if (a.note > b.note) {
+          if (a.noteL > b.noteL) {
             return 1;
           }
-          if (b.note > a.note) {
+          if (b.noteL > a.noteL) {
             return -1;
           }
           return 0;
         });
       } else {
         notes.sort((a, b) => {
-          if (a.note > b.note) {
+          if (a.noteL > b.noteL) {
             return -1;
           }
-          if (b.note > a.note) {
+          if (b.noteL > a.noteL) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+
+    }
+    if (property === 'noteX') {
+      if (this.isAsc) {
+        notes.sort((a, b) => {
+          if (a.noteX > b.noteX) {
+            return 1;
+          }
+          if (b.noteX > a.noteX) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        notes.sort((a, b) => {
+          if (a.noteX > b.noteX) {
+            return -1;
+          }
+          if (b.noteX > a.noteX) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
+    if (property === 'noteOP') {
+      if (this.isAsc) {
+        notes.sort((a, b) => {
+          if (a.noteOP > b.noteOP) {
+            return 1;
+          }
+          if (b.noteOP > a.noteOP) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        notes.sort((a, b) => {
+          if (a.noteOP > b.noteOP) {
+            return -1;
+          }
+          if (b.noteOP > a.noteOP) {
             return 1;
           }
           return 0;
@@ -234,14 +296,21 @@ export class NoteEntretienComponent implements OnInit {
     this.updateFormNote.patchValue({
       nom: note.candidature?.compte?.name,
       prenom: note.candidature?.compte?.prenom,
-      note: note.note,
+      noteL: note.noteL,
+      noteOP: note.noteOP,
+      noteX: note.noteX,
     });
   }
 
   createNote() {
     let d = { ...this.formNote.value };
     delete d.note;
-    d = { ...d, note: parseInt(this.formNote.value.note, 10) };
+    d = {
+      ...d,
+      noteL: parseInt(this.formNote.value.noteL, 10),
+      noteOP: parseInt(this.formNote.value.noteOP, 10),
+      noteX: parseInt(this.formNote.value.noteX, 10),
+    };
 
     this.noteSrv.create(d).subscribe({
       next: (value) => {
@@ -257,7 +326,9 @@ export class NoteEntretienComponent implements OnInit {
   }
 
   updateNoteObjet() {
-    this.note.note = parseInt(this.updateFormNote.value.note, 10);
+    this.note.noteL = parseInt(this.updateFormNote.value.noteL, 10);
+    this.note.noteOP = parseInt(this.updateFormNote.value.noteOP, 10);
+    this.note.noteX = parseInt(this.updateFormNote.value.noteX, 10);
     this.noteSrv.update({ ...this.note }).subscribe({
       next: (value) => {
         this.getNotes();

@@ -51,7 +51,7 @@
             <h3 class="title" *ngIf="currentDate">{{currentDate | date}}</h3>
         </div>
 
-        <div class="calendrier vh-space-between" *ngIf="currentDate != undefined && currentDate != null">
+        <div class="calendrier v-start-between" *ngIf="currentDate != undefined && currentDate != null">
             <table id="table">
                 <thead>
                     <th>Horaire</th>
@@ -90,20 +90,11 @@
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <!-- <p-dropdown optionLabel="compte.email" *ngIf="time != '12h00 - 13h00'" name="candidat"
-                                id="candidat" [options]="candidats" [(ngModel)]="selectCandidat"
-                                (onChange)="handleCandidatSelect($event, time)" [showClear]="true" [ngModel]="selectCandidatMap.get(time)"
-                                placeholder="Choisir un candidat"></p-dropdown> -->
-                            <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full"
-                                *ngIf="time != '12h00 - 13h00'" (onNodeSelect)="handleCandidatSelect($event, time, i)"
-                                [showClear]="true" [options]="candidatNodes"
-                                placeholder="Choisir un candidat"></p-treeSelect>
+                            <p><strong>{{candidatsMap.get(time + 'candidat')}}</strong></p>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
                             <td>
-                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
-                                    [showClear]="true" [ngModel]="interviewer"
-                                    placeholder="Choisir un intervenant"></p-dropdown>
+                                <p><strong>{{candidatsMap.get(time + 'intervenant')}}</strong></p>
                             </td>
                         </ng-container>
                         <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
@@ -115,7 +106,7 @@
         <div class="footer">
             <div class="line"></div>
             <div class="btn-group">
-                <button class="btn btn-info" (click)="addNote()" type="submit">
+                <button class="btn btn-info" (click)="addNote()" [disabled]="loading" type="submit">
                     Soumettre
                 </button>
             </div>
