@@ -257,7 +257,9 @@ export class NoteEntretienComponent implements OnInit {
 
   getNotes() {
     this.noteSrv.liste().subscribe({
-      next: (value: Note[]) => {
+      next: (res: Note[]) => {
+        let value = this.isJury ? res.filter((v) => v.compteid === this.compte.id) : res;
+
         value = this.sort('nom', value);
         this.searchNotes = [];
         this.searchNotes = value;

@@ -52,11 +52,14 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     selectable: true,
   };
   interviewers: string[] = [];
+  entretiensBeforeBreak: string[] = [];
+  entretiensAfterBreak: string[] = [];
   interviewer!: string;
   selectCandidat!: any;
   selectCandidatMap: Map<string, any> = new Map<string, any>();
   candidatsMap: Map<string, any> = new Map<string, any>();
   indexCurrentDate: number = 0;
+  breakIndex: number = 0;
   datesOfDisponibilities: number[] = [];
   datesOfEntretiens: Date[] = [];
   currentDate!: Date;
@@ -73,6 +76,7 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     private messageService: MessageService, private router: Router, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
+    this.breakIndex = this.entretienTimes.findIndex(x => x.includes('12h00 - 13h00'));
     this.entretienNoteMap = new Map<string, Note>();
     this.interverwerMap = new Map<string, string[]>();
     this.getActiveSession();
@@ -86,7 +90,9 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         this.session = value;
 
         let d = new Date(this.session.date_debut_entretien!);
+        d.setHours(0, 0, 0, 0);
         let d2 = new Date(this.session.date_fin_entretien!);
+        d2.setHours(0, 0, 0, 0);
 
         this.datesOfEntretiens = this.commonService.genererDates(d.getTime(), d2.getTime());
 
@@ -203,7 +209,9 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         let intervenants: string[] = [];
 
         for (let compteDisponibilite of compteDisponibilites) {
-          let d = new Date(compteDisponibilite!.disponibilite!.date_disponibilite).getTime();
+          let dTemps = new Date(compteDisponibilite!.disponibilite!.date_disponibilite);
+          dTemps.setHours(0, 0, 0, 0);
+          let d = dTemps.getTime();
           let dateIndex = dates.findIndex(date => date == d);
           if (dateIndex <= -1) {
             dates.push(d);
@@ -240,8 +248,22 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         this.datesOfDisponibilities.sort();
 
         this.interviewers = [...new Set(intervenants)];
+        this.entretiensBeforeBreak = this.interverwerMap.get('08h00 - 12h00 - ' + this.currentDate.getTime().toString()) || [];
+        this.entretiensAfterBreak = this.interverwerMap.get('13h00 - 16h30 - ' + this.currentDate.getTime().toString()) || [];
+
+        console.log('entretiensBeforeBreak', this.entretiensBeforeBreak);
+        console.log('entretiensAfterBreak', this.entretiensAfterBreak);
+
       }
     })
+  }
+
+  getIntervenant(index: number) {
+    if (this.breakIndex > -1 && index < this.breakIndex) {
+      return this.entretiensBeforeBreak;
+    } else {
+      return this.entretiensAfterBreak;
+    }
   }
 
   handleCandidatSelect(event: any, time: string, index: number) {
@@ -252,40 +274,62 @@ export class CalendrierDisponibiliteComponent implements OnInit {
       selectable: true,
     };
 
+    let timeN1: string = '';
+
     if (this.entretienTimes[index + 1].includes('12h00 - 13h00')) {
-      this.selectCandidatMap.set(this.entretienTimes[index + 2], node);
-      this.candidatsMap.set(this.entretienTimes[index + 2] + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
+      timeN1 = this.entretienTimes[index + 2];
     } else {
-      this.selectCandidatMap.set(this.entretienTimes[index + 1], node);
-      this.candidatsMap.set(this.entretienTimes[index + 1] + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
+      timeN1 = this.entretienTimes[index + 1];
     }
 
-    this.selectCandidatMap.set(time, node);
+    this.selectCandidatMap.set(timeN1, node);
+    this.candidatsMap.set(timeN1 + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
 
+    this.selectCandidatMap.set(time, node);
     this.candidatsMap.set(time + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
 
     let note: Note = new Note();
+    let note1: Note = new Note();
 
     let dates = this.commonService.buildDate(this.currentDate, time);
     note.debut_entretien = new Date(dates.startDate);
     note.fin_entretien = new Date(dates.endDate);
 
-    // let candidat = this.candidats.find(c => c.compte.email == candidatEmail)
+    let dates1 = this.commonService.buildDate(this.currentDate, timeN1);
+    note1.debut_entretien = new Date(dates1.startDate);
+    note1.fin_entretien = new Date(dates1.endDate);
 
-    note.candidature_id = candidat!.id || 0;
+    note.candidatureid = candidat!.id || 0;
     note.candidature = candidat;
 
-    if (this.entretienNoteMap.has(time + ' - ' + this.currentDate.getTime().toString())) {
-      let n = this.entretienNoteMap.get(time + ' - ' + this.currentDate.getTime().toString()) as unknown as Note;
-      n.candidature = note.candidature;
-      n.candidature_id = note.candidature_id;
+    note1.candidatureid = candidat!.id || 0;
+    note1.candidature = candidat;
+
+    let entretiens: Note[] = [];
+    this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
+      entretiens.push(value);
+    });
+
+    let n = entretiens.find((value: Note, index: number, array: Note[]) => value.debut_entretien.getTime() == note.debut_entretien.getTime());
+    if (n) {
+      n.compte = note.compte;
+      n.compteid = note.compteid;
       n.debut_entretien = note.debut_entretien;
       n.fin_entretien = note.fin_entretien;
       note = n;
     }
 
+    let n1 = entretiens.find((value: Note, index: number, array: Note[]) => value.debut_entretien.getTime() == note1.debut_entretien.getTime());
+    if (n1) {
+      n1.compte = note.compte;
+      n1.compteid = note.compteid;
+      n1.debut_entretien = note.debut_entretien;
+      n1.fin_entretien = note.fin_entretien;
+      note1 = n1;
+    }
+
     this.entretienNoteMap.set(time + ' - ' + this.currentDate.getTime().toString(), note);
-    this.entretienNoteMap.set(this.entretienTimes[index + 1] + ' - ' + this.currentDate.getTime().toString(), note);
+    this.entretienNoteMap.set(timeN1 + ' - ' + this.currentDate.getTime().toString(), note1);
   }
 
   handleInterviewerSelect(event: any, time: string) {
@@ -299,29 +343,41 @@ export class CalendrierDisponibiliteComponent implements OnInit {
 
     let jury = this.juries.find(j => (j?.name + ' ' + j?.prenom) == interviewer);
 
-    note.compte_id = jury!.id || 0;
+    note.compteid = jury!.id || 0;
     note.compte = jury;
 
-    if (this.entretienNoteMap.has(time + ' - ' + this.currentDate.getTime().toString())) {
-      let n = this.entretienNoteMap.get(time + ' - ' + this.currentDate.getTime().toString()) as unknown as Note;
+    let entretiens: Note[] = [];
+    this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
+      entretiens.push(value);
+    });
+
+    let n = entretiens.find((value: Note, index: number, array: Note[]) => value.debut_entretien.getTime() == note.debut_entretien.getTime());
+    if (n) {
       n.compte = note.compte;
-      n.compte_id = note.compte_id;
+      n.compteid = note.compteid;
       n.debut_entretien = note.debut_entretien;
       n.fin_entretien = note.fin_entretien;
       note = n;
     }
 
     this.candidatsMap.set(time + 'intervenant', interviewer);
-    this.entretienNoteMap.set(time + ' - ' + this.currentDate.getTime().toString(), note);
+    // this.entretienNoteMap.set(time + ' - ' + this.currentDate.getTime().toString(), note);
   }
 
   addNote() {
     this.loading = true;
+    console.log(this.entretienNoteMap.values());
 
+    let entretiens: Note[] = [];
     this.entretienNoteMap.forEach((value: Note, key: string, map: Map<string, Note>) => {
+      entretiens.push(value);
+    });
+
+    for (let index = 0; index < entretiens.length; index++) {
+      const value = entretiens[index];
       this.noteService.create({
-        candidature_id: value.candidature_id,
-        compte_id: value.compte!.id || 0,
+        candidatureid: value.candidatureid,
+        compteid: value.compte?.id || 0,
         debut_entretien: value.debut_entretien,
         fin_entretien: value.fin_entretien,
         noteL: 0,
@@ -338,7 +394,9 @@ export class CalendrierDisponibiliteComponent implements OnInit {
           console.log("Error: ", err);
         }
       })
-    });
+    }
+    this.reset();
+
     // this.router.navigate(['/calendrier_entretiens']);
   }
 
@@ -361,6 +419,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   reset() {
     this.interviewer = "";
     this.selectCandidat = {};
+    this.candidatsMap = new Map<string, any>();
+    this.selectCandidatMap = new Map<string, any>();
     this.candidatsMap = new Map<string, any>();
     this.entretienNoteMap = new Map<string, Note>();
   }

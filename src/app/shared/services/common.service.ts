@@ -20,7 +20,6 @@ export class CommonService {
 
   genererDates(dateDebut: number, dateFin: number): Date[] {
     let nbreJr = this.calculerJours(dateDebut, dateFin);
-    console.log("Nombre de jours : " + nbreJr);
     var dates = [];
     let date = new Date(dateDebut);
 

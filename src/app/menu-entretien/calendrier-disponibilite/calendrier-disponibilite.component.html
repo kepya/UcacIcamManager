@@ -61,10 +61,6 @@
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <!-- <p-dropdown optionLabel="compte.email" *ngIf="time != '12h00 - 13h00'" name="candidat"
-                                id="candidat" [options]="candidats" [(ngModel)]="selectCandidat"
-                                (onChange)="handleCandidatSelect($event, time)" [showClear]="true"
-                                placeholder="Choisir un candidat"></p-dropdown> -->
                             <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full"
                                 *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidatMap.get(time)"
                                 (onNodeSelect)="handleCandidatSelect($event, time, i)" [showClear]="true"
@@ -72,9 +68,9 @@
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
                             <td>
-                                <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event, time)"
-                                    [showClear]="true" [ngModel]="interviewer"
-                                    placeholder="Choisir un intervenant"></p-dropdown>
+                                <p-dropdown [options]="getIntervenant(i)"
+                                    (onChange)="handleInterviewerSelect($event, time)" [showClear]="true"
+                                    [ngModel]="interviewer" placeholder="Choisir un intervenant"></p-dropdown>
                             </td>
                         </ng-container>
                         <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>

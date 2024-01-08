@@ -5,8 +5,8 @@ export class Note {
     noteOP!: number;
     noteX!: number;
     compte?: Compte;
-    compte_id!: number;
-    candidature_id!: number;
+    compteid!: number;
+    candidatureid!: number;
     debut_entretien!: Date;
     fin_entretien!: Date;
     candidature?: Candidature;
@@ -16,8 +16,8 @@ export class NoteRequest {
     noteL!: number;
     noteOP!: number;
     noteX!: number;
-    compte_id!: number;
-    candidature_id!: number;
+    compteid!: number;
+    candidatureid!: number;
     debut_entretien!: Date;
     fin_entretien!: Date;
 }
