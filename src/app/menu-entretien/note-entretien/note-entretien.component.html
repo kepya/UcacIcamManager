@@ -326,7 +326,7 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="">Note X *</label>
-                            <input type="number" formControlName="noteX"
+                            <input type="number" formControlName="noteX" max="4" min="0"
                                 [ngClass]="{required: updateFormNote.get('noteX')!.invalid}">
                         </div>
                         <div class="alert" *ngIf="updateFormNoteControl['noteX'].errors">
@@ -334,12 +334,16 @@
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
+                            <div *ngIf="updateFormNoteControl['noteX'].errors['max']">
+                                Veuillez s'il vous plait entrer une
+                                valeur maximale de 4
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group">
                             <label for="">Note OP *</label>
-                            <input type="number" formControlName="noteOP"
+                            <input type="number" formControlName="noteOP" max="4" min="0"
                                 [ngClass]="{required: updateFormNote.get('noteOP')!.invalid}">
                         </div>
                         <div class="alert" *ngIf="updateFormNoteControl['noteOP'].errors">
@@ -347,18 +351,26 @@
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
+                            <div *ngIf="updateFormNoteControl['noteOP'].errors['max']">
+                                Veuillez s'il vous plait entrer une
+                                valeur maximale de 4
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group">
                             <label for="">Note L *</label>
-                            <input type="number" formControlName="noteL"
+                            <input type="number" formControlName="noteL" max="4" min="0"
                                 [ngClass]="{required: updateFormNote.get('noteL')!.invalid}">
                         </div>
                         <div class="alert" *ngIf="updateFormNoteControl['noteL'].errors">
                             <div *ngIf="updateFormNoteControl['noteL'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
+                            </div>
+                            <div *ngIf="updateFormNoteControl['noteL'].errors['max']">
+                                Veuillez s'il vous plait entrer une
+                                valeur maximale de 4
                             </div>
                         </div>
                     </div>

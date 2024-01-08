@@ -43,17 +43,17 @@ export class NoteEntretienComponent implements OnInit {
     prenom: new FormControl('', [Validators.required]),
     horaire: new FormControl('', [Validators.required]),
     centre: new FormControl('', [Validators.required]),
-    noteL: new FormControl(0, [Validators.required]),
-    noteX: new FormControl(0, [Validators.required]),
-    noteOP: new FormControl(0, [Validators.required]),
+    noteL: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
+    noteX: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
+    noteOP: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
   });
 
   updateFormNote: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
-    noteOP: new FormControl(0, [Validators.required]),
-    noteL: new FormControl(0, [Validators.required]),
-    noteX: new FormControl(0, [Validators.required]),
+    noteOP: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
+    noteL: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
+    noteX: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
   });
 
   constructor(private noteSrv: NoteService, private storageService: StorageService, private messageService: MessageService, private commonService: CommonService, private siteSrv: SiteService) { }
