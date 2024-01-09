@@ -119,7 +119,7 @@ export class IntervenantEntretienComponent implements OnInit {
 
       this.compteDisponibiliteService.create({
         disponibilite_id: element.disponibilityId,
-        compte_id: element.jury
+        compteId: element.jury
       }).subscribe({
         next: (value) => {
           this.messageService.add({ severity: 'success', summary: 'Selection de la plage', detail: 'Selection de la plage éffectuée avec success' });
