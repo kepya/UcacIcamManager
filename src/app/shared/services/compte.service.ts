@@ -56,6 +56,6 @@ export class CompteService {
   }
 
   public delete(idCompte: number): Observable<void> {
-    return this.http.delete<void>(this.url + idCompte);
+    return this.http.delete<void>(this.url + 'delete/' + idCompte);
   }
 }
