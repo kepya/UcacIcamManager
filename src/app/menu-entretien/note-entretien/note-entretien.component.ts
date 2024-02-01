@@ -208,6 +208,7 @@ export class NoteEntretienComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     this.getNotes();
   }
 

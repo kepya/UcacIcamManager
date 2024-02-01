@@ -175,7 +175,7 @@ export class JuryMemberComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    ;
+    this.page = 1;
     this.getComptes();
   }
 

@@ -140,6 +140,7 @@ export class ListeAdmissibiliteComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     if (this.actifOption == 'centre') {
       this.getCandidaturesByCentre(this.centre.id ?? 0);
 

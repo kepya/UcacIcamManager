@@ -193,6 +193,7 @@ export class CentreExamenPageComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     this.getCentres();
   }
 

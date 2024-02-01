@@ -175,6 +175,7 @@ export class AdministrateurComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     this.getComptes();
   }
 
