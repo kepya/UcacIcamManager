@@ -94,15 +94,20 @@ export class CalendrierEntretienComponent implements OnInit {
     });
   }
 
+
   prochaineDate() {
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
-    this.indexCurrentDate = this.indexCurrentDate + 1;
-    this.getEntretiens();
+    if (this.indexCurrentDate < this.datesOfEntretiens.length) {
+    this.indexCurrentDate = (this.indexCurrentDate > this.datesOfEntretiens.length) ? this.datesOfEntretiens.length - 1 : this.indexCurrentDate + 1;
+    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
+     this.getEntretiens();
+    }
   }
 
   previousDate() {
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate - 1];
-    this.indexCurrentDate = this.indexCurrentDate - 1;
-    this.getEntretiens();
+    if (this.indexCurrentDate > 0) {
+    this.indexCurrentDate = (this.indexCurrentDate < 0) ? 0 : this.indexCurrentDate - 1;
+    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
+     this.getEntretiens();
+    }
   }
 }

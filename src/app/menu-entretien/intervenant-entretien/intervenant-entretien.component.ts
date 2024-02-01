@@ -100,7 +100,6 @@ export class IntervenantEntretienComponent implements OnInit {
           }
           this.disponibilityMap.set(horaire + ' - ' + d, disponibilite.id || 0)
         }
-        console.log('horaires: ', horaires);
 
         let datesSet = new Set(dates);
         this.datesOfDisponibilities = [...datesSet] || [];

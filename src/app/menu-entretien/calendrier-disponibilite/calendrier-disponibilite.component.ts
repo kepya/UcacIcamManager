@@ -95,7 +95,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         d2.setHours(0, 0, 0, 0);
 
         this.datesOfEntretiens = this.commonService.genererDates(d.getTime(), d2.getTime());
-
+        console.log('dateOfEntretien: ', this.datesOfEntretiens);
+        
         this.indexCurrentDate = 0;
         this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
       },
@@ -250,10 +251,6 @@ export class CalendrierDisponibiliteComponent implements OnInit {
         this.interviewers = [...new Set(intervenants)];
         this.entretiensBeforeBreak = this.interverwerMap.get('08h00 - 12h00 - ' + this.currentDate.getTime().toString()) || [];
         this.entretiensAfterBreak = this.interverwerMap.get('13h00 - 16h30 - ' + this.currentDate.getTime().toString()) || [];
-
-        console.log('entretiensBeforeBreak', this.entretiensBeforeBreak);
-        console.log('entretiensAfterBreak', this.entretiensAfterBreak);
-
       }
     })
   }
@@ -401,19 +398,23 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   prochaineDate() {
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate + 1];
-    this.indexCurrentDate = this.indexCurrentDate + 1;
+   if (this.indexCurrentDate < this.datesOfEntretiens.length) {
+    this.indexCurrentDate = (this.indexCurrentDate > this.datesOfEntretiens.length) ? this.datesOfEntretiens.length - 1 : this.indexCurrentDate + 1;
+    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
     this.candidatsMap = new Map<string, any>();
     this.selectCandidatMap = new Map<string, any>();
     this.reset();
+   }
   }
 
   previousDate() {
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate - 1];
-    this.indexCurrentDate = this.indexCurrentDate - 1;
-    this.candidatsMap = new Map<string, any>();
-    this.selectCandidatMap = new Map<string, any>();
-    this.reset();
+    if (this.indexCurrentDate > 0) {
+      this.indexCurrentDate = (this.indexCurrentDate < 0) ? 0 : this.indexCurrentDate - 1;
+      this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
+      this.candidatsMap = new Map<string, any>();
+      this.selectCandidatMap = new Map<string, any>();
+      this.reset();
+    }
   }
 
   reset() {

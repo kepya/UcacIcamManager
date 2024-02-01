@@ -20,11 +20,14 @@ export class CommonService {
 
   genererDates(dateDebut: number, dateFin: number): Date[] {
     let nbreJr = this.calculerJours(dateDebut, dateFin);
-    var dates = [];
+    console.log("nombre jour:", nbreJr);
+
+    let dates:Date[] = [];
     let date = new Date(dateDebut);
+    dates.push(new Date(dateDebut));
 
     for (let index = 0; index < nbreJr; index++) {
-      date.setDate(date.getDate() + index);
+      date.setDate(date.getDate() + 1);
       dates.push(new Date(date));
     }
 
@@ -40,7 +43,6 @@ export class CommonService {
   buildDateWithTime(time: string) {
     const current = new Date()
     const dateTimeTwo = new Date(`${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${time}`)
-    console.log('time', dateTimeTwo);
     return dateTimeTwo;
   }
 
