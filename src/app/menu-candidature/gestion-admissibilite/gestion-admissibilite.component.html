@@ -108,25 +108,6 @@
                                     [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Commencé <i class="icon-sort {{this.sortProperty == 'start' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'start'}" (click)="sort('start')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Terminé <i class="icon-sort {{this.sortProperty == 'end' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'end'}" (click)="sort('end')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Note <i class="icon-sort {{this.sortProperty == 'note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'note'}" (click)="sort('note')"></i>
-                            </div>
-                        </th>
-
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
                         <td><input class="checkbox" type="checkbox" name="validate"
@@ -136,9 +117,6 @@
                         <td>{{candidature?.centre}}</td>
                         <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
                         <td>{{candidature?.statut}}</td>
-                        <td>{{"20"}}</td>
-                        <td>{{"20"}}</td>
-                        <td>{{"16"}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
                         <td colspan="9"><span class="vh-center">

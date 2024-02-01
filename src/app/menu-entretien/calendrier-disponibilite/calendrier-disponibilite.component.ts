@@ -17,6 +17,11 @@ import { Router } from '@angular/router';
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Session } from 'src/app/shared/models/session';
 
+interface SelectItemFormation {
+   label:string;
+   items: {label: string; candidat: Candidature}[];
+}
+
 @Component({
   selector: 'app-calendrier-disponibilite',
   templateUrl: './calendrier-disponibilite.component.html',
@@ -71,6 +76,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   candidatNodes: TreeNode[] = [];
   session!: Session;
 
+  groupedFormations!: SelectItemFormation[];
+
   constructor(private candidatureSrv: CandidatureService, private commonService: CommonService, private noteService: NoteService,
     private compteDisponibiliteService: CompteDisponibiliteService, private compteService: CompteService,
     private messageService: MessageService, private router: Router, private sessionSrv: SessionExamenService) { }
@@ -107,98 +114,82 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.candidatureSrv.liste().subscribe({
       next: (candidatures) => {
         this.candidats = candidatures;
+        this.groupedFormations = [];
+
         let faCandidats = candidatures.filter(v => v.formation1 === "FA").map((r) => ({
           label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-        let ipCandidats = candidatures.filter(v => v.formation1 === "IP").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-        let iCandidats = candidatures.filter(v => v.formation1 === "I").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-        let xCandidats = candidatures.filter(v => v.formation1 === "X").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-        let lCandidats = candidatures.filter(v => v.formation1 === "L").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-        let opCandidats = candidatures.filter(v => v.formation1 === "OP").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
-          data: r,
-          selectable: true,
-        }) as unknown as TreeNode);
-
-        if (xCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation X",
-            draggable: true,
-            selectable: false,
-            expanded: true,
-            children: xCandidats,
-          });
-        }
-
+          candidat: r
+        }));
 
         if (faCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation FA",
-            draggable: true,
-            expanded: true,
-            selectable: false,
-            children: faCandidats,
-          });
+        this.groupedFormations.push({
+          label: "FA",
+          items: faCandidats
+        });
         }
 
-        if (iCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation I",
-            draggable: true,
-            expanded: true,
-            selectable: false,
-            children: iCandidats,
-          });
-        }
+        let ipCandidats = candidatures.filter(v => v.formation1 === "IP").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          candidat: r
+        }));
 
         if (ipCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation IP",
-            draggable: true,
-            expanded: true,
-            selectable: false,
-            children: ipCandidats,
+          this.groupedFormations.push({
+            label: "IP",
+            items: ipCandidats
           });
-        }
+          }
+
+        let iCandidats = candidatures.filter(v => v.formation1 === "I").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          candidat: r
+        }));
+
+        if (iCandidats.length > 0) {
+          this.groupedFormations.push({
+            label: "I",
+            items: iCandidats
+          });
+          }
+
+        let xCandidats = candidatures.filter(v => v.formation1 === "X").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          candidat: r
+        }));
+
+        if (xCandidats.length > 0) {
+          this.groupedFormations.push({
+            label: "X",
+            items: xCandidats
+          });
+          }
+
+        let lCandidats = candidatures.filter(v => v.formation1 === "L").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          candidat: r
+        }));
 
         if (lCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation L",
-            draggable: true,
-            expanded: true,
-            selectable: false,
-            children: lCandidats,
+          this.groupedFormations.push({
+            label: "L",
+            items: lCandidats
           });
-        }
+          }
+
+        let opCandidats = candidatures.filter(v => v.formation1 === "OP").map((r) => ({
+          label: r.compte.name + " " + r.compte.prenom,
+          candidat: r
+        }));
 
         if (opCandidats.length > 0) {
-          this.candidatNodes.push({
-            label: "Formation Op",
-            draggable: true,
-            selectable: false,
-            expanded: true,
-            children: opCandidats,
+          this.groupedFormations.push({
+            label: "OP",
+            items: opCandidats
           });
+          }
 
-        }
+        console.log('fro:', this.groupedFormations);
+        
       }
     })
   }
@@ -264,12 +255,8 @@ export class CalendrierDisponibiliteComponent implements OnInit {
   }
 
   handleCandidatSelect(event: any, time: string, index: number) {
-    let candidat = event.node.data;
-    let node = {
-      label: candidat.compte.name + " " + candidat.compte.prenom,
-      data: candidat,
-      selectable: true,
-    };
+    console.log('test: ', event.itemValue);
+    let candidat = event.itemValue.candidat;
 
     let timeN1: string = '';
 
@@ -279,10 +266,10 @@ export class CalendrierDisponibiliteComponent implements OnInit {
       timeN1 = this.entretienTimes[index + 1];
     }
 
-    this.selectCandidatMap.set(timeN1, node);
+    this.selectCandidatMap.set(timeN1, [{label: event.itemValue.label, candidat: candidat}]);
     this.candidatsMap.set(timeN1 + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
 
-    this.selectCandidatMap.set(time, node);
+    this.selectCandidatMap.set(time, [{label: event.itemValue.label, candidat: candidat}]);
     this.candidatsMap.set(time + 'candidat', candidat.compte.name + " " + candidat.compte.prenom);
 
     let note: Note = new Note();
@@ -424,6 +411,9 @@ export class CalendrierDisponibiliteComponent implements OnInit {
     this.selectCandidatMap = new Map<string, any>();
     this.candidatsMap = new Map<string, any>();
     this.entretienNoteMap = new Map<string, Note>();
+
+    // this.getCandidatures();
+    // this.getCompteDisponibilite();
   }
 
 }

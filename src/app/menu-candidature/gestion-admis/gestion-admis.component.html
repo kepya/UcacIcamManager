@@ -120,47 +120,6 @@
                                     [ngClass]="{bold: this.sortProperty == 'genre'}" (click)="sort('genre')"></i>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Jury 1 <i class="icon-sort {{this.sortProperty == 'jury1' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'jury1'}" (click)="sort('jury1')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Jury 2 <i class="icon-sort {{this.sortProperty == 'jury2' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'jury2'}" (click)="sort('jury2')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Jury 3 <i class="icon-sort {{this.sortProperty == 'jury3' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'jury3'}" (click)="sort('jury3')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Jury 4 <i class="icon-sort {{this.sortProperty == 'jury4' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'jury4'}" (click)="sort('jury4')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Sommes notes <i
-                                    class="icon-sort {{this.sortProperty == 'somme_note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'somme_note'}"
-                                    (click)="sort('somme_note')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Nombre Notes <i
-                                    class="icon-sort {{this.sortProperty == 'nombre_note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nombre_note'}"
-                                    (click)="sort('nombre_note')"></i>
-                            </div>
-                        </th>
-
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
                         <td><input class="checkbox" type="checkbox" name="validate"
@@ -172,12 +131,6 @@
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature.genre}}</td>
-                        <td>{{"20"}}</td>
-                        <td>{{"20"}}</td>
-                        <td>{{"20"}}</td>
-                        <td>{{"16"}}</td>
-                        <td>{{"9"}}</td>
-                        <td>{{"2"}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
                         <td colspan="14"><span class="vh-center">

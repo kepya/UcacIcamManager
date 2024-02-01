@@ -20,6 +20,10 @@ export class CompteDisponibiliteService {
     return this.http.get<CompteDisponibilite[]>(this.url + "all");
   }
 
+  public allBySession(sessionId: string): Observable<CompteDisponibilite[]> {
+    return this.http.get<CompteDisponibilite[]>(this.url + "bysession/" + sessionId);
+  }
+
   public getOne(id: number): Observable<CompteDisponibilite> {
     return this.http.get<CompteDisponibilite>(this.url + id);
   }

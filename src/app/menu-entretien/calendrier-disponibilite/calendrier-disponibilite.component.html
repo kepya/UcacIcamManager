@@ -61,10 +61,13 @@
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full"
-                                *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidatMap.get(time)"
-                                (onNodeSelect)="handleCandidatSelect($event, time, i)" [showClear]="true"
-                                [options]="candidatNodes" placeholder="Choisir un candidat"></p-treeSelect>
+                            <p-multiSelect *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidatMap.get(time)" (onChange)="handleCandidatSelect($event, time, i)" [selectionLimit]="1" [showClear]="true" [options]="groupedFormations" [group]="true"  placeholder="Choisir un candidat" scrollHeight="250px" display="chip" optionLabel="label">
+                                <ng-template let-group pTemplate="group">
+                                    <div class="flex align-items-center">
+                                        <span>{{ group.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-multiSelect>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
                             <td>
