@@ -160,6 +160,54 @@ export class ListeCandidatureComponent implements OnInit {
       }
     }
 
+    if (property === 'genre') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.genre > b.genre) {
+            return 1;
+          }
+          if (b.genre > a.genre) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.genre > b.genre) {
+            return -1;
+          }
+          if (b.genre > a.genre) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
+    if (property === 'langue') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.langue > b.langue) {
+            return 1;
+          }
+          if (b.langue > a.langue) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.langue > b.langue) {
+            return -1;
+          }
+          if (b.langue > a.langue) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
     if (property === 'photo') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {

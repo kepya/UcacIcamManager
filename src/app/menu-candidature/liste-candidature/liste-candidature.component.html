@@ -97,6 +97,30 @@
                         </th>
                         <th>
                             <div>
+                                Formation <i
+                                    class="icon-sort {{this.sortProperty == 'formation' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'formation'}"
+                                    ></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Genre <i
+                                    class="icon-sort {{this.sortProperty == 'genre' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'genre'}"
+                                    (click)="sort('genre')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Langue <i
+                                    class="icon-sort {{this.sortProperty == 'langue' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'langue'}"
+                                    (click)="sort('langue')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
                                 Photo <i class="icon-sort {{this.sortProperty == 'photo' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'photo'}" (click)="sort('photo')"></i>
                             </div>
@@ -114,6 +138,9 @@
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature.nationalite}}</td>
+                        <td>{{candidature.formation1}} {{candidature.formation2}} {{candidature.formation2}}</td>
+                        <td>{{candidature.genre}}</td>
+                        <td>{{candidature.langue}}</td>
                         <td></td>
                         <td>{{candidature.statut}}</td>
                     </tr>

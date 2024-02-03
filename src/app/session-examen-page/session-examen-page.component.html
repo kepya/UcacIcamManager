@@ -42,7 +42,7 @@
                         </th>
                         <th>
                             <div>
-                                Date de début <i
+                                Date de debut d'enregistrement <i
                                     class="icon-sort {{this.sortProperty == 'date_debut' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'date_debut'}"
                                     (click)="sort('date_debut')"></i>
@@ -50,7 +50,7 @@
                         </th>
                         <th>
                             <div>
-                                Date limite de dépot de dossiers <i
+                                Date fin d'enregistrement <i
                                     class="icon-sort {{this.sortProperty == 'date_limite' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'date_limite'}"
                                     (click)="sort('date_limite')"></i>
@@ -81,7 +81,7 @@
                         <td>{{session.date_debut | date}}</td>
                         <td>{{session.date_limite | date}}</td>
                         <td>{{session.date_examen | date}}</td>
-                        <td>{{session.statut ? session.statut:'Inactive'}}</td>
+                        <td>{{session.statut === "true" ? 'Active':'Inactive'}}</td>
                         <td>
                             <button class="btn" (click)="updateSession(session)">
                                 <div>

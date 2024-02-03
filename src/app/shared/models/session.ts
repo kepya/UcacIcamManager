@@ -8,5 +8,5 @@ export class Session {
     date_debut_entretien?: Date;
     date_fin_entretien?: Date;
 
-    statut!: boolean;
+    statut!: string;
 }
