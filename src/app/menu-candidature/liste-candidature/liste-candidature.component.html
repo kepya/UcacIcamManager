@@ -138,19 +138,19 @@
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature.nationalite}}</td>
-                        <td>{{candidature.formation1}} {{candidature.formation2}} {{candidature.formation2}}</td>
+                        <td>{{candidature.formation1}}, {{candidature.formation2}}, {{candidature.formation2}}</td>
                         <td>{{candidature.genre}}</td>
                         <td>{{candidature.langue}}</td>
                         <td></td>
                         <td>{{candidature.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="6"><span class="vh-center">
+                        <td colspan="9"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="6"><span class="vh-center">
+                        <td colspan="9"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>
