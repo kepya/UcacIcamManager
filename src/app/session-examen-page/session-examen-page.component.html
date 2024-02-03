@@ -81,7 +81,7 @@
                         <td>{{session.date_debut | date}}</td>
                         <td>{{session.date_limite | date}}</td>
                         <td>{{session.date_examen | date}}</td>
-                        <td>{{session.statut ? 'Active':'Inactive'}}</td>
+                        <td>{{session.statut ? session.statut:'Inactive'}}</td>
                         <td>
                             <button class="btn" (click)="updateSession(session)">
                                 <div>

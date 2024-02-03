@@ -281,6 +281,7 @@ export class NoteEntretienComponent implements OnInit {
 
   viewNote(view: string = 'data') {
     if (view === 'data') {
+      this.note = new Note();
       this.isFormNote = false;
     } else {
       this.isFormNote = true;

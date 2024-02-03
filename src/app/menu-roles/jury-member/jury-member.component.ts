@@ -230,6 +230,7 @@ export class JuryMemberComponent implements OnInit {
 
   viewCompte(view: string = 'data') {
     if (view === 'data') {
+      this.compte = new Compte();
       this.isFormCompte = false;
     } else {
       this.isFormCompte = true;
