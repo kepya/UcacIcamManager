@@ -36,10 +36,13 @@ export class ParcoursDialogComponent implements OnInit {
   }
 
   validate() {
-    this.criteria.emit({
-      cycle: this.cycle,
-      formation: this.formation
-    });
+    if (this.cycle && this.formation) {
+      this.criteria.emit({
+        cycle: this.cycle,
+        formation: this.formation
+      });
+    }
+
   }
 
 }
