@@ -45,6 +45,33 @@ export class CandidatureService {
     return this.http.get<Candidature[]>(this.url + "allbycentreexamen/" + idCentre);
   }
 
+  public allByParcours(parcours: string): Observable<Candidature[]> {
+    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+      "parcours": true,
+      "cycle": false,
+      "valeaurParcours": parcours,
+      "valeurCycle": "string"
+    });
+  }
+
+  public allByCycle(cycle: string): Observable<Candidature[]> {
+    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+      "parcours": false,
+      "cycle": true,
+      "valeaurParcours": "string",
+      "valeurCycle":cycle
+    });
+  }
+
+  public allByCycleAndParcours(cycle: string, parcours: string): Observable<Candidature[]> {
+    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+      "parcours": true,
+      "cycle": true,
+      "valeaurParcours": parcours,
+      "valeurCycle":cycle
+    });
+  }
+
   public allSolvableByCentre(idCentre: number, solvable: boolean): Observable<Candidature[]> {
     return this.http.get<Candidature[]>(this.url + "allbysolvabilitecentreexamen/" + idCentre + '/' + solvable);
   }

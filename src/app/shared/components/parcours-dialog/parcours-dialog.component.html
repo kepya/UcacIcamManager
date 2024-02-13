@@ -1,0 +1,18 @@
+<p-dialog header="Sélection du parcous et du cycle" [closable]="true" [(visible)]="visible" [modal]="true" [maximizable]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <p class="m-0">
+        Bienvenue à vous, veuillez indiquer s'il vous plaît le parcours de formation et le cycle à utiliser pour la prévisualisation de la page.
+    </p>
+
+        <div class="w-full parcours-dialog-form">
+            <div class="mb-4 mt-5">
+                <label class="block text-900 font-medium mb-2">Parcours</label>
+                <p-dropdown [options]="formations" [(ngModel)]="formation" [showClear]="true" placeholder="Sélectionner le parcours de formation"></p-dropdown>
+            </div>
+            <div>
+                <label  class="block text-900 font-medium mb-2">Cycle de formation</label>
+            <p-dropdown [options]="cycles" [(ngModel)]="cycle" [showClear]="true" placeholder="Sélectionner le cycle de formation"></p-dropdown>
+            </div>
+            
+            <button pButton (click)="validate()" pRipple label="Valider" icon="pi pi-check" class="w-full mt-5"></button>
+        </div>
+</p-dialog>

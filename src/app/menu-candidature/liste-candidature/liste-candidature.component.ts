@@ -1,5 +1,5 @@
 import { Centre } from './../../shared/models/centre';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Site } from 'src/app/shared/models/site';
@@ -13,6 +13,7 @@ import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
 import { saveAs } from "file-saver";
+import { Genre } from 'src/app/shared/enums/genre.enum';
 
 @Component({
   selector: 'app-liste-candidature',
@@ -20,18 +21,31 @@ import { saveAs } from "file-saver";
   styles: [
   ]
 })
-export class ListeCandidatureComponent implements OnInit {
+export class ListeCandidatureComponent implements OnInit, AfterViewInit {
+  visible: boolean = false;
+
 
   candidatures: Candidature[] = [];
+  date_naissance!: Date;
+  formations: string[] = [
+    "Ingénieur généraliste parcours international",
+    "Ingénieur généraliste par apprentissage ou génie des procédés",
+    "Ingénieur genie des procédés",
+    "Ingénieur géneraliste parcours international et innovation",
+    "Ingénieur génie Informtique",
+  ];
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
   loading: boolean = false;
   sortIcon!: string;
+  nationalites: string[] = [];
   sortProperty!: string;
   isAsc!: boolean;
   downUpIcon!: string;
+  idZone!: number;
   searchValue!: string;
   page!: number;
+  totalElement!: number;
   pageSize!: number;
   collectionSize!: number;
   nbrOfPage!: number;
@@ -48,6 +62,10 @@ export class ListeCandidatureComponent implements OnInit {
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
     private siteSrv: SiteService, private exportExcelService: ExportExcelService,
     private centreSrv: CentreExamenService, private zoneService: ZoneService) { }
+  
+  ngAfterViewInit(): void {
+    this.showDialog();
+  }
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -234,6 +252,14 @@ export class ListeCandidatureComponent implements OnInit {
     return candidatures;
   }
 
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
+  }
+
   exportToExcel() {
     this.loading = true;
     this.exportExcelService.downloadCandidatureExcel().subscribe(response => {
@@ -247,6 +273,10 @@ export class ListeCandidatureComponent implements OnInit {
       this.loading = false;
     });
   }
+
+  showDialog() {
+    this.visible = true;
+}
 
   handlePageSize(event: any) {
     this.page = 1;
@@ -285,6 +315,49 @@ export class ListeCandidatureComponent implements OnInit {
   handleCentreSelect(event: any) {
     this.centre = this.centres.find(s => s.id == event.target.value) as unknown as Centre;
     this.getCandidaturesByCentre(event.target.value ?? 0);
+  }
+
+  getFormationLabel(value: string) {
+    if (value == "Ingénieur généraliste parcours international") {
+      return "OP";
+    }
+
+    if (value == "Ingénieur généraliste par apprentissage ou génie des procédés") {
+      return "L";
+    }
+
+    if (value == "Ingénieur genie des procédés") {
+      return "IP";
+    }
+
+    if (value == "Ingénieur géneraliste parcours international et innovation") {
+      return "I";
+    }
+
+    if (value == "Ingénieur génie Informtique") {
+      return "X";
+    }
+    return "";
+  }
+
+  handleFormationSelect(event: any) {
+    this.getCandidaturesByParcours(this.getFormationLabel(event.target.value));
+  }
+
+  handleCycleSelect(event: any) {
+    this.getCandidaturesByCycle(event.target.value);
+  }
+
+  handleDateNaissanceSelect(event: any) {
+    this.getCandidaturesByDateNaissance();
+  }
+
+  handleNationalitySelect(event: any) {
+    this.getCandidaturesByNationality(event.target.value);
+  }
+
+  handleSexeSelect(event: any) {
+    this.getCandidaturesBySexe(event.target.value == "M" ? Genre.M: Genre.F);
   }
 
   handleSiteSelect(event: any) {
@@ -351,8 +424,12 @@ export class ListeCandidatureComponent implements OnInit {
 
   getCandidaturesByZone(idZone: number) {
     this.actifOption = 'zone';
+    this.idZone = idZone;
     this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        this.nationalites = value.map(c => c.nationalite);
+        this.nationalites = [...new Set(this.nationalites)];
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -366,6 +443,78 @@ export class ListeCandidatureComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByNationality(nationality: string) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.nationalite == nationality));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesBySexe(sexe: Genre) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.genre == sexe));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByDateNaissance() {
+    this.actifOption = 'zone';
+    let date = this.date_naissance.getFullYear() + "-" + this.date_naissance.getMonth() + "-" + this.date_naissance.getDate();
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.date_naissance == date));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -375,6 +524,7 @@ export class ListeCandidatureComponent implements OnInit {
     this.actifOption = 'centre';
     this.candidatureSrv.allByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -388,6 +538,76 @@ export class ListeCandidatureComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByParcours(parcours: string) {
+    this.candidatureSrv.allByParcours(parcours).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycle(cycle: string) {
+    this.candidatureSrv.allByCycle(cycle).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycleAndParcours(cycle: string, parcours: string) {
+    this.candidatureSrv.allByCycleAndParcours(cycle, parcours).subscribe({
+      next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -397,6 +617,7 @@ export class ListeCandidatureComponent implements OnInit {
     this.actifOption = 'site';
     this.candidatureSrv.allBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -410,6 +631,7 @@ export class ListeCandidatureComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });

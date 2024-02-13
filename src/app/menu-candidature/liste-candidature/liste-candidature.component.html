@@ -3,7 +3,9 @@
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Liste des candidatures Ucac-Icam</h3>
+            <h3 class="title">Liste des candidatures Ucac-Icam 
+            <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
+                </h3>
             <div *ngIf="loading">
                 <p>Téléchargement en cours...</p>
                 <!-- ou utiliser une barre de chargement -->
@@ -35,6 +37,11 @@
                             <option value="centre">Centre</option>
                             <option value="site">Site</option>
                             <option value="zone">Zone</option>
+                            <option value="formation">Formation</option>
+                            <option value="cycle">Cycle</option>
+                            <option value="nationalite">Nationalité</option>
+                            <option value="date_naissance">Date de naissance</option>
+                            <option value="genre">Genre</option>
                         </select>
 
                         <select class="form form-control" *ngIf="searchOption && searchOption == 'zone'"
@@ -52,6 +59,30 @@
                             (change)="handleCentreSelect($event)">
                             <option [value]="centre.id" *ngFor="let centre of centres">{{centre.nom}}</option>
                         </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'genre'"
+                            (change)="handleSexeSelect($event)">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'nationalite'"
+                            (change)="handleNationalitySelect($event)">
+                            <option [value]="nationalite" *ngFor="let nationalite of nationalites">{{nationalite}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'formation'"
+                            (change)="handleFormationSelect($event)">
+                            <option [value]="formation" *ngFor="let formation of formations">{{formation}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'cycle'"
+                            (change)="handleCycleSelect($event)">
+                            <option value="premier">Premier</option>
+                            <option value="second">Second</option>
+                        </select>
+
+                        <p-calendar  class="ms-2"  (onSelect)="handleDateNaissanceSelect($event)" [(ngModel)]="date_naissance"  *ngIf="searchOption && searchOption == 'date_naissance'"></p-calendar>
                     </div>
 
                     <div class="search_value">
@@ -157,7 +188,7 @@
                 </table>
             </div>
             <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées</span>
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées, {{totalElement}} éléments au total</span>
                 <ul class="pagination">
                     <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
                         <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
@@ -176,3 +207,5 @@
     </div>
 
 </section>
+
+<app-parcours-dialog [visible]="visible" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
