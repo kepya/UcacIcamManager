@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Cycle } from 'src/app/shared/enums/cycle.enum';
 import { Genre } from 'src/app/shared/enums/genre.enum';
@@ -17,6 +17,8 @@ import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
 import { saveAs } from "file-saver";
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { formations } from 'src/app/shared/mocks/mock';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-gestion-solvable',
@@ -24,7 +26,15 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styles: [
   ]
 })
-export class GestionSolvableComponent implements OnInit {
+export class GestionSolvableComponent implements OnInit, AfterViewInit {
+  visible: boolean = false;
+  date_naissance!: Date;
+  formations: string[] = formations;
+  downloadFile: boolean = false;
+  nationalites: string[] = [];
+  totalElement!: number;
+  idZone!: number;
+  
   candidatures: Candidature[] = [];
   candidatsSolvable: Candidature[] = [];
   candidature!: Candidature;
@@ -50,10 +60,18 @@ export class GestionSolvableComponent implements OnInit {
   compte!: Compte;
 
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
-    private siteSrv: SiteService, private exportExcelService: ExportExcelService,
+    private siteSrv: SiteService, private commonSrv : CommonService,private exportExcelService: ExportExcelService,
     private centreSrv: CentreExamenService, private zoneService: ZoneService,
     private messageService: MessageService, private confirmationService: ConfirmationService,
   ) { }
+
+  ngAfterViewInit(): void {
+    this.showDialog();
+  }
+
+  showDialog() {
+    this.visible = true;
+}
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -206,6 +224,27 @@ export class GestionSolvableComponent implements OnInit {
     });
   }
 
+  
+  handleFormationSelect(event: any) {
+    this.getCandidaturesByParcours(this.commonSrv.getFormationLabel(event.target.value));
+  }
+
+  handleCycleSelect(event: any) {
+    this.getCandidaturesByCycle(event.target.value);
+  }
+
+  handleDateNaissanceSelect(event: any) {
+    this.getCandidaturesByDateNaissance();
+  }
+
+  handleNationalitySelect(event: any) {
+    this.getCandidaturesByNationality(event.target.value);
+  }
+
+  handleSexeSelect(event: any) {
+    this.getCandidaturesBySexe(event.target.value == "M" ? Genre.M: Genre.F);
+  }
+
   handlePageSize(event: any) {
     this.page = 1;
     if (this.actifOption == 'centre') {
@@ -308,8 +347,11 @@ export class GestionSolvableComponent implements OnInit {
 
   getCandidaturesByZone(idZone: number) {
     this.actifOption = 'zone';
+    this.idZone = idZone;
     this.candidatureSrv.allSolvableByZone(idZone, false).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -325,6 +367,7 @@ export class GestionSolvableComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -334,6 +377,8 @@ export class GestionSolvableComponent implements OnInit {
     this.actifOption = 'centre';
     this.candidatureSrv.allSolvableByCentre(idCentre, false).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -347,6 +392,7 @@ export class GestionSolvableComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -356,6 +402,8 @@ export class GestionSolvableComponent implements OnInit {
     this.actifOption = 'site';
     this.candidatureSrv.allSolvableBySite(idSite, false).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = this.sort('nom', value);
         this.searchCandidatures = [];
         this.searchCandidatures = value;
@@ -369,6 +417,156 @@ export class GestionSolvableComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  
+  getCandidaturesByNationality(nationality: string) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.nationalite == nationality));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesBySexe(sexe: Genre) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.genre == sexe));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByDateNaissance() {
+    this.actifOption = 'zone';
+    let date = this.date_naissance.getFullYear() + "-" + this.date_naissance.getMonth() + "-" + this.date_naissance.getDate();
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.date_naissance == date));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByParcours(parcours: string) {
+    this.candidatureSrv.allByParcours(parcours).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycle(cycle: string) {
+    this.candidatureSrv.allByCycle(cycle).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycleAndParcours(cycle: string, parcours: string) {
+    this.candidatureSrv.allByCycleAndParcours(cycle, parcours).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.solvable == false);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -505,5 +703,19 @@ export class GestionSolvableComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la validation' });
       }
     });
+  }
+
+    
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+
+    if (this.downloadFile) {
+   
+    } else {
+      this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
+    }
   }
 }

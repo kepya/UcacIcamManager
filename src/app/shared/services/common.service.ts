@@ -18,6 +18,29 @@ export class CommonService {
     return jours;
   }
 
+  getFormationLabel(value: string) {
+    if (value == "Ingénieur généraliste parcours international") {
+      return "OP";
+    }
+
+    if (value == "Ingénieur généraliste par apprentissage ou génie des procédés") {
+      return "L";
+    }
+
+    if (value == "Ingénieur genie des procédés") {
+      return "IP";
+    }
+
+    if (value == "Ingénieur géneraliste parcours international et innovation") {
+      return "I";
+    }
+
+    if (value == "Ingénieur génie Informtique") {
+      return "X";
+    }
+    return "";
+  }
+
   genererDates(dateDebut: number, dateFin: number): Date[] {
     let nbreJr = this.calculerJours(dateDebut, dateFin);
     console.log("nombre jour:", nbreJr);

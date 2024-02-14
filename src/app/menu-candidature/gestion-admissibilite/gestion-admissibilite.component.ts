@@ -17,6 +17,8 @@ import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
 import { saveAs } from "file-saver";
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { formations } from 'src/app/shared/mocks/mock';
 
 @Component({
   selector: 'app-gestion-admissibilite',
@@ -25,7 +27,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   ]
 })
 export class GestionAdmissibiliteComponent implements OnInit {
-
+  visible: boolean = false;
+  date_naissance!: Date;
+  formations: string[] = formations;
+  downloadFile: boolean = false;
+  nationalites: string[] = [];
+  totalElement!: number;
+  idZone!: number;
+  
   candidatures: Candidature[] = [];
   admissiblesCandidats: Candidature[] = [];
   candidature!: Candidature;
@@ -52,9 +61,19 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
     private siteSrv: SiteService, private exportExcelService: ExportExcelService,
-    private centreSrv: CentreExamenService, private zoneService: ZoneService,
+    private centreSrv: CentreExamenService, private commonSrv : CommonService, private zoneService: ZoneService,
     private messageService: MessageService, private confirmationService: ConfirmationService,
   ) { }
+
+  
+  ngAfterViewInit(): void {
+    this.showDialog();
+  }
+
+  showDialog() {
+    this.visible = true;
+}
+
 
   ngOnInit(): void {
     this.sortProperty = "code_examen";
@@ -206,6 +225,26 @@ export class GestionAdmissibiliteComponent implements OnInit {
       this.loading = false;
     });
   }
+  
+  handleFormationSelect(event: any) {
+    this.getCandidaturesByParcours(this.commonSrv.getFormationLabel(event.target.value));
+  }
+
+  handleCycleSelect(event: any) {
+    this.getCandidaturesByCycle(event.target.value);
+  }
+
+  handleDateNaissanceSelect(event: any) {
+    this.getCandidaturesByDateNaissance();
+  }
+
+  handleNationalitySelect(event: any) {
+    this.getCandidaturesByNationality(event.target.value);
+  }
+
+  handleSexeSelect(event: any) {
+    this.getCandidaturesBySexe(event.target.value == "M" ? Genre.M: Genre.F);
+  }
 
   handlePageSize(event: any) {
     this.page = 1;
@@ -309,8 +348,11 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   getCandidaturesByZone(idZone: number) {
     this.actifOption = 'zone';
+    this.idZone = idZone;
     this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
         console.log('candidatures: ', value);
         value = this.sort('nom', value);
@@ -331,6 +373,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -340,6 +383,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'centre';
     this.candidatureSrv.allByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
 
         value = this.sort('nom', value);
@@ -355,6 +400,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -364,6 +410,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'site';
     this.candidatureSrv.allBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
+        this.totalElement = value.length;
+
         value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
 
         value = this.sort('nom', value);
@@ -379,6 +427,156 @@ export class GestionAdmissibiliteComponent implements OnInit {
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
       error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+    
+  getCandidaturesByNationality(nationality: string) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.nationalite == nationality));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesBySexe(sexe: Genre) {
+    this.actifOption = 'zone';
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.genre == sexe));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByDateNaissance() {
+    this.actifOption = 'zone';
+    let date = this.date_naissance.getFullYear() + "-" + this.date_naissance.getMonth() + "-" + this.date_naissance.getDate();
+    this.candidatureSrv.allByZone(this.idZone).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value.filter(c => c.date_naissance == date));
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByParcours(parcours: string) {
+    this.candidatureSrv.allByParcours(parcours).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycle(cycle: string) {
+    this.candidatureSrv.allByCycle(cycle).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  getCandidaturesByCycleAndParcours(cycle: string, parcours: string) {
+    this.candidatureSrv.allByCycleAndParcours(cycle, parcours).subscribe({
+      next: (val: Candidature[]) => {
+        let value = val.filter(c => c.statut == 'En_Attente' && c.solvable == true);
+        this.totalElement = value.length;
+        value = this.sort('nom', value);
+        this.searchCandidatures = [];
+        this.searchCandidatures = value;
+        this.candidatures = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        this.candidatures = [];
         console.log('error: ', err);
       }
     });
@@ -464,39 +662,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
 
   downloadAdmissibleCandidatureFile() {
-    if (this.actifOption == 'centre') {
-      this.candidatureSrv.downloadAdmissibleCandidatureFileByCentre(this.centre.id ?? 0).subscribe({
-        next: (value) => {
-          saveAs(value, 'liste_candidat_admissible_centre_' + this.centre.id + '.xlsx');
-        },
-        error: (err) => {
-          console.log('error: ', err);
-        }
-      });
-    }
-
-    if (this.actifOption == 'site') {
-      this.candidatureSrv.downloadAdmissibleCandidatureFileBySite(this.site.id ?? 0).subscribe({
-        next: (value) => {
-          saveAs(value, 'liste_candidat_admissible_site_' + this.site.id + '.xlsx');
-        },
-        error: (err) => {
-          console.log('error: ', err);
-        }
-      });
-    }
-
-
-    if (this.actifOption == 'zone') {
-      this.candidatureSrv.downloadAdmissibleCandidatureFileByZone(this.zone.id ?? 0).subscribe({
-        next: (value) => {
-          saveAs(value, 'liste_candidat_admissible_zone_' + this.zone.id + '.xlsx');
-        },
-        error: (err) => {
-          console.log('error: ', err);
-        }
-      });
-    }
+    this.downloadFile = true;
+    this.showDialog();
   }
 
   validateAdmissibilityOfCandidats(event: any, candidat: Candidature) {
@@ -553,5 +720,51 @@ export class GestionAdmissibiliteComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la validation' });
       }
     });
+  }
+
+  
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+
+    if (this.downloadFile) {
+      if (this.actifOption == 'centre') {
+        this.candidatureSrv.downloadAdmissibleCandidatureFileByCentre(this.centre.id ?? 0).subscribe({
+          next: (value) => {
+            saveAs(value, 'liste_candidat_admissible_centre_' + this.centre.id + '.xlsx');
+          },
+          error: (err) => {
+            console.log('error: ', err);
+          }
+        });
+      }
+  
+      if (this.actifOption == 'site') {
+        this.candidatureSrv.downloadAdmissibleCandidatureFileBySite(this.site.id ?? 0).subscribe({
+          next: (value) => {
+            saveAs(value, 'liste_candidat_admissible_site_' + this.site.id + '.xlsx');
+          },
+          error: (err) => {
+            console.log('error: ', err);
+          }
+        });
+      }
+  
+  
+      if (this.actifOption == 'zone') {
+        this.candidatureSrv.downloadAdmissibleCandidatureFileByZone(this.zone.id ?? 0).subscribe({
+          next: (value) => {
+            saveAs(value, 'liste_candidat_admissible_zone_' + this.zone.id + '.xlsx');
+          },
+          error: (err) => {
+            console.log('error: ', err);
+          }
+        });
+      }
+    } else {
+      this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
+    }
   }
 }

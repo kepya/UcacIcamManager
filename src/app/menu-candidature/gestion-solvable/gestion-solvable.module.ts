@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
 import { GestionSolvableComponent } from './gestion-solvable.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { GestionSolvableComponent } from './gestion-solvable.component';
     FormsModule,
     ToastModule,
     ConfirmPopupModule,
-    ButtonModule
+    ButtonModule,
+    SharedModule
   ]
 })
 export class GestionSolvableModule { }

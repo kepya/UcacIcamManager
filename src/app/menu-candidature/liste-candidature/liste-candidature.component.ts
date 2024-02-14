@@ -37,6 +37,7 @@ export class ListeCandidatureComponent implements OnInit, AfterViewInit {
   candidature!: Candidature;
   searchCandidatures: Candidature[] = [];
   loading: boolean = false;
+  downloadFile: boolean = false;
   sortIcon!: string;
   nationalites: string[] = [];
   sortProperty!: string;
@@ -257,7 +258,19 @@ export class ListeCandidatureComponent implements OnInit, AfterViewInit {
     formation: string
   }) {
     this.visible = false;
-this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
+
+    if (this.downloadFile) {
+      this.candidatureSrv.downloadCandidatureFileFor(data.cycle, data.formation).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_' + data.cycle + '_cycle.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    } else {
+      this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
+    }
   }
 
   exportToExcel() {
@@ -364,7 +377,6 @@ this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
     this.site = this.sites.find(s => s.id == event.target.value) as unknown as Site;
     this.getCandidaturesBySite(event.target.value ?? 0);
   }
-
 
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
@@ -680,7 +692,6 @@ this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
     });
   }
 
-
   getSitesByZone(idZone: number) {
     this.siteSrv.allByZone(idZone).subscribe({
       next: (value: Site[]) => {
@@ -716,13 +727,7 @@ this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
   }
 
   downloadCandidatureFile() {
-    this.candidatureSrv.downloadCandidatureFile().subscribe({
-      next: (value) => {
-        saveAs(value, 'liste_candidat.xlsx');
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
+    this.downloadFile = true;
+    this.showDialog();
   }
 }

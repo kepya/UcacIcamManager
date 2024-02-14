@@ -46,7 +46,7 @@ export class CandidatureService {
   }
 
   public allByParcours(parcours: string): Observable<Candidature[]> {
-    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+    return this.http.post<Candidature[]>(this.url + "filteredcandidats", {
       "parcours": true,
       "cycle": false,
       "valeaurParcours": parcours,
@@ -55,7 +55,7 @@ export class CandidatureService {
   }
 
   public allByCycle(cycle: string): Observable<Candidature[]> {
-    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+    return this.http.post<Candidature[]>(this.url + "filteredcandidats", {
       "parcours": false,
       "cycle": true,
       "valeaurParcours": "string",
@@ -64,7 +64,7 @@ export class CandidatureService {
   }
 
   public allByCycleAndParcours(cycle: string, parcours: string): Observable<Candidature[]> {
-    return this.http.post<Candidature[]>(this.url + "candidature/filteredcandidats", {
+    return this.http.post<Candidature[]>(this.url + "filteredcandidats", {
       "parcours": true,
       "cycle": true,
       "valeaurParcours": parcours,
@@ -110,6 +110,15 @@ export class CandidatureService {
 
   public downloadCandidatureFile() {
     return this.http.get(this.url + 'candidatures/download', { responseType: 'blob' });
+  }
+
+  public downloadCandidatureFileFor(cycle: string, parcours: string) {
+    return this.http.post(this.url + 'filteredcandidats/download' , {
+      "parcours": true,
+      "cycle": true,
+      "valeaurParcours": parcours,
+      "valeurCycle":cycle
+    }, { responseType: 'blob' });
   }
 
   public downloadAdmissibleCandidatureFile() {

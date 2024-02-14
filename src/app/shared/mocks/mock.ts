@@ -258,3 +258,11 @@ export const horaires: {
             ]
         },
     ];
+
+    export const formations: string[] = [
+        "Ingénieur généraliste parcours international",
+        "Ingénieur généraliste par apprentissage ou génie des procédés",
+        "Ingénieur genie des procédés",
+        "Ingénieur géneraliste parcours international et innovation",
+        "Ingénieur génie Informtique",
+      ];

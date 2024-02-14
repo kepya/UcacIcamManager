@@ -7,7 +7,7 @@ import { GestionAdmisComponent } from './gestion-admis.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,8 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     ToastModule,
     ConfirmPopupModule,
-    ButtonModule
+    ButtonModule,
+    SharedModule
   ]
 })
 export class GestionAdmisModule { }

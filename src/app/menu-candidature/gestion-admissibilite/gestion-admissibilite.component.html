@@ -3,7 +3,9 @@
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Liste des candidatures et notes associées</h3>
+            <h3 class="title">Liste des candidatures et notes associées
+                <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
+            </h3>
             <div>
                 <button class="btn btn-danger" (click)="downloadAdmissibleCandidatureFile()">
                     Exporter la liste des canditats
@@ -36,6 +38,11 @@
                             <option value="centre">Centre</option>
                             <option value="site">Site</option>
                             <option value="zone">Zone</option>
+                            <option value="formation">Formation</option>
+                            <option value="cycle">Cycle</option>
+                            <option value="nationalite">Nationalité</option>
+                            <option value="date_naissance">Date de naissance</option>
+                            <option value="genre">Genre</option>
                         </select>
 
                         <select class="form form-control" *ngIf="searchOption && searchOption == 'zone'"
@@ -53,6 +60,30 @@
                             (change)="handleCentreSelect($event)">
                             <option [value]="centre.id" *ngFor="let centre of centres">{{centre.nom}}</option>
                         </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'genre'"
+                            (change)="handleSexeSelect($event)">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'nationalite'"
+                            (change)="handleNationalitySelect($event)">
+                            <option [value]="nationalite" *ngFor="let nationalite of nationalites">{{nationalite}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'formation'"
+                            (change)="handleFormationSelect($event)">
+                            <option [value]="formation" *ngFor="let formation of formations">{{formation}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'cycle'"
+                            (change)="handleCycleSelect($event)">
+                            <option value="premier">Premier</option>
+                            <option value="second">Second</option>
+                        </select>
+
+                        <p-calendar  class="ms-2"  (onSelect)="handleDateNaissanceSelect($event)" [(ngModel)]="date_naissance"  *ngIf="searchOption && searchOption == 'date_naissance'"></p-calendar>
                     </div>
 
                     <div class="search_value">
@@ -83,6 +114,18 @@
                         </th>
                         <th>
                             <div>
+                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
                                 Cycle <i class="icon-sort {{this.sortProperty == 'cycle' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'cycle'}" (click)="sort('cycle')"></i>
                             </div>
@@ -96,10 +139,34 @@
                         </th>
                         <th>
                             <div>
+                                Nationalité <i
+                                    class="icon-sort {{this.sortProperty == 'nationalite' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nationalite'}"
+                                    (click)="sort('nationalite')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
                                 Formations <i
                                     class="icon-sort {{this.sortProperty == 'formation' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'formation'}"
                                     (click)="sort('formation')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Genre <i
+                                    class="icon-sort {{this.sortProperty == 'genre' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'genre'}"
+                                    (click)="sort('genre')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Langue <i
+                                    class="icon-sort {{this.sortProperty == 'langue' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'langue'}"
+                                    (click)="sort('langue')"></i>
                             </div>
                         </th>
                         <th>
@@ -113,25 +180,30 @@
                         <td><input class="checkbox" type="checkbox" name="validate"
                                 (change)="validateAdmissibilityOfCandidats($event, candidature)" /></td>
                         <td>{{candidature?.code_examen}}</td>
+                        <td>{{candidature.compte.name}}</td>
+                        <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature?.cycle}}</td>
                         <td>{{candidature?.centre}}</td>
+                        <td>{{candidature?.nationalite}}</td>
                         <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
+                        <td>{{candidature.genre}}</td>
+                        <td>{{candidature.langue}}</td>
                         <td>{{candidature?.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>
                 </table>
             </div>
             <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées</span>
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées, {{totalElement}} éléments au total</span>
                 <ul class="pagination">
                     <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
                         <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
@@ -152,3 +224,5 @@
     <p-toast></p-toast>
     <p-confirmPopup></p-confirmPopup>
 </section>
+
+<app-parcours-dialog [visible]="visible" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
