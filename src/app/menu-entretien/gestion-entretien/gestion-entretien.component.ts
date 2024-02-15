@@ -59,7 +59,6 @@ export class GestionEntretienComponent implements OnInit {
 this.getEntretiens();
 
 this.compte = this.storageService.getUserConnected();
-this.getZonesOfUser();
   }
 
   handlePageSize(event: any) {
@@ -68,19 +67,10 @@ this.getZonesOfUser();
       this.getCentre(this.centre.id ?? 0);
 
     }
-
-    if (this.actifOption == 'zone') {
-      this.getCentreByZone(this.zone.id ?? 0);
-    }
   }
 
   handleCycleSelect(event: any) {
     this.getEntretiensByCenter(event.target.value);
-  }
-  
-  handleZoneSelect(event: any) {
-    this.zone = this.zones.find(s => s.id == event.target.value) as unknown as Zone;
-    this.getCentreByZone(event.target.value ?? 0);
   }
 
   handleCentreSelect(event: any) {
@@ -94,46 +84,6 @@ this.getZonesOfUser();
         this.getCentres();
       }
     }
-  }
-  
-  getZonesOfUser() {
-    if (this.compte.role == Role.SUPER_ADMIN) {
-      this.zoneService.liste().subscribe({
-        next: (value: Zone[]) => {
-          this.zone = value[0];
-          this.zones = value;
-          this.getCentreByZone(value[0].id ?? 0);
-        },
-        error: (err) => {
-          console.log('error: ', err);
-        }
-      });
-    }
-
-    if (this.compte.role == Role.ADMIN || this.compte.role == Role.JURY) {
-      this.zoneService.getOne(this.compte.idZone ?? 0).subscribe({
-        next: (value: Zone) => {
-          this.zone = value;
-          this.zones = [value];
-          this.getCentreByZone(value.id ?? 0);
-        },
-        error: (err) => {
-          console.log('error: ', err);
-        }
-      });
-    }
-  }
-
-  getCentreByZone(idZone: number) {
-    this.actifOption = 'zone';
-    this.centreSrv.allByZone(idZone).subscribe({
-      next: (value: Centre[]) => {
-        this.centres = value;
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
   }
 
   getCentre(idCentre: number) {
@@ -162,6 +112,7 @@ this.getZonesOfUser();
             fin_entretien: new Date(v.fin_entretien),
           };
         });
+        this.searchEntretiens = entretiens;
 
         this.totalElement = entretiens.length;
 
@@ -399,20 +350,12 @@ this.getZonesOfUser();
       this.getCentre(this.centre.id ?? 0);
 
     }
-
-    if (this.actifOption == 'zone') {
-      this.getCentreByZone(this.zone.id ?? 0);
-    }
   }
 
   previous() {
     this.page--;
     if (this.actifOption == 'centre') {
       this.getCentre(this.centre.id ?? 0);
-    }
-
-    if (this.actifOption == 'zone') {
-      this.getCentreByZone(this.zone.id ?? 0);
     }
   }
   

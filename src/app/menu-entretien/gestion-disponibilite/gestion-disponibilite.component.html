@@ -1,1 +1,123 @@
-<p>gestion-disponibilite works!</p>
+<section class="compte-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Gestion des entretiens</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Liste des entretiens
+            </h3>
+            <!-- <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button> -->
+        </div>
+        <div class="line"></div>
+
+        <div class="table-content">
+            <div class="search-content">
+                <div class="select-page-size">
+                    <span>Voir</span>
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>entrées</span>
+                </div>
+                    <div class="search_value">
+                        <span>Rechercher</span>
+                        <div>
+                            <input type="text" name="value" id="value" [(ngModel)]="searchValue"
+                                (keyup)="handleSearchValue($event)">
+                            <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+                        </div>
+                    </div>
+            </div>
+            <div class="row">
+                <table id="table">
+                    <tr>
+                        <th>
+                            <div>
+                                Jour d'entretien <i class="icon-sort {{this.sortProperty == 'date_disponibilite' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'date_disponibilite'}" (click)="sort('date_disponibilite')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Heure de debut d'entretien <i class="icon-sort {{this.sortProperty == 'debut_disponibilite' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'debut_disponibilite'}" (click)="sort('debut_disponibilite')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Heure de fin d'entretien <i class="icon-sort {{this.sortProperty == 'fin_disponibilite' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'fin_disponibilite'}" (click)="sort('fin_disponibilite')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Prenom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                #
+                            </div>
+                        </th>
+                    </tr>
+                    <tr *ngFor="let disponibilitie of disponibilities">
+                        <td>{{disponibilitie.disponibilite?.date_disponibilite | date}}</td>
+                        <td>{{disponibilitie.disponibilite?.debut_disponibilite}}</td>
+                        <td>{{disponibilitie.disponibilite?.fin_disponibilite}}</td>
+                        <td>{{disponibilitie.compte?.name}}</td>
+                        <td>{{disponibilitie.compte?.prenom}}</td>
+                        <td>
+                            <button class="btn mt-2" (click)="confirm($event,disponibilitie.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="searchValue && disponibilities.length === 0">
+                        <td colspan="6"><span class="vh-center">
+                                Aucune disponibilités trouvées avec ces lettres dans son nom
+                            </span></td>
+                    </tr>
+                    <tr *ngIf="!searchValue && disponibilities.length === 0">
+                        <td colspan="6"><span class="vh-center">
+                                Aucune disponibilités presentent dans la base
+                            </span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pagination_content">
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{disponibilities.length}} entrées affichées, {{totalElement}} éléments au total</span>
+                <ul class="pagination">
+                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
+                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
+                            (click)="previous()">Précedent</a>
+                    </li>
+                    <li class="paginate_button active">
+                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
+                    </li>
+                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
+                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
+                            (click)="next()">Suivant</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>
