@@ -11,6 +11,7 @@ import { NoteService } from 'src/app/shared/services/note.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { Role } from 'src/app/shared/enums/role.enum';
 
 @Component({
   selector: 'app-gestion-disponibilite',
@@ -78,6 +79,10 @@ this.compte = this.storageService.getUserConnected();
             }
           };
         });
+
+        if (this.compte.role == Role.JURY) {
+          disponibilities = disponibilities.filter(d => d.compte?.name== this.compte.name && d.compte?.prenom== this.compte.prenom)
+        }
 
         this.searchDisponibilities = disponibilities;
 
@@ -229,7 +234,7 @@ this.compte = this.storageService.getUserConnected();
     this.searchValue = event.target.value;
 
     if (this.searchValue !== '') {
-      let result = this.searchDisponibilities.filter(entretiens => (entretiens.compte!.name.indexOf(this.searchValue) > -1) || 
+      let result = this.searchDisponibilities.filter(entretiens => (entretiens.compte!.name.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || 
       (entretiens.compte!.prenom.indexOf(this.searchValue) > -1)
       );
 

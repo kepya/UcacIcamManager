@@ -92,7 +92,7 @@
                         </th>
                     </tr>
                     <tr *ngFor="let entretien of entretiens">
-                        <td>{{entretien.debut_entretien | date: 'EEEE, HH:mm'}} - {{entretien.fin_entretien | date: 'HH:mm'}}</td>
+                        <td>{{entretien.debut_entretien | date: 'MMMM d, y, HH:mm'}} - {{entretien.fin_entretien | date: 'HH:mm'}}</td>
                         <td>{{entretien.candidat.compte.name}}</td>
                         <td>{{entretien.candidat.compte.prenom}}</td>
                         <td>{{entretien.jury}}</td>

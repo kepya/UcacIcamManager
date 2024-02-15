@@ -6,7 +6,7 @@
             <h3 class="title">Calendrier final des entretiens</h3>
             <div>
                 <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event)" [showClear]="true"
-                    [(ngModel)]="interviewer" placeholder="Choisir un intervenant"></p-dropdown>
+                    [(ngModel)]="interviewer" placeholder="Choisir un intervenant" *ngIf="compte.role != 'JURY'"></p-dropdown>
                 <button class="btn btn-danger ml-1 mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
                     Precedent Date
                 </button>

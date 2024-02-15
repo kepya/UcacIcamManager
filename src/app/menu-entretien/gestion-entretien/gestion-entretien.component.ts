@@ -56,16 +56,14 @@ export class GestionEntretienComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
+    this.compte = this.storageService.getUserConnected();
 this.getEntretiens();
-
-this.compte = this.storageService.getUserConnected();
   }
 
   handlePageSize(event: any) {
     this.page = 1;
     if (this.actifOption == 'centre') {
       this.getCentre(this.centre.id ?? 0);
-
     }
   }
 
@@ -112,6 +110,11 @@ this.compte = this.storageService.getUserConnected();
             fin_entretien: new Date(v.fin_entretien),
           };
         });
+
+        if (this.compte.role == Role.JURY) {
+          entretiens = entretiens.filter(e => e.jury==(this.compte.name + ' ' + this.compte.prenom))
+        }
+
         this.searchEntretiens = entretiens;
 
         this.totalElement = entretiens.length;
@@ -147,7 +150,11 @@ this.compte = this.storageService.getUserConnected();
           };
         });
 
-        entretiens = entretiens.filter(e => e.centre.toLowerCase() == center.toLowerCase());
+        if (this.compte.role == Role.JURY) {
+          entretiens = entretiens.filter(e => (e.jury==(this.compte.name + ' ' + this.compte.prenom)) && (e.centre.toLowerCase() == center.toLowerCase()))
+        } else {
+          entretiens = entretiens.filter(e => e.centre.toLowerCase() == center.toLowerCase());
+        }
 
         this.totalElement = entretiens.length;
 
@@ -182,7 +189,11 @@ this.compte = this.storageService.getUserConnected();
           };
         });
 
-        entretiens = entretiens.filter(e => e.cycle.toLowerCase() == cycle.toLowerCase());
+        if (this.compte.role == Role.JURY) {
+          entretiens = entretiens.filter(e => (e.jury==(this.compte.name + ' ' + this.compte.prenom)) && (e.cycle.toLowerCase() == cycle.toLowerCase()))
+        } else {
+          entretiens = entretiens.filter(e => e.cycle.toLowerCase() == cycle.toLowerCase());
+        }
 
         this.totalElement = entretiens.length;
 
@@ -334,8 +345,8 @@ this.compte = this.storageService.getUserConnected();
     this.searchValue = event.target.value;
 
     if (this.searchValue !== '') {
-      let result = this.searchEntretiens.filter(entretiens => (entretiens.candidat.compte.name.indexOf(this.searchValue) > -1) || 
-      (entretiens.candidat.compte.prenom.indexOf(this.searchValue) > -1) || (entretiens.jury.indexOf(this.searchValue) > -1)
+      let result = this.searchEntretiens.filter(entretiens => (entretiens.candidat.compte.name.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || 
+      (entretiens.candidat.compte.prenom.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || (entretiens.jury.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1)
       );
 
       this.entretiens = result;

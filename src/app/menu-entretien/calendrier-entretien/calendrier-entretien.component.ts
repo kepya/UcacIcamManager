@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Session } from 'inspector';
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
+import { Compte } from 'src/app/shared/models/compte';
 import { CompteDisponibilite, Disponibility } from 'src/app/shared/models/entretient';
 import { Note } from 'src/app/shared/models/note';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
 import { NoteService } from 'src/app/shared/services/note.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
 @Component({
   selector: 'app-calendrier-entretien',
@@ -22,13 +24,21 @@ export class CalendrierEntretienComponent implements OnInit {
   datesOfEntretiens: Date[] = [];
   currentDate!: Date;
   indexCurrentDate: number = 0;
+  compte!: Compte;
 
-  constructor(private noteService: NoteService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
+  constructor(private noteService: NoteService, private storageService: StorageService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
     this.currentDate = new Date();
     this.getActiveSession();
-    this.getCompteDisponibilite();
+this.compte = this.storageService.getUserConnected();
+if (this.compte.role == Role.JURY) {
+  this.interviewer = this.compte.name + ' ' + this.compte.prenom;
+  this.getEntretiens();
+}
+this.getCompteDisponibilite();
+
+
   }
 
 
