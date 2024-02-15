@@ -90,6 +90,16 @@ const routes: Routes = [
     loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule),
   },
   {
+    path: 'gestion_entretiens',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/gestion-entretien/gestion-entretien.module').then(s => s.GestionEntretienModule),
+  },
+  {
+    path: 'gestion_disponibilites',
+    data: { title: `Entretien` },
+    loadChildren: () => import('./menu-entretien/gestion-disponibilite/gestion-disponibilite.module').then(s => s.GestionDisponibiliteModule),
+  },
+  {
     path: 'calendrier_disponibilites',
     data: { title: `Entretien` },
     loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule),
