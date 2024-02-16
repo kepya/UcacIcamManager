@@ -665,6 +665,8 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
   validateSolvabilityCandidats() {
     for (let index = 0; index < this.candidatsSolvable.length; index++) {
       const candidat = this.candidatsSolvable[index];
+      
+      candidat.compteID = candidat.compte.id!;
       candidat.solvable = true;
       this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {

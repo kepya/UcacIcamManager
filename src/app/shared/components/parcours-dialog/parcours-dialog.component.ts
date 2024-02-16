@@ -8,16 +8,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ParcoursDialogComponent implements OnInit {
   formations: string[] = [
-    "Ingénieur généraliste parcours international",
-    "Ingénieur généraliste par apprentissage ou génie des procédés",
-    "Ingénieur genie des procédés",
-    "Ingénieur géneraliste parcours international et innovation",
-    "Ingénieur génie Informtique",
+    "OP",
+    "L",
+    "IP",
+    "I",
+    "X",
   ];
 
   cycles: string[] = [
-    "Premier",
-    "Second"
+    "premier",
+    "second"
   ];
 
   public formation!: any;
