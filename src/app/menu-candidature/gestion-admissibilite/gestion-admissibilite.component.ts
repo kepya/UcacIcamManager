@@ -209,6 +209,30 @@ export class GestionAdmissibiliteComponent implements OnInit {
         });
       }
     }
+
+    if (property === 'datenaissance') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.date_naissance > b.date_naissance) {
+            return 1;
+          }
+          if (b.date_naissance > a.date_naissance) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.date_naissance > b.date_naissance) {
+            return -1;
+          }
+          if (b.date_naissance > a.date_naissance) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
     return candidatures;
   }
 

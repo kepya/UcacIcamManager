@@ -63,8 +63,8 @@
                     <tr>
                         <th>
                             <div>
-                                Numero <i class="icon-sort {{this.sortProperty == 'numero' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'numero'}" (click)="sort('numero')"></i>
+                                Code d'examen <i class="icon-sort {{this.sortProperty == 'code_examen' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'code_examen'}" (click)="sort('code_examen')"></i>
                             </div>
                         </th>
                         <th>
@@ -88,7 +88,7 @@
                         </th>
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
-                        <td>{{candidature.id}}</td>
+                        <td>{{candidature.code_examen}}</td>
                         <td>{{candidature.centre}}</td>
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>

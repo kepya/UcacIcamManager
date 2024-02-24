@@ -136,6 +136,30 @@ export class ListeAdmissibiliteComponent implements OnInit {
       }
     }
 
+    if (property === 'code_examen') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.code_examen > b.code_examen) {
+            return 1;
+          }
+          if (b.code_examen > a.code_examen) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.code_examen > b.code_examen) {
+            return -1;
+          }
+          if (b.code_examen > a.code_examen) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
     return candidatures;
   }
 

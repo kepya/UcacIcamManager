@@ -110,8 +110,28 @@
                         </th>
                         <th>
                             <div>
+                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
                                 Cycle <i class="icon-sort {{this.sortProperty == 'cycle' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'cycle'}" (click)="sort('cycle')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Nationalité <i
+                                    class="icon-sort {{this.sortProperty == 'nationalite' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nationalite'}"
+                                    (click)="sort('nationalite')"></i>
                             </div>
                         </th>
                         <th>
@@ -140,7 +160,10 @@
                         <td><input class="checkbox" type="checkbox" name="validate"
                                 (change)="validateSolvabilityOfCandidats($event, candidature)" /></td>
                         <td>{{candidature?.code_examen}}</td>
+                        <td>{{candidature.compte.name}}</td>
+                        <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature?.cycle}}</td>
+                        <td>{{candidature.nationalite}}</td>
                         <td>{{candidature?.centre}}</td>
                         <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
                         <td>{{candidature?.statut}}</td>

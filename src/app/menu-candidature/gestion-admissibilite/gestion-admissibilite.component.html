@@ -171,6 +171,12 @@
                         </th>
                         <th>
                             <div>
+                                Date naissance <i class="icon-sort {{this.sortProperty == 'datenaissance' ? sortIcon : downUpIcon}}"
+                                [ngClass]="{bold: this.sortProperty == 'datenaissance'}" (click)="sort('datenaissance')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
                                 Etat <i class="icon-sort {{this.sortProperty == 'statut' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
                             </div>
@@ -188,15 +194,16 @@
                         <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
                         <td>{{candidature.genre}}</td>
                         <td>{{candidature.langue}}</td>
+                        <td>{{candidature.date_naissance}}</td>
                         <td>{{candidature?.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="11"><span class="vh-center">
+                        <td colspan="12"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="11"><span class="vh-center">
+                        <td colspan="12"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>

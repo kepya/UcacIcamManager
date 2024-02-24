@@ -107,8 +107,28 @@
                         </th>
                         <th>
                             <div>
-                                Pays <i class="icon-sort {{this.sortProperty == 'pays' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'pays'}" (click)="sort('pays')"></i>
+                                Code d'examen <i
+                                    class="icon-sort {{this.sortProperty == 'code_examen' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'code_examen'}"
+                                    (click)="sort('code_examen')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Cycle <i class="icon-sort {{this.sortProperty == 'cycle' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'cycle'}" (click)="sort('cycle')"></i>
                             </div>
                         </th>
                         <th>
@@ -128,10 +148,10 @@
                         </th>
                         <th>
                             <div>
-                                Formation <i
+                                Formations <i
                                     class="icon-sort {{this.sortProperty == 'formation' ? sortIcon : downUpIcon}}"
                                     [ngClass]="{bold: this.sortProperty == 'formation'}"
-                                    ></i>
+                                    (click)="sort('formation')"></i>
                             </div>
                         </th>
                         <th>
@@ -152,37 +172,42 @@
                         </th>
                         <th>
                             <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                                Date naissance <i class="icon-sort {{this.sortProperty == 'datenaissance' ? sortIcon : downUpIcon}}"
+                                [ngClass]="{bold: this.sortProperty == 'datenaissance'}" (click)="sort('datenaissance')"></i>
                             </div>
                         </th>
                         <th>
                             <div>
-                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                                Etat <i class="icon-sort {{this.sortProperty == 'statut' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
                             </div>
                         </th>
+                        
 
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
                         <td><input class="checkbox" type="checkbox" name="validate"
                                 (change)="validateCandidats($event, candidature)" /></td>
                         <td>{{'Pays'}}</td>
-                        <td>{{candidature.centre}}</td>
-                        <td>{{candidature.nationalite}}</td>
-                        <td>{{candidature.formation1}}, {{candidature.formation2}}, {{candidature.formation2}}</td>
-                        <td>{{candidature.genre}}</td>
-                        <td>{{candidature.langue}}</td>
+                        <td>{{candidature?.code_examen}}</td>
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
+                        <td>{{candidature?.cycle}}</td>
+                        <td>{{candidature?.centre}}</td>
+                        <td>{{candidature?.nationalite}}</td>
+                        <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
+                        <td>{{candidature.genre}}</td>
+                        <td>{{candidature.langue}}</td>
+                        <td>{{candidature.date_naissance}}</td>
+                        <td>{{candidature?.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="12"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="12"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>
