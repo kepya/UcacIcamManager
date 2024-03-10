@@ -66,7 +66,7 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    this.showDialog();
+    //this.showDialog();
   }
 
   showDialog() {

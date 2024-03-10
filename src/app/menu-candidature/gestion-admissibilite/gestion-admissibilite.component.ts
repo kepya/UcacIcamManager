@@ -67,7 +67,7 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   
   ngAfterViewInit(): void {
-    this.showDialog();
+    //this.showDialog();
   }
 
   showDialog() {

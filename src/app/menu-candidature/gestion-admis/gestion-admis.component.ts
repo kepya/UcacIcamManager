@@ -65,7 +65,7 @@ export class GestionAdmisComponent implements OnInit, AfterViewInit  {
   ) { }
 
   ngAfterViewInit(): void {
-    this.showDialog();
+    //this.showDialog();
   }
 
   showDialog() {
