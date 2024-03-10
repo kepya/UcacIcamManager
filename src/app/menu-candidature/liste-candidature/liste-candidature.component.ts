@@ -65,7 +65,7 @@ export class ListeCandidatureComponent implements OnInit, AfterViewInit {
     private centreSrv: CentreExamenService, private zoneService: ZoneService) { }
   
   ngAfterViewInit(): void {
-    this.showDialog();
+    //this.showDialog();
   }
 
   ngOnInit(): void {
