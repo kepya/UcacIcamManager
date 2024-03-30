@@ -35,7 +35,7 @@
                         Prochaine Session
                     </p>
                     <p class="value">
-                        {{nextSession!= null ? (nextSession.date_examen | date) : 'Non defini'}}
+                        {{nextSession!= null ? (nextSession.date_examen| date) : 'Non defini'}}
                     </p>
                 </div>
                 <div class="information">
@@ -49,33 +49,4 @@
             </section>
         </section>
     </div>
-</section>
-
-<section class="charts-container">
-    <section>
-        <section class="information_card">
-            <div class="information">
-                <p class="label">
-                    Centre d'examen
-                </p>
-                <p class="value">{{statCandidatures.nbCentreExamenParticipant}}</p>
-            </div>
-            <div class="information">
-                <p class="label">
-                    Sites
-                </p>
-                <p class="value">{{statCandidatures.nbSiteParticipant}}</p>
-            </div>
-        </section>
-    </section>
-    <section>
-        <h1 class="title">Candidats par sites</h1>
-        <app-pie-chart [datasets]="datasetsSite" [labels]="labelsSite"></app-pie-chart>
-    </section>
-    <section>
-        <h1 class="title">Nombre de candidats par type de concours</h1>
-        <div class="chart-container">
-            <canvas id="MyConcourChart"></canvas>
-        </div>
-    </section>
 </section>

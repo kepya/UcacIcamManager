@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
 
   isJury: boolean = false;
   isSuperAdmin: boolean = false;
+  isComptable: boolean = false;
   isAdmin: boolean = false;
 
 
@@ -84,6 +85,7 @@ export class HomeComponent implements OnInit {
     this.compte = this.storageService.getUserConnected();
     this.isJury = this.compte.role == Role.JURY ? true : false;
     this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
+    this.isComptable = this.compte.role == Role.COMPTABLE ? true : false;
     this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
 
     this.getStatistics();

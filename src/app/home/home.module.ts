@@ -10,13 +10,15 @@ import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { JuryHomeComponent } from './jury-home/jury-home.component';
 import { SuperAdminHomeComponent } from './super-admin-home/super-admin-home.component';
 import { SharedModule } from '../shared/shared.module';
+import { ComptableHomeComponent } from './comptable-home/comptable-home.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     AdminHomeComponent,
     JuryHomeComponent,
-    SuperAdminHomeComponent
+    SuperAdminHomeComponent,
+    ComptableHomeComponent
   ],
   imports: [
     CommonModule,

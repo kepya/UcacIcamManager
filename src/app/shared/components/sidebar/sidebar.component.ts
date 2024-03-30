@@ -16,6 +16,7 @@ export class SidebarComponent implements OnInit {
   @Input() isExtended!: boolean;
 
   isJury: boolean = false;
+  isComptable: boolean = false;
   isSuperAdmin: boolean = false;
   isAdmin: boolean = false;
 
@@ -27,6 +28,7 @@ export class SidebarComponent implements OnInit {
     this.isJury = this.compte.role == Role.JURY ? true : false;
     this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
     this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
+    this.isComptable = this.compte.role == Role.COMPTABLE ? true : false;
   }
 
   showMenuChild(content: any) {

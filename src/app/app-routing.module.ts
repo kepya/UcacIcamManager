@@ -125,6 +125,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule),
   },
   {
+    path: 'gestion_matieres',
+    data: { title: `Evaluations` },
+    loadChildren: () => import('./menu-evaluation/gestion-matiere/gestion-matiere.module').then(s => s.GestionMatiereModule),
+  },
+  {
     path: '**',
     redirectTo: 'login'
   },

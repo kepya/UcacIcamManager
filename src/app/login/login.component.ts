@@ -10,6 +10,7 @@ import { UserService } from '../shared/services/user.service';
 import { Compte } from '../shared/models/compte';
 import { MessageService } from 'primeng/api';
 import { Subscription, interval } from 'rxjs';
+import { Role } from '../shared/enums/role.enum';
 
 @Component({
   selector: 'app-login',
@@ -63,7 +64,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         this.storageService.storeUserToken(value.accessToken);
 
-        if (role == "ADMIN" || role == "SUPER_ADMIN" || role == "JURY") {
+        if (role == "ADMIN" || role == "SUPER_ADMIN" || role == "JURY" || role == Role.COMPTABLE) {
           this.compteService.getOneByEmail(this.tokenService.decodeToken(value.accessToken).sub).subscribe({
             next: (compte: Compte) => {
               this.authService.isLogin.next(true);
