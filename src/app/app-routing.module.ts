@@ -132,7 +132,7 @@ const routes: Routes = [
   {
     path: 'gestion_epreuves',
     data: { title: `Evaluations` },
-    loadChildren: () => import('./menu-evaluation/gestion-matiere/gestion-matiere.module').then(s => s.GestionMatiereModule),
+    loadChildren: () => import('./menu-evaluation/gestion-epreuve/gestion-epreuve.module').then(s => s.GestionEpreuveModule),
   },
   {
     path: '**',
