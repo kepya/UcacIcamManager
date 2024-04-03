@@ -13,7 +13,7 @@ export class EpreuveService {
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.candidaturePath}`;
-    this.url += 'matiere/';
+    this.url += 'epreuve/';
   }
 
   public liste(): Observable<Epreuve[]> {
