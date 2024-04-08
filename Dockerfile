@@ -1,19 +1,11 @@
-#stage 1
-FROM node:latest as node
-# FROM node:alpine as node
+FROM node:latest as build
+WORKDIR /app
+COPY ./package.json /app/
+RUN npm install --legacy-peer-deps
+COPY . /app/
+RUN npm run build
 
-WORKDIR /app/dist
-
-COPY ./dist/admin-ucac-dashboard /app/dist/admin-ucac-dashboard
-
-
-#stage 2
-FROM nginx:alpine
-
-# FROM nginx:stable-alpine
+FROM nginx:latest AS client-browser
 COPY nginx.conf /etc/nginx/nginx.conf
-
-COPY --from=node /app/dist/admin-ucac-dashboard /usr/share/nginx/html
-
-# Expose port 80
+COPY --from=build /app/dist/admin-ucac-dashboard/ /usr/share/nginx/html
 EXPOSE 80
