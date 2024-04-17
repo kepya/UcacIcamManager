@@ -5,7 +5,7 @@ export class Epreuve {
     id?: number;
     matiereId?: number;
     sessionId?: number;
-    file?:string;
+    file?:File;
     matiere!: Matter;
     session?: Session;
     path!: string;

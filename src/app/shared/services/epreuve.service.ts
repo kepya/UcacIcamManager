@@ -24,8 +24,12 @@ export class EpreuveService {
     return this.http.get<Epreuve>(this.url + id);
   }
 
-  public create(epreuve: Epreuve): Observable<Epreuve> {
-    return this.http.post<Epreuve>(this.url + "create", epreuve);
+  public create(epreuve: Epreuve, file: File): Observable<Epreuve> {
+    let formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('matiereId', epreuve.matiereId + "");
+    formData.append('sessionId', epreuve.sessionId + "");
+    return this.http.post<Epreuve>(this.url + "create", formData);
   }
 
   public update(epreuve: Epreuve): Observable<Epreuve> {

@@ -46,6 +46,7 @@ export class GestionEpreuveComponent implements OnInit {
   formEpreuve: FormGroup = new FormGroup({
     sessionId: new FormControl(0, [Validators.required, Validators.min(1)]),
     matiereId: new FormControl(0, [Validators.required, Validators.min(1)]),
+    file: new FormControl(null, [Validators.required]),
   });
 
   get formEpreuveControl(): { [key: string]: AbstractControl } {
@@ -181,10 +182,10 @@ export class GestionEpreuveComponent implements OnInit {
   }
 
   createOrUpdateEpreuve() {
-    if (this.epreuve.id || 0 > 0) {
+    if (this.epreuve?.id || 0 > 0) {
       this.epreuve.matiereId = parseInt(this.formEpreuve.value.matiereId, 10);
       this.epreuve.sessionId = parseInt(this.formEpreuve.value.sessionId, 10);
-      this.epreuve.file = this.uploadedFile;
+      // this.epreuve.file = this.uploadedFile;
 
       this.epreuveService.update({ ...this.epreuve }).subscribe({
         next: (value) => {
@@ -200,12 +201,13 @@ export class GestionEpreuveComponent implements OnInit {
         }
       })
     } else {
-      this.epreuveService.create({...this.formEpreuve.value, file: this.uploadedFile,}).subscribe({
+      this.epreuveService.create({...this.formEpreuve.value, file: this.selectedFile,},  this.selectedFile,).subscribe({
         next: (value) => {
           this.getAllEpreuves();
           this.epreuve = new Epreuve();
           this.formEpreuve.reset();
           this.isFormEpreuve = false;
+          this.messageService.add({ severity: 'success', summary: "Création de l'epreuve", detail: "Création de l'epreuve des évaluations effectuée avec success" });
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: `Erreur de création`, detail: err.message });

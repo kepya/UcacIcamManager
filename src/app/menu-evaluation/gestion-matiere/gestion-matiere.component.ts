@@ -28,7 +28,7 @@ export class GestionMatiereComponent implements OnInit {
   pageSize!: number;
   collectionSize!: number;
   nbrOfPage!: number;
-  isFormNote!: boolean;
+  isFormMatter!: boolean;
   compte!: Compte;
 
   isJury: boolean = false;
@@ -148,9 +148,9 @@ export class GestionMatiereComponent implements OnInit {
   viewMatter(view: string = 'data') {
     if (view === 'data') {
       this.matter = new Matter();
-      this.isFormNote = false;
+      this.isFormMatter = false;
     } else {
-      this.isFormNote = true;
+      this.isFormMatter = true;
     }
   }
   
@@ -160,7 +160,7 @@ export class GestionMatiereComponent implements OnInit {
   }
 
   createOrUpdateMatter() {
-    if (this.matter.id || 0 > 0) {
+    if (this.matter?.id || 0 > 0) {
       this.matter.coefficient = parseInt(this.formMatter.value.coefficient, 10);
       this.matter.duree = parseInt(this.formMatter.value.duree, 10);
       this.matter.intitule = this.formMatter.value.intitule;
@@ -170,7 +170,7 @@ export class GestionMatiereComponent implements OnInit {
           this.getAllMatters();
           this.matter = new Matter();
           this.formMatter.reset();
-          this.isFormNote = false;
+          this.isFormMatter = false;
           this.messageService.add({ severity: 'success', summary: 'Modification de la matière', detail: 'Modification de la matière des évaluations effectuée avec success' });
         },
         error: (err) => {
@@ -184,7 +184,8 @@ export class GestionMatiereComponent implements OnInit {
           this.getAllMatters();
           this.matter = new Matter();
           this.formMatter.reset();
-          this.isFormNote = false;
+          this.isFormMatter = false;
+          this.messageService.add({ severity: 'success', summary: 'Création de la matière', detail: 'Création de la matière des évaluations effectuée avec success' });
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: `Erreur de création`, detail: err.message });

@@ -1,9 +1,12 @@
-<section class="note-page page-content" *ngIf="!isFormNote else addNote">
+<section class="note-page page-content" *ngIf="!isFormMatter else addMatter">
     <h1 class="page-title"> Concours <i class="pi pi-angle-right"></i> Matières concours</h1>
 
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des matières</h3>
+            <button class="btn btn-danger ml-1 mr-1" (click)="viewMatter('add')">
+                Ajouter une matière
+            </button>
         </div>
         <div class="line"></div>
 
@@ -103,13 +106,13 @@
 
 </section>
 
-<ng-template #addNote>
-    <section class="Note-page page-content">
+<ng-template #addMatter>
+    <section class="Matter-page page-content">
         <h1 class="page-title"><img (click)="viewMatter()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> Matière d'examen <i class="pi pi-angle-right"></i>{{matter!.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière</h1>
+                srcset=""> Matière d'examen <i class="pi pi-angle-right"></i>{{matter?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière</h1>
         <div class="card">
             <div class="header">
-                <h3 class="title">{{matter!.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière
+                <h3 class="title">{{matter?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière
                 </h3>
             </div>
             <div class="line"></div>
@@ -169,7 +172,7 @@
                 <div class="footer">
                     <div class="line"></div>
                     <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formMatter.invalid" type="submit">
+                        <button class="btn btn-info" [disabled]="formMatter.invalid" type="button" (click)="createOrUpdateMatter()">
                             Soumettre
                         </button>
 
