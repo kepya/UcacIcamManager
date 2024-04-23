@@ -11,6 +11,10 @@ import { JuryHomeComponent } from './jury-home/jury-home.component';
 import { SuperAdminHomeComponent } from './super-admin-home/super-admin-home.component';
 import { SharedModule } from '../shared/shared.module';
 import { ComptableHomeComponent } from './comptable-home/comptable-home.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,12 @@ import { ComptableHomeComponent } from './comptable-home/comptable-home.componen
     HomeRoutingModule,
     AccordionModule,
     ButtonModule,
-    SharedModule
+    SharedModule,
+    TableModule,
+    DropdownModule,
+    FormsModule,
+    TagModule,
+    InputTextModule
   ]
 })
 export class HomeModule { }
