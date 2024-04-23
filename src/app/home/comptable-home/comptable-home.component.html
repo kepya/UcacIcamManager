@@ -1,52 +1,52 @@
-<section class=" grid stat-card-container">
-    <div class="col-9">
-        <section class="active_session">
-            <p>
-                Section en cours: <strong>{{session.nom}}</strong>
-            </p>
-        </section>
-        <section class="statistics">
-            <section class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <div class="stat">
-                    <p class="label">Nombre d'inscriptions</p>
-                    <p class="value">{{statCandidatures.nbCandidaturesTotal}}</p>
-                </div>
-            </section>
+<section class="grid stat-card-container">
+  <div class="col-9">
+    <section class="active_session">
+      <p>
+        Session en cours: <strong>{{ session.nom }}</strong>
+      </p>
+    </section>
+    <section class="statistics">
+      <section class="stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="stat">
+          <p class="label">Nombre d'inscriptions</p>
+          <p class="value">{{ statCandidatures.nbCandidaturesTotal }}</p>
+        </div>
+      </section>
 
-            <section class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-school-lock"></i>
-                </div>
-                <div class="stat">
-                    <p class="label">Candidature en attentes</p>
-                    <p class="value">{{statCandidatures.nbCandidaturesEnAttente}}</p>
-                </div>
-            </section>
-        </section>
-    </div>
-    <div class="col-3">
-        <section>
-            <section class="information_card">
-                <div class="information">
-                    <p class="label">
-                        Prochaine Session
-                    </p>
-                    <p class="value">
-                        {{nextSession!= null ? (nextSession.date_examen| date) : 'Non defini'}}
-                    </p>
-                </div>
-                <div class="information">
-                    <p class="label">
-                        Compte à rebours
-                    </p>
-                    <p class="value">
-                        {{compteARebour}}
-                    </p>
-                </div>
-            </section>
-        </section>
-    </div>
+      <section class="stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-school-lock"></i>
+        </div>
+        <div class="stat">
+          <p class="label">Candidature en attentes</p>
+          <p class="value">{{ statCandidatures.nbCandidaturesEnAttente }}</p>
+        </div>
+      </section>
+    </section>
+  </div>
+  <div class="col-3">
+    <section>
+      <section class="information_card">
+        <div class="information">
+          <p class="label">Prochaine Session</p>
+          <p class="value">
+            {{
+              nextSession != null
+                ? (nextSession.date_examen | date)
+                : "Non defini"
+            }}
+          </p>
+        </div>
+        <div class="information">
+          <p class="label">Compte à rebours</p>
+          <p class="value">
+            {{ compteARebour }}
+          </p>
+        </div>
+      </section>
+    </section>
+  </div>
 </section>
