@@ -410,5 +410,16 @@ export class ListeSolvableComponent implements OnInit {
     });
   }
 
+  downloadSolvableCandidatureFile() {
+this.candidatureSrv.downloadSolvableCandidatureFile(true).subscribe({
+        next: (value) => {
+          saveAs(value, 'liste_candidat_solvable.xlsx');
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+  }
+
 }
 

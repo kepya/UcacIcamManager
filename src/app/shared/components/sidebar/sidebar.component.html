@@ -40,6 +40,16 @@
                 <a class="link"><i class="fa fa-calendar"></i> Sessions d'examen </a>
             </li>
 
+            <li [ngClass]="{'active-link': url.indexOf('evaluations') > -1}" #matter
+                (click)="showMenuChild(matter)">
+                <a class="link"><i class="fa fa-envelope"></i>
+                    Evaluations <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_one_line">
+                    <li (click)="goToUrl('gestion_matieres')"><a class="sub-link">Gestion des matières</a></li>
+                    <li (click)="goToUrl('gestion_epreuves')"><a class="sub-link">Gestion des épreuves</a></li>
+                </ul>
+            </li>
+
             <li [ngClass]="{'active-link': url.indexOf('candidature') > -1}" #candidacy
                 (click)="showMenuChild(candidacy)">
                 <a class="link"><i class="fa fa-envelope"></i>
@@ -113,7 +123,6 @@
                     Candidatures <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu child_menu_one_line">
                     <li (click)="goToUrl('liste_candidature')"><a class="sub-link">Liste des candidatures</a></li>
-                    <li (click)="goToUrl('gestion_solvabilite')"><a class="sub-link">Gestion de solvabilités</a></li>
                     <li (click)="goToUrl('gestion_admissibilite')"><a class="sub-link">Gestion d'admissibilité</a></li>
                     <li (click)="goToUrl('gestion_admis')"><a class="sub-link">Gestion des admis</a></li>
                 </ul>
@@ -170,5 +179,19 @@
             </li>
         </ul>
 
+        <ul class="nav side-menu" *ngIf="isComptable">
+            <li [ngClass]="{'active-page': url.indexOf('home') > -1}" (click)="goToUrl('home')">
+                <a class="link"><i class="fa fa-home"></i> Accueil </a>
+            </li>
+
+            <li [ngClass]="{'active-link': url.indexOf('candidature') > -1}" #candidacy
+                (click)="showMenuChild(candidacy)">
+                <a class="link"><i class="fa fa-envelope"></i>
+                    Candidatures <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu child_menu_one_line">
+                    <li (click)="goToUrl('gestion_solvabilite')"><a class="sub-link">Gestion de solvabilités</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </div>

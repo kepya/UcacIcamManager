@@ -111,6 +111,29 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
         });
       }
     }
+    if (property === 'code_examen') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.code_examen > b.code_examen) {
+            return 1;
+          }
+          if (b.code_examen > a.code_examen) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.code_examen > b.code_examen) {
+            return -1;
+          }
+          if (b.code_examen > a.code_examen) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
 
     if (property === 'prenom') {
       if (this.isAsc) {
@@ -160,23 +183,71 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if (property === 'nationalite') {
+    if (property === 'reference_paiement') {
       if (this.isAsc) {
         candidatures.sort((a, b) => {
-          if (a.nationalite > b.nationalite) {
+          if (a.reference_paiement > b.reference_paiement) {
             return 1;
           }
-          if (b.nationalite > a.nationalite) {
+          if (b.reference_paiement > a.reference_paiement) {
             return -1;
           }
           return 0;
         });
       } else {
         candidatures.sort((a, b) => {
-          if (a.nationalite > b.nationalite) {
+          if (a.reference_paiement > b.reference_paiement) {
             return -1;
           }
-          if (b.nationalite > a.nationalite) {
+          if (b.reference_paiement > a.reference_paiement) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
+    if (property === 'telephone_paiement') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.telephone_paiement > b.telephone_paiement) {
+            return 1;
+          }
+          if (b.telephone_paiement > a.telephone_paiement) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.telephone_paiement > b.telephone_paiement) {
+            return -1;
+          }
+          if (b.telephone_paiement > a.telephone_paiement) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+    }
+
+    if (property === 'paiement') {
+      if (this.isAsc) {
+        candidatures.sort((a, b) => {
+          if (a.paiement > b.paiement) {
+            return 1;
+          }
+          if (b.paiement > a.paiement) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        candidatures.sort((a, b) => {
+          if (a.paiement > b.paiement) {
+            return -1;
+          }
+          if (b.paiement > a.paiement) {
             return 1;
           }
           return 0;
@@ -294,18 +365,30 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
 
     if (this.searchValue !== '') {
       let names = this.searchCandidatures.map(candidature => candidature.compte.name);
+      let code_examens = this.searchCandidatures.map(candidature => candidature.code_examen);
       let name = names.filter(name => name.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
+      let code_examen = code_examens.filter(code => code.toString().toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
 
-      if (name.length === 0) {
+      if (name.length === 0 && code_examen.length == 0) {
         this.candidatures = [];
       } else {
-        let candidatures: Candidature[] = [];
-        for (let index = 0; index < name.length; index++) {
-          const element = name[index];
-          let z = this.searchCandidatures.filter(candidature => candidature.compte.name.indexOf('' + element) > -1);
-          candidatures.push(...z);
+        if (name.length > 0) {
+          let candidatures: Candidature[] = [];
+          for (let index = 0; index < name.length; index++) {
+            const element = name[index];
+            let z = this.searchCandidatures.filter(candidature => candidature.compte.name.indexOf('' + element) > -1);
+            candidatures.push(...z);
+          }
+          this.candidatures = candidatures;
+        } else {
+          let candidatures: Candidature[] = [];
+          for (let index = 0; index < code_examen.length; index++) {
+            const element = code_examen[index];
+            let z = this.searchCandidatures.filter(candidature => candidature.code_examen.toString().indexOf('' + element) > -1);
+            candidatures.push(...z);
+          }
+          this.candidatures = candidatures;
         }
-        this.candidatures = candidatures;
       }
     } else {
       this.candidatures = this.searchCandidatures;
@@ -588,7 +671,7 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
       });
     }
 
-    if (this.compte.role == Role.ADMIN || this.compte.role == Role.JURY) {
+    if (this.compte.role == Role.ADMIN || this.compte.role == Role.JURY || this.compte.role == Role.COMPTABLE) {
       this.zoneService.getOne(this.compte.idZone ?? 0).subscribe({
         next: (value: Zone) => {
           this.zone = value;

@@ -1,0 +1,189 @@
+<section class="note-page page-content" *ngIf="!isFormMatter else addMatter">
+    <h1 class="page-title"> Concours <i class="pi pi-angle-right"></i> Matières concours</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Liste des matières</h3>
+            <button class="btn btn-danger ml-1 mr-1" (click)="viewMatter('add')">
+                Ajouter une matière
+            </button>
+        </div>
+        <div class="line"></div>
+
+        <div class="table-content">
+            <div class="search-content">
+                <div class="select-page-size">
+                    <span>Voir</span>
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>entrées</span>
+                </div>
+            </div>
+            <div class="row">
+                <table id="table">
+                    <tr>
+                        <th>
+                            <div>
+                                Intitule <i class="icon-sort {{this.sortProperty == 'intitule' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'intitule'}" (click)="sort('intitule')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Duree <i class="icon-sort {{this.sortProperty == 'duree' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'duree'}" (click)="sort('duree')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Coefficient <i class="icon-sort {{this.sortProperty == 'coefficient' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'coefficient'}" (click)="sort('coefficient')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                #
+                            </div>
+                        </th>
+                    </tr>
+                    <tr *ngFor="let matter of matters">
+                        <td>{{matter.intitule}}</td>
+                        <td>{{matter.duree}} H</td>
+                        <td>{{matter.coefficient}}</td>
+                        <td>
+                            <button class="btn" (click)="showUpdateMatterView(matter)">
+                                <div>
+                                    <i class="fa-solid fa-pencil"></i>
+                                </div>
+                                <span>
+                                    Modifier
+                                </span>
+                            </button>
+                            <button class="btn mt-2" (click)="deleteMatter(matter.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="searchValue && matters.length === 0">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune matière trouvées avec ces elements de recherche
+                            </span></td>
+                    </tr>
+                    <tr *ngIf="!searchValue && matters.length === 0">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune matière presentent dans la base
+                            </span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pagination_content">
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{matters.length}} entrées affichées</span>
+                <ul class="pagination">
+                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
+                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
+                            (click)="previous()">Précedent</a>
+                    </li>
+                    <li class="paginate_button active">
+                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
+                    </li>
+                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
+                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
+                            (click)="next()">Suivant</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<ng-template #addMatter>
+    <section class="Matter-page page-content">
+        <h1 class="page-title"><img (click)="viewMatter()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
+                srcset=""> Matière d'examen <i class="pi pi-angle-right"></i>{{matter?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière</h1>
+        <div class="card">
+            <div class="header">
+                <h3 class="title">{{matter?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une matière
+                </h3>
+            </div>
+            <div class="line"></div>
+            <form class="form" [formGroup]="formMatter" (ngSubmit)="createOrUpdateMatter()">
+                <div class="header">
+                    Veullez remplir les champs suivants
+                    <div class="line"></div>
+                </div>
+                <div class="main">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Intitule *</label>
+                            <input type="text" formControlName="intitule"
+                                [ngClass]="{required: formMatter.get('intitule')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formMatterControl['intitule'].errors">
+                            <div *ngIf="formMatterControl['intitule'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Duree *</label>
+                            <input type="number" formControlName="duree"
+                                [ngClass]="{required: formMatter.get('duree')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formMatterControl['duree'].errors">
+                            <div *ngIf="formMatterControl['duree'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formMatterControl['duree'].errors['min']">
+                                La durée doit être supérieur à zero
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Coefficient *</label>
+                            <input type="number" formControlName="coefficient"
+                                [ngClass]="{required: formMatter.get('coefficient')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formMatterControl['coefficient'].errors">
+                            <div *ngIf="formMatterControl['coefficient'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                            <div *ngIf="formMatterControl['coefficient'].errors['min']">
+                                Le coefficient doit être supérieur à zero
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="line"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-info" [disabled]="formMatter.invalid" type="button" (click)="createOrUpdateMatter()">
+                            Soumettre
+                        </button>
+
+                        <button class="btn btn-danger" (click)="formMatter.reset()">
+                            Renitialiser
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </section>
+</ng-template>

@@ -153,6 +153,10 @@ export class CandidatureService {
     return this.http.get(this.url + 'download/admisbyste/' + idSite, { responseType: 'blob' });
   }
 
+  public downloadSolvableCandidatureFile(solvable: boolean) {
+    return this.http.get(this.url + 'download/allbysolvabilite/' + solvable, { responseType: 'blob' });
+  }
+
   public delete(idCandidature: number): Observable<void> {
     return this.http.delete<void>(this.url + idCandidature);
   }

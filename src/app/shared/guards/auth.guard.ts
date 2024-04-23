@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     let token: string | null = this.storageService.getUserTokenConnected();
     if (token != null) {
       let role: string = this.tokenService.decodeToken(token).scope;
-      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN || role == Role.JURY)) {
+      if (this.tokenService.isLogged() && (role == Role.ADMIN || role == Role.SUPER_ADMIN || role == Role.JURY || role == Role.COMPTABLE)) {
         this.authService.isLogin.next(true);
         return true;
       }

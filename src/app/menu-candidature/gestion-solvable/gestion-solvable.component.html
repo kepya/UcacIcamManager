@@ -128,10 +128,26 @@
                         </th>
                         <th>
                             <div>
-                                Nationalité <i
-                                    class="icon-sort {{this.sortProperty == 'nationalite' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nationalite'}"
-                                    (click)="sort('nationalite')"></i>
+                                Code MP <i
+                                    class="icon-sort {{this.sortProperty == 'reference_paiement' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'reference_paiement'}"
+                                    (click)="sort('reference_paiement')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                               Numero transaction <i
+                                    class="icon-sort {{this.sortProperty == 'telephone_paiement' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'telephone_paiement'}"
+                                    (click)="sort('telephone_paiement')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                               Montant à payer <i
+                                    class="icon-sort {{this.sortProperty == 'paiement' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'paiement'}"
+                                    (click)="sort('paiement')"></i>
                             </div>
                         </th>
                         <th>
@@ -163,18 +179,20 @@
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
                         <td>{{candidature?.cycle}}</td>
-                        <td>{{candidature.nationalite}}</td>
+                        <td>{{candidature.reference_paiement}}</td>
+                        <td>{{candidature.telephone_paiement}}</td>
+                        <td>{{candidature.paiement}}</td>
                         <td>{{candidature?.centre}}</td>
                         <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
                         <td>{{candidature?.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="9"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>

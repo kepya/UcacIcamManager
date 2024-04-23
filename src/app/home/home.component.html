@@ -4,6 +4,11 @@
             [compteARebour]="compteARebour" [nextSession]="nextSession" [labelsConcour]="labelsConcour"
             [statCandidatures]="statCandidatures" [session]="session"></app-admin-home>
     </section>
+    <section *ngIf="isComptable">
+        <app-comptable-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [datasetsConcour]="datasetsConcour"
+            [compteARebour]="compteARebour" [nextSession]="nextSession" [labelsConcour]="labelsConcour"
+            [statCandidatures]="statCandidatures" [session]="session"></app-comptable-home>
+    </section>
     <section *ngIf="isJury">
         <app-jury-home [datasetsCandidatEntretenuParSite]="datasetsCandidatEntretenuParSite"
             [compteARebour]="compteARebour" [labelsCandidatEntretenuParSite]="labelsCandidatEntretenuParSite"
