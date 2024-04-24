@@ -2,7 +2,7 @@
   <div class="col-9">
     <section class="active_session">
       <p>
-        Session en cours: <strong>{{ session.nom }}</strong>
+        Session en cours: <strong>{{ session?.nom ?? '' }}</strong>
       </p>
     </section>
     <section class="statistics">
@@ -12,7 +12,7 @@
         </div>
         <div class="stat">
           <p class="label">Candidature total</p>
-          <p class="value">{{ statCandidatures.nbCandidaturesTotal }}</p>
+          <p class="value">{{ statCandidatures?.nbCandidaturesTotal ?? 0  }}</p>
         </div>
       </section>
 
@@ -23,7 +23,7 @@
         <div class="stat">
           <p class="label">Candidats entretenus</p>
           <p class="value">16</p>
-          <p class="value">{{ statCandidatures.nbEntretenusTotal }}</p>
+          <p class="value"></p>
         </div>
       </section>
 
@@ -33,7 +33,7 @@
         </div>
         <div class="stat">
           <p class="label">Candidature en attentes</p>
-          <p class="value">{{ statCandidatures.nbCandidaturesEnAttente }}</p>
+          <p class="value">{{ statCandidatures?.nbCandidaturesEnAttente ?? 0 }}</p>
         </div>
       </section>
     </section>
@@ -54,7 +54,7 @@
         <div class="information">
           <p class="label">Compte à rebours</p>
           <p class="value">
-            {{ compteARebour }}
+            {{ compteARebour }} {{ compteARebour < 0 ? 'Jours' : 'Jour'}}
           </p>
         </div>
       </section>
@@ -67,11 +67,11 @@
     <section class="information_card">
       <div class="information">
         <p class="label">Centre d'examen</p>
-        <p class="value">{{ statCandidatures.nbCentreExamenParticipant }}</p>
+        <p class="value">{{ statCandidatures?.nbCentreExamenParticipant ?? 0 }}</p>
       </div>
       <div class="information">
         <p class="label">Sites</p>
-        <p class="value">{{ statCandidatures.nbSiteParticipant }}</p>
+        <p class="value">{{ statCandidatures?.nbSiteParticipant ?? 0 }}</p>
       </div>
     </section>
   </section>
@@ -89,12 +89,12 @@
       [labels]="labelsCandidatEntretenuParZone"
     ></app-bar-chart>
   </section>
-  <section>
-    <h1 class="title">Nombre de candidats entrenu par type de concours</h1>
+  <!-- <section>
+    <h1 class="title">Nombre de candidats entrenu par formation</h1>
     <div class="chart-container">
       <canvas id="MyConcourChart"></canvas>
     </div>
-  </section>
+  </section> -->
 </section>
 
 <section style="    margin-top: 3rem;">
@@ -115,7 +115,7 @@
         <div class="vh-space-between flex justify-content-between ">
             <div>
                 <h3 class="text-lg font-bold">Entretiens programmés</h3>
-                <span class="text-sm font-semibold" style="color: var(--clr-primary-500);">Session de {{session.date_examen | date:'MMMM':'fr'}}</span>
+                <span class="text-sm font-semibold" style="color: var(--clr-primary-500);">Session de {{session?.date_examen | date:'MMMM':'fr'}}</span>
             </div>
             <div>
                 <button pButton label="Reiniatialiser" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>

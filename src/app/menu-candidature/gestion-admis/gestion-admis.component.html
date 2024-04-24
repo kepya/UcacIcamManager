@@ -188,7 +188,6 @@
                     <tr *ngFor="let candidature of candidatures">
                         <td><input class="checkbox" type="checkbox" name="validate"
                                 (change)="validateCandidats($event, candidature)" /></td>
-                        <td>{{'Pays'}}</td>
                         <td>{{candidature?.code_examen}}</td>
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>
@@ -202,12 +201,12 @@
                         <td>{{candidature?.statut}}</td>
                     </tr>
                     <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="12"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures trouvés avec ces lettres dans son nom
                             </span></td>
                     </tr>
                     <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="12"><span class="vh-center">
+                        <td colspan="11"><span class="vh-center">
                                 Aucune candidatures presents dans la base
                             </span></td>
                     </tr>

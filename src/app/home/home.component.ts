@@ -94,8 +94,14 @@ export class HomeComponent implements OnInit {
   }
 
   daysBetween(date1: Date, date2: Date): number {
-    const diffInMs = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
-    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+    const diffInMs = (new Date(date1).getTime() - new Date(date2).getTime());
+    let diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays >= 0) {
+      diffInDays = 0;
+      // this.session.statut = "false";
+      // this.sessionSrv.update(this.session);
+    }
     return diffInDays;
   }
 
@@ -182,6 +188,7 @@ export class HomeComponent implements OnInit {
         }
 
         this.datasetsZone = [{
+          label: 'Candidats',
           data: data
         }];
         // this.datasetsZone = data1;
@@ -221,6 +228,7 @@ export class HomeComponent implements OnInit {
         }
 
         this.datasetsConcour = [{
+          label: 'Concour',
           data: data
         }];
         // this.labelsConcour = ['Candidats'];
@@ -259,7 +267,7 @@ export class HomeComponent implements OnInit {
       next: (value: Session) => {
         this.nextSession = value;
         if (value != null) {
-          this.compteARebour = this.daysBetween(new Date(), value.date_debut);
+          this.compteARebour = this.daysBetween(new Date(), value.date_limite);
         }
       },
       error: (err) => {

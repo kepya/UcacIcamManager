@@ -375,9 +375,9 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.idZone = idZone;
     this.candidatureSrv.allByZone(idZone).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.En_Attente.toString() && c.solvable);
         this.totalElement = value.length;
 
-        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
         console.log('candidatures: ', value);
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -389,9 +389,6 @@ export class GestionAdmissibiliteComponent implements OnInit {
             (this.page - 1) * this.pageSize,
             (this.page - 1) * this.pageSize + this.pageSize
           );
-
-        console.log('c: ', value);
-        console.log('candidatures: ', value);
 
         this.collectionSize = value.length;
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
@@ -407,9 +404,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'centre';
     this.candidatureSrv.allByCentre(idCentre).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.En_Attente.toString() && c.solvable);
         this.totalElement = value.length;
-
-        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
 
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -434,9 +430,8 @@ export class GestionAdmissibiliteComponent implements OnInit {
     this.actifOption = 'site';
     this.candidatureSrv.allBySite(idSite).subscribe({
       next: (value: Candidature[]) => {
+        value = value.filter(c => c.statut.toString() == Statut.En_Attente.toString() && c.solvable);
         this.totalElement = value.length;
-
-        value = value.filter(c => c.statut.toString() == Statut.Echec.toString());
 
         value = this.sort('nom', value);
         this.searchCandidatures = [];
@@ -703,8 +698,9 @@ export class GestionAdmissibiliteComponent implements OnInit {
 
   validateAdmissibleCandidats() {
     for (let index = 0; index < this.admissiblesCandidats.length; index++) {
-      const candidat = this.admissiblesCandidats[index];
+      let candidat = this.admissiblesCandidats[index];
       candidat.statut = Statut.Admissible;
+      candidat.compteID = candidat.compte!.id || 0;
       this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
           this.messageService.add({ severity: 'success', summary: 'Passé en admissible', detail: 'Le candidat ' + candidat.compte.name + ' est passé en admissible' });

@@ -12,7 +12,7 @@
         </div>
         <div class="stat">
           <p class="label">Nombre d'inscriptions</p>
-          <p class="value">{{ statCandidatures.nbCandidaturesTotal }}</p>
+          <p class="value">{{ statCandidatures?.nbCandidaturesTotal ?? 0  }}</p>
         </div>
       </section>
       <section class="stat-card">
@@ -87,7 +87,7 @@
     ></app-bar-chart>
   </section>
   <section>
-    <h1 class="title">Nombre de candidats par type de concours</h1>
+    <h1 class="title">Nombre de candidats par formation</h1>
     <div class="chart-container">
       <canvas id="MyConcourChart"></canvas>
     </div>

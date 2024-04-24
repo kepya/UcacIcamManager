@@ -665,6 +665,7 @@ export class GestionAdmisComponent implements OnInit, AfterViewInit  {
     for (let index = 0; index < this.admisCandidats.length; index++) {
       const candidat = this.admisCandidats[index];
       candidat.statut = Statut.Admis;
+      candidat.compteID = candidat.compte!.id || 0;
       this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
         next: (value: Candidature) => {
           this.messageService.add({ severity: 'success', summary: 'Passé en admis', detail: 'Le candidat ' + candidat.compte.name + ' est passé en admis' });
