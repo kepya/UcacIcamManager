@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { Table } from 'primeng/table';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,44 @@ export class CommonService {
     var jours = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
 
     return jours;
+  }
+
+  clear(table: Table) {
+    table.clear();
+  }
+
+  getStatuses(): {
+    label: string;
+    value: string;
+  }[] {
+    return [
+      { label: 'ToDo', value: 'A faire' },
+      { label: 'Realised', value: 'Réalisé' },
+    ];
+  }
+
+  getSeverity(status: string) {
+    switch (status.toLowerCase()) {
+      case 'ToDo':
+        return 'danger';
+
+      case 'Realised':
+        return 'success';
+      default:
+        return 'warning';
+    }
+  }
+
+  getStatusLabel(status: string) {
+    switch (status) {
+      case 'ToDo':
+        return 'A faire';
+
+      case 'Realised':
+        return 'Réalisé';
+      default:
+        return '';
+    }
   }
 
   getFormationLabel(value: string) {
@@ -45,7 +84,7 @@ export class CommonService {
     let nbreJr = this.calculerJours(dateDebut, dateFin);
     console.log("nombre jour:", nbreJr);
 
-    let dates:Date[] = [];
+    let dates: Date[] = [];
     let date = new Date(dateDebut);
     dates.push(new Date(dateDebut));
 

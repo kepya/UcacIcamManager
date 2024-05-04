@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import Chart from 'chart.js/auto';
-import { Table } from 'primeng/table';
+import { Component, OnInit } from '@angular/core';
+import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Cycle } from 'src/app/shared/enums/cycle.enum';
 import { Genre } from 'src/app/shared/enums/genre.enum';
 import { Langue } from 'src/app/shared/enums/langue.enum';
@@ -8,58 +7,24 @@ import { Role } from 'src/app/shared/enums/role.enum';
 import { Statut } from 'src/app/shared/enums/statut.enum';
 import { NoteResponse } from 'src/app/shared/models/note';
 import { Session } from 'src/app/shared/models/session';
-import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
 import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
-  selector: 'app-jury-home',
-  templateUrl: './jury-home.component.html',
+  selector: 'app-planning',
+  templateUrl: './planning.component.html',
   styles: [
   ]
 })
-export class JuryHomeComponent implements OnInit, AfterViewInit {
-  loading: boolean = false;
-
-  public chart: any;
-  @Input() statCandidatures!: StatCandidatures;
-  @Input() session!: Session;
-  @Input() nextSession!: Session;
-  @Input() compteARebour!: number;
-
-  @Input() datasetsCandidatEntretenuParZone!: {
-    label?: string;
-    data: number[];
-    backgroundColor?: string;
-  }[];
-  @Input() labelsCandidatEntretenuParZone!: string[];
-
-  @Input() datasetsCandidatEntretenuParSite!: {
-    label?: string;
-    data: number[];
-    backgroundColor?: string;
-  }[];
-  @Input() labelsCandidatEntretenuParSite!: string[];
-
-  @Input() datasetsCandidatEntretenuParConcour!: {
-    label?: string;
-    data: number[];
-    backgroundColor?: string;
-  }[];
-  @Input() labelsCandidatEntretenuParConcour!: string[];
-
+export class PlanningComponent implements OnInit {
   entretiens: NoteResponse[] = [];
-
+  loading: boolean = false;
+  session!: Session;
   statuses!: any[];
 
-  constructor(public commonService: CommonService) { }
-
-  ngAfterViewInit(): void {
-    this.createChartCandidatByConcour();
-  }
+  constructor(public commonService: CommonService, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
     this.statuses = this.commonService.getStatuses();
-
     this.entretiens = [
       {
         candidature: {
@@ -163,26 +128,11 @@ export class JuryHomeComponent implements OnInit, AfterViewInit {
         candidatureid: 75,
         status: 'ToDo'
       },
-    ];
-  }
-
-  createChartCandidatByConcour() {
-    this.chart = new Chart("MyConcourChart", {
-      type: 'bar', //this denotes tha type of chart
-
-      data: {// values on X-Axis
-        labels: this.labelsCandidatEntretenuParConcour,
-        datasets: this.datasetsCandidatEntretenuParConcour
-      },
-      options: {
-        aspectRatio: 2.5
-      }
-
-    });
+          ];
   }
 
   getEventValue(event: any) {
     return event.target != null ? event.target.value : '';
   }
-  
+
 }

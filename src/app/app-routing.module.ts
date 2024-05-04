@@ -117,7 +117,8 @@ const routes: Routes = [
   {
     path: 'intervenant_entretiens',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/intervenant-entretien/intervenant-entretien.module').then(s => s.IntervenantEntretienModule),
+    // loadChildren: () => import('./menu-entretien/intervenant-entretien/intervenant-entretien.module').then(s => s.IntervenantEntretienModule),
+    loadChildren: () => import('./menu-entretien/schedule-disponibility/schedule-disponibility.module').then(s => s.ScheduleDisponibilityModule),
   },
   {
     path: 'calendrier_entretiens',
@@ -133,6 +134,11 @@ const routes: Routes = [
     path: 'gestion_epreuves',
     data: { title: `Evaluations` },
     loadChildren: () => import('./menu-evaluation/gestion-epreuve/gestion-epreuve.module').then(s => s.GestionEpreuveModule),
+  },
+  {
+    path: 'planning',
+    data: { title: `Planning` },
+    loadChildren: () => import('./menu-entretien/planning/planning.module').then(s => s.PlanningModule),
   },
   {
     path: '**',
