@@ -102,7 +102,8 @@ const routes: Routes = [
   {
     path: 'calendrier_disponibilites',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule),
+    // loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule),
+    loadChildren: () => import('./menu-entretien/schedule-interviewer/schedule-interviewer.module').then(s => s.ScheduleInterviewerModule),
   },
   {
     path: 'note_entretiens',

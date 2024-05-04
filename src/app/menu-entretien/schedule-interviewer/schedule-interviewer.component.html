@@ -1,0 +1,123 @@
+<section class="schedule-interviewer-page calendrier-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Plannifications des entretiens</h1>
+    <div class="page-header">
+        <div class="line"></div>
+    </div>
+
+    <div class="card p-block-1">
+        <div class="main">
+            <div class="vh-center gap-1 mb-3">
+                <div class="icon-btn-round">
+                    <i class="pi pi-angle-left"></i>
+                </div>
+                <h3 class="active-day">
+                    {{currentDay | date: 'EEEE dd MMMM yyyy': 'fr'}}
+                </h3>
+                <div class="icon-btn-round">
+                    <i class="pi pi-angle-right"></i>
+                </div>
+            </div>
+            <div class="jurys-plages">
+                <div class="vh-center jurys-plages-title-content">
+                    <h3 class="title">Jury disponible</h3>
+                </div>
+                <div class="grid">
+                    <div class="col-12 md:col-6" *ngFor="let horaire of horaires">
+                        <div class="horaire-card-title">
+                            <h4 class="title text-center">{{horaire}}</h4>
+                        </div>
+                        <div class="horaire-card-content">
+                            <ul class="list-none">
+                                <li class="text-base font-semibold v-center"
+                                    *ngFor="let compte of juriesByDispo.get(horaire)">
+                                    <p-tag value="{{zones.get(compte.idZone)?.nom ?? ''}}"></p-tag> <span
+                                        class="ml-2">{{compte.name}} {{compte.prenom}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+ 
+        <p-table #dt1 [value]="juries" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [loading]="loading" [paginator]="true"
+            currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+            [globalFilterFields]="['horaire']"  groupRowsBy="horaire" sortField="horaire" sortMode="single"
+            rowGroupMode="rowspan" 
+            >
+            <ng-template pTemplate="caption">
+                <div class="vh-space-between flex justify-content-between ">
+                    <div>
+                        <h2>Nouvel entretien</h2>
+                        <h4 class="text-orange-500 mb-5">Session Mai 2024</h4>
+                    </div>
+                    <div>
+                        <span class="ml-2 p-input-icon-left ml-auto">
+                            <i class="pi pi-filter-slash"></i>
+                            <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleFormationSelect($event)"  [options]="formations" [filter]="true" [showClear]="true"
+                            optionLabel="name" [showClear]="true"
+                                placeholder="Filtrer par formation prioritaire"></p-dropdown>
+                        </span>
+                    </div>
+                </div>
+                <div class="vh-end flex-wrap">
+                    <p-tag severity="danger" value="Plage horaire :" styleClass="tag-style"></p-tag>
+                    <p-tag severity="danger" value="{{activeHoraire}}" styleClass="tag-style basic-bg"></p-tag>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th >
+                       
+                    </th>
+                       
+                    <th style="min-width:10rem">
+                       
+                    </th>
+                       
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Plage 1
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Plage 2
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-entretien let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
+                <tr>
+                    <td *ngIf="rowgroup" class="available-juries-title" [attr.rowspan]="rowspan">
+                     <div >
+                        Jurys disponible
+                     </div>
+                    </td>
+                    <td>
+                        <p-dropdown  [tooltipPosition]="'top'" [options]="juries" [filter]="true" [showClear]="true"
+                        optionLabel="name"  (onChange)="handleInterviewerSelect($event)" [showClear]="true"
+                            placeholder="Choisir un intervenant"></p-dropdown>
+                    </td>
+                    <td>
+                        <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)" [filter]="true" [showClear]="true"
+                            placeholder="Choisir un candidat"></p-dropdown>
+                    </td>
+                    <td>
+                        <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)" [filter]="true" [showClear]="true"
+                            placeholder="En attente de candidat delectionné"></p-dropdown>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="3">Aucun jury disponible pour le moment.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</section>

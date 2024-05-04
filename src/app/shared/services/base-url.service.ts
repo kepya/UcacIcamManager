@@ -14,6 +14,7 @@ export class BaseUrlService {
       // 'http://' + window.location.hostname + ':' + environment.port + '/';
       // 'http://' + window.location.hostname;
       'http://51.178.136.105';
+      // 'https://inscription.ucac-icam.com';
  }
 
   getOrigin() {

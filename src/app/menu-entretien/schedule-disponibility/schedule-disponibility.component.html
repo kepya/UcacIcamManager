@@ -38,7 +38,6 @@
                                     <div *ngFor="let horaire of disponibility.horaires, index as i" class="field-checkbox mb-1">
                                         <input type="radio" id="radio{{i}}" name="{{disponibility.key}}" [value]="horaire"
                                         (change)="selectHoraire($event, disponibility,i)">
-                                        <!-- <p-radioButton [value]="horaire" name="{{disponibility.key}}" (ngModelChange)="selectHoraire($event, disponibility,i)" [ngModel]="selectedHoraire"></p-radioButton> -->
                                         <label [for]="horaire" class="ml-2">
                                             {{ horaire }}
                                         </label>

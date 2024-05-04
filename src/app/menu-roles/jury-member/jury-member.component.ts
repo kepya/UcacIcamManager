@@ -240,7 +240,7 @@ export class JuryMemberComponent implements OnInit {
   updateCompte(compte: Compte) {
     this.isFormCompte = true;
     this.compte = compte;
-    this.formCompte.setValue({
+    this.formCompte.patchValue({
       name: compte.name,
       prenom: compte.prenom,
       telephone: compte.telephone,
@@ -259,8 +259,7 @@ export class JuryMemberComponent implements OnInit {
           this.isFormCompte = false;
         },
         error: (err) => {
-          console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.error });
         }
       })
     } else {
@@ -274,8 +273,7 @@ export class JuryMemberComponent implements OnInit {
           this.isFormCompte = false;
         },
         error: (err) => {
-          console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.error });
         }
       })
     }
