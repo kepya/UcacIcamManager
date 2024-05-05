@@ -7,13 +7,13 @@
     <div class="card p-block-1">
         <div class="main">
             <div class="vh-center gap-1 mb-3">
-                <div class="icon-btn-round">
+                <div class="icon-btn-round  cursor-pointer">
                     <i class="pi pi-angle-left"></i>
                 </div>
                 <h3 class="active-day">
                     {{currentDay | date: 'EEEE dd MMMM yyyy': 'fr'}}
                 </h3>
-                <div class="icon-btn-round">
+                <div class="icon-btn-round  cursor-pointer">
                     <i class="pi pi-angle-right"></i>
                 </div>
             </div>
@@ -42,13 +42,12 @@
     </div>
 
     <div class="card mt-3">
- 
+
         <p-table #dt1 [value]="juries" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
             [rowsPerPageOptions]="[5, 10, 25, 50]" [loading]="loading" [paginator]="true"
             currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
-            [globalFilterFields]="['horaire']"  groupRowsBy="horaire" sortField="horaire" sortMode="single"
-            rowGroupMode="rowspan" 
-            >
+            [globalFilterFields]="['horaire']" groupRowsBy="horaire" sortField="horaire" sortMode="single"
+            rowGroupMode="rowspan">
             <ng-template pTemplate="caption">
                 <div class="vh-space-between flex justify-content-between ">
                     <div>
@@ -58,57 +57,63 @@
                     <div>
                         <span class="ml-2 p-input-icon-left ml-auto">
                             <i class="pi pi-filter-slash"></i>
-                            <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleFormationSelect($event)"  [options]="formations" [filter]="true" [showClear]="true"
-                            optionLabel="name" [showClear]="true"
-                                placeholder="Filtrer par formation prioritaire"></p-dropdown>
+                            <p-dropdown [tooltipPosition]="'top'" (onChange)="handleFormationSelect($event)"
+                                [options]="formations" [filter]="true" [showClear]="true" optionLabel="name"
+                                [showClear]="true" placeholder="Filtrer par formation prioritaire"></p-dropdown>
                         </span>
                     </div>
                 </div>
                 <div class="vh-end flex-wrap">
                     <p-tag severity="danger" value="Plage horaire :" styleClass="tag-style"></p-tag>
-                    <p-tag severity="danger" value="{{activeHoraire}}" styleClass="tag-style basic-bg"></p-tag>
+                    <p-tag (click)="showMainDialog()" severity="danger"  value="{{activeHoraire}}" styleClass="tag-style basic-bg cursor-pointer"></p-tag>
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th >
-                       
+                    <th>
+
                     </th>
-                       
+
                     <th style="min-width:10rem">
-                       
+
                     </th>
-                       
+
                     <th style="min-width:10rem">
                         <div class="flex align-items-center">
                             Plage 1
+                            <p-tag severity="danger" [value]="plage1" (click)="showDialog(firstPlages, 1)"
+                                styleClass="ml-2  cursor-pointer"></p-tag>
                         </div>
                     </th>
                     <th style="min-width:10rem">
                         <div class="flex align-items-center">
                             Plage 2
+                            <p-tag severity="danger" [value]="plage2" (click)="showDialog(secondPlages, 2 )"
+                                styleClass="ml-2 cursor-pointer"></p-tag>
                         </div>
                     </th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-entretien let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
+            <ng-template pTemplate="body" let-entretien let-rowIndex="rowIndex" let-rowgroup="rowgroup"
+                let-rowspan="rowspan">
                 <tr>
                     <td *ngIf="rowgroup" class="available-juries-title" [attr.rowspan]="rowspan">
-                     <div >
-                        Jurys disponible
-                     </div>
+                        <div>
+                            Jurys disponible
+                        </div>
                     </td>
                     <td>
-                        <p-dropdown  [tooltipPosition]="'top'" [options]="juries" [filter]="true" [showClear]="true"
-                        optionLabel="name"  (onChange)="handleInterviewerSelect($event)" [showClear]="true"
+                        <p-dropdown [tooltipPosition]="'top'" [options]="juries" [filter]="true" [showClear]="true"
+                            optionLabel="name" (onChange)="handleInterviewerSelect($event)" [showClear]="true"
                             placeholder="Choisir un intervenant"></p-dropdown>
                     </td>
                     <td>
-                        <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)" [filter]="true" [showClear]="true"
-                            placeholder="Choisir un candidat"></p-dropdown>
+                        <p-dropdown [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)"
+                            [filter]="true" [showClear]="true" placeholder="Choisir un candidat"></p-dropdown>
                     </td>
                     <td>
-                        <p-dropdown  [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)" [filter]="true" [showClear]="true"
+                        <p-dropdown [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)"
+                            [filter]="true" [showClear]="true"
                             placeholder="En attente de candidat delectionné"></p-dropdown>
                     </td>
                 </tr>
@@ -119,5 +124,29 @@
                 </tr>
             </ng-template>
         </p-table>
+
+        
+        <div class="mt-2 vh-end ">
+            <button pButton pRipple type="button" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
+            </div>
     </div>
 </section>
+
+
+<p-dialog header="Sélection de la plage" [closable]="true" [(visible)]="visible" [modal]="true" [maximizable]="true"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <div class="w-full plage-interview-dialog">
+        <div class="mb-4 mt-5">
+            <label class="block text-900 font-medium mb-2">Plages</label>
+            <div class="flex flex-wrap gap-3" *ngIf="!visibleMainPlage">
+                <p-tag styleClass="cursor-pointer tag-style basic-bg" [value]="p" (click)="selectPlage(p)"
+                    *ngFor="let p of selectPlages"></p-tag>
+            </div>
+            <div class="flex flex-wrap gap-3" *ngIf="visibleMainPlage">
+                <p-tag styleClass="cursor-pointer tag-style basic-bg" [value]="p" (click)="selectMainPlage(p)"
+                    *ngFor="let p of horaires"></p-tag>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+

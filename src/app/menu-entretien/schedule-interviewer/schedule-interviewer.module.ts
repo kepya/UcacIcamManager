@@ -8,6 +8,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { InputTextModule } from 'primeng/inputtext';
     DropdownModule,
     TableModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    FormsModule,
+    DialogModule
   ]
 })
 export class ScheduleInterviewerModule { }
