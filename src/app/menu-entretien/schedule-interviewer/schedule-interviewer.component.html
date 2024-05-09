@@ -7,13 +7,13 @@
     <div class="card p-block-1">
         <div class="main">
             <div class="vh-center gap-1 mb-3">
-                <div class="icon-btn-round  cursor-pointer">
+                <div class="icon-btn-round  cursor-pointer"  (click)="previousDate(dt1)">
                     <i class="pi pi-angle-left"></i>
                 </div>
                 <h3 class="active-day">
                     {{currentDay | date: 'EEEE dd MMMM yyyy': 'fr'}}
                 </h3>
-                <div class="icon-btn-round  cursor-pointer">
+                <div class="icon-btn-round  cursor-pointer" (click)="nextDate(dt1)">
                     <i class="pi pi-angle-right"></i>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
     <div class="card mt-3">
 
-        <p-table #dt1 [value]="juries" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
+        <p-table #dt1 [value]="(juriesByDispo.get(activeHoraire) || [])" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
             [rowsPerPageOptions]="[5, 10, 25, 50]" [loading]="loading" [paginator]="true"
             currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
             [globalFilterFields]="['horaire']" groupRowsBy="horaire" sortField="horaire" sortMode="single"
@@ -55,7 +55,9 @@
                         <h4 class="text-orange-500 mb-5">Session Mai 2024</h4>
                     </div>
                     <div>
-                        <span class="ml-2 p-input-icon-left ml-auto">
+                        <button pButton label="Reiniatialiser" class="p-button-outlined mr-2" icon="pi pi-filter-slash"
+                        (click)="filterGroupedFormations = groupedFormations"></button>
+                        <span class=" p-input-icon-left ml-auto">
                             <i class="pi pi-filter-slash"></i>
                             <p-dropdown [tooltipPosition]="'top'" (onChange)="handleFormationSelect($event)"
                                 [options]="formations" [filter]="true" [showClear]="true" optionLabel="name"
@@ -103,18 +105,23 @@
                         </div>
                     </td>
                     <td>
-                        <p-dropdown [tooltipPosition]="'top'" [options]="juries" [filter]="true" [showClear]="true"
-                            optionLabel="name" (onChange)="handleInterviewerSelect($event)" [showClear]="true"
-                            placeholder="Choisir un intervenant"></p-dropdown>
+                        <p-dropdown [tooltipPosition]="'top'" [options]="getAvalaibleJury(juriesByDispo.get(activeHoraire) || [], activeHoraire)" [filter]="true" [showClear]="true"
+                            optionLabel="name" (onChange)="handleInterviewerSelect($event, rowIndex)" [showClear]="true"
+                            placeholder="Choisir un intervenant" [disabled]="(plage1 == 'Selectionner')" [readonly]="(plage1 == 'Selectionner')" ></p-dropdown>
                     </td>
                     <td>
-                        <p-dropdown [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)"
-                            [filter]="true" [showClear]="true" placeholder="Choisir un candidat"></p-dropdown>
+                        <p-dropdown [tooltipPosition]="'top'" 
+                         scrollHeight="250px" display="chip" optionLabel="label" [options]="filterGroupedFormations" [group]="true"  (onChange)="handleCandidatSelect($event, plage1, rowIndex)"
+                            [filter]="true" [showClear]="true" placeholder="Choisir un candidat" *ngIf="plage1 != 'Selectionner'">
+                            <ng-template let-group pTemplate="group">
+                                <div class="flex align-items-center">
+                                    <span>{{ group.label }}</span>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
                     </td>
                     <td>
-                        <p-dropdown [tooltipPosition]="'top'" (onChange)="handleInterviewerSelect($event)"
-                            [filter]="true" [showClear]="true"
-                            placeholder="En attente de candidat delectionné"></p-dropdown>
+                        <input type="text" [readOnly]="true" [disabled]="true" pInputText  [ngModel]="selectCandidatMap.get(currentDay.getTime() + ' - ' + activeHoraire + ' - ' + rowIndex + ' - ' + plage2)?.label"/>
                     </td>
                 </tr>
             </ng-template>
@@ -127,7 +134,7 @@
 
         
         <div class="mt-2 vh-end ">
-            <button pButton pRipple type="button" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
+            <button pButton pRipple type="button" [disabled]="!canSave" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
             </div>
     </div>
 </section>

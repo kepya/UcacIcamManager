@@ -115,13 +115,13 @@ export class CommonService {
 
     let date1 = dates[0];
     let timeDate1 = date1.split('h');
-    date.setHours(parseInt(timeDate1[0], 10))
+    date.setHours(parseInt(timeDate1[0], 10) + 1)
     date.setMinutes(parseInt(timeDate1[1], 10))
     startDate = date.getTime();
 
     let date2 = dates[1];
     let timeDate2 = date2.split('h');
-    date.setHours(parseInt(timeDate2[0], 10))
+    date.setHours(parseInt(timeDate2[0], 10) + 1)
     date.setMinutes(parseInt(timeDate2[1], 10))
     endDate = date.getTime();
 
