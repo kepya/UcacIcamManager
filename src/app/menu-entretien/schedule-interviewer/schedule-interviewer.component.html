@@ -52,7 +52,8 @@
                 <div class="vh-space-between flex justify-content-between ">
                     <div>
                         <h2>Nouvel entretien</h2>
-                        <h4 class="text-orange-500 mb-5">Session Mai 2024</h4>
+                        <h4 class="text-orange-500 ">Session de {{session?.date_examen
+                            | date:'MMMM':'fr'}}</h4>
                     </div>
                     <div>
                         <button pButton label="Reiniatialiser" class="p-button-outlined mr-2" icon="pi pi-filter-slash"

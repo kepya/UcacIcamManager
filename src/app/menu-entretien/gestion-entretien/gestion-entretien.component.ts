@@ -4,7 +4,7 @@ import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.se
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
-import { Entretien, Note } from 'src/app/shared/models/note';
+import { Entretien, Note, NoteResponse } from 'src/app/shared/models/note';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
 import { NoteService } from 'src/app/shared/services/note.service';
@@ -13,6 +13,7 @@ import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
 import { Centre } from 'src/app/shared/models/centre';
 import { Site } from 'src/app/shared/models/site';
+import { Session } from 'src/app/shared/models/session';
 
 @Component({
   selector: 'app-gestion-entretien',
@@ -35,6 +36,8 @@ export class GestionEntretienComponent implements OnInit {
   entretiens: Entretien[] = [];
   searchEntretiens: Entretien[] = [];
 
+  isJury: boolean = false;
+
   actifOption!: string;
   searchOption!: string;
 
@@ -44,20 +47,38 @@ export class GestionEntretienComponent implements OnInit {
   site!: Site;
   centres: Centre[] = [];
   centre!: Centre;
-  
-  compte!: Compte;
 
-  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService, private commonSrv : CommonService,
-    private messageService: MessageService, private confirmationService: ConfirmationService,private noteService: NoteService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
+  compte!: Compte;
+  session!: Session;
+  statuses!: any[];
+
+  selectedEntretien: any;
+
+  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService,
+    private messageService: MessageService, public commonService: CommonService, private confirmationService: ConfirmationService, private noteService: NoteService, private compteDisponibiliteService: CompteDisponibiliteService,
+    private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
+    this.compte = this.storageService.getUserConnected();
+    this.isJury = this.compte.role == Role.JURY ? true : false;
+
+    this.statuses = this.commonService.getStatuses();
     this.sortProperty = "centre";
     this.sortIcon = "fa-solid fa-arrow-down-short-wide";
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
     this.compte = this.storageService.getUserConnected();
-this.getEntretiens();
+    this.getActiveSession();
+    this.getEntretiens();
+  }
+
+  getActiveSession() {
+    this.sessionSrv.getActive().subscribe({
+      next: (value) => {
+        this.session = value;
+      },
+    })
   }
 
   handlePageSize(event: any) {
@@ -65,6 +86,10 @@ this.getEntretiens();
     if (this.actifOption == 'centre') {
       this.getCentre(this.centre.id ?? 0);
     }
+  }
+
+  getEventValue(event: any) {
+    return event.target != null ? event.target.value : '';
   }
 
   handleCycleSelect(event: any) {
@@ -98,21 +123,24 @@ this.getEntretiens();
 
   getEntretiens() {
     this.noteService.liste().subscribe({
-      next: (result: Note[]) => {
+      next: (result: NoteResponse[]) => {
         let entretiens = result.map((v) => {
           return {
-            id:v!.id ?? 0,
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires, 
+            done: v.done,
             cycle: v.candidature!.cycle.toString(),
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
-            candidat: v.candidature as unknown as Candidature,
+            candidature: v.candidature as unknown as Candidature,
             debut_entretien: new Date(v.debut_entretien),
             fin_entretien: new Date(v.fin_entretien),
           };
         });
 
         if (this.compte.role == Role.JURY) {
-          entretiens = entretiens.filter(e => e.jury==(this.compte.name + ' ' + this.compte.prenom))
+          entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
         }
 
         this.searchEntretiens = entretiens;
@@ -121,7 +149,7 @@ this.getEntretiens();
 
         entretiens = this.sort('nom', entretiens);
         this.entretiens = entretiens
-          .map((mis, i) => ({  ...mis }))
+          .map((mis, i) => ({ ...mis }))
           .slice(
             (this.page - 1) * this.pageSize,
             (this.page - 1) * this.pageSize + this.pageSize
@@ -137,21 +165,24 @@ this.getEntretiens();
 
   getEntretiensByCenter(center: string) {
     this.noteService.liste().subscribe({
-      next: (result: Note[]) => {
+      next: (result: NoteResponse[]) => {
         let entretiens = result.filter(e => e).map((v) => {
           return {
-            id:v!.id ?? 0,
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires, 
+            done: v.done,
             cycle: v.candidature!.cycle.toString(),
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
-            candidat: v.candidature as unknown as Candidature,
+            candidature: v.candidature as unknown as Candidature,
             debut_entretien: new Date(v.debut_entretien),
             fin_entretien: new Date(v.fin_entretien),
           };
         });
 
         if (this.compte.role == Role.JURY) {
-          entretiens = entretiens.filter(e => (e.jury==(this.compte.name + ' ' + this.compte.prenom)) && (e.centre.toLowerCase() == center.toLowerCase()))
+          entretiens = entretiens.filter(e => (e.jury == (this.compte.name + ' ' + this.compte.prenom)) && (e.centre.toLowerCase() == center.toLowerCase()))
         } else {
           entretiens = entretiens.filter(e => e.centre.toLowerCase() == center.toLowerCase());
         }
@@ -160,7 +191,7 @@ this.getEntretiens();
 
         entretiens = this.sort('nom', entretiens);
         this.entretiens = entretiens
-          .map((mis, i) => ({  ...mis }))
+          .map((mis, i) => ({ ...mis }))
           .slice(
             (this.page - 1) * this.pageSize,
             (this.page - 1) * this.pageSize + this.pageSize
@@ -176,21 +207,24 @@ this.getEntretiens();
 
   getEntretiensByCycle(cycle: string) {
     this.noteService.liste().subscribe({
-      next: (result: Note[]) => {
+      next: (result: NoteResponse[]) => {
         let entretiens = result.map((v) => {
           return {
-            id:v!.id ?? 0,
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires, 
+            done: v.done,
             cycle: v.candidature!.cycle.toString(),
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
-            candidat: v.candidature as unknown as Candidature,
+            candidature: v.candidature as unknown as Candidature,
             debut_entretien: new Date(v.debut_entretien),
             fin_entretien: new Date(v.fin_entretien),
           };
         });
 
         if (this.compte.role == Role.JURY) {
-          entretiens = entretiens.filter(e => (e.jury==(this.compte.name + ' ' + this.compte.prenom)) && (e.cycle.toLowerCase() == cycle.toLowerCase()))
+          entretiens = entretiens.filter(e => (e.jury == (this.compte.name + ' ' + this.compte.prenom)) && (e.cycle.toLowerCase() == cycle.toLowerCase()))
         } else {
           entretiens = entretiens.filter(e => e.cycle.toLowerCase() == cycle.toLowerCase());
         }
@@ -199,7 +233,7 @@ this.getEntretiens();
 
         entretiens = this.sort('nom', entretiens);
         this.entretiens = entretiens
-          .map((mis, i) => ({  ...mis }))
+          .map((mis, i) => ({ ...mis }))
           .slice(
             (this.page - 1) * this.pageSize,
             (this.page - 1) * this.pageSize + this.pageSize
@@ -221,20 +255,20 @@ this.getEntretiens();
     if (property === 'nom') {
       if (this.isAsc) {
         entretiens.sort((a, b) => {
-          if (a.candidat.compte.name > b.candidat.compte.name) {
+          if (a.candidature.compte.name > b.candidature.compte.name) {
             return 1;
           }
-          if (b.candidat.compte.name > a.candidat.compte.name) {
+          if (b.candidature.compte.name > a.candidature.compte.name) {
             return -1;
           }
           return 0;
         });
       } else {
         entretiens.sort((a, b) => {
-          if (a.candidat.compte.name > b.candidat.compte.name) {
+          if (a.candidature.compte.name > b.candidature.compte.name) {
             return -1;
           }
-          if (b.candidat.compte.name > a.candidat.compte.name) {
+          if (b.candidature.compte.name > a.candidature.compte.name) {
             return 1;
           }
           return 0;
@@ -245,20 +279,20 @@ this.getEntretiens();
     if (property === 'prenom') {
       if (this.isAsc) {
         entretiens.sort((a, b) => {
-          if (a.candidat.compte.prenom > b.candidat.compte.prenom) {
+          if (a.candidature.compte.prenom > b.candidature.compte.prenom) {
             return 1;
           }
-          if (b.candidat.compte.prenom > a.candidat.compte.prenom) {
+          if (b.candidature.compte.prenom > a.candidature.compte.prenom) {
             return -1;
           }
           return 0;
         });
       } else {
         entretiens.sort((a, b) => {
-          if (a.candidat.compte.prenom > b.candidat.compte.prenom) {
+          if (a.candidature.compte.prenom > b.candidature.compte.prenom) {
             return -1;
           }
-          if (b.candidat.compte.prenom > a.candidat.compte.prenom) {
+          if (b.candidature.compte.prenom > a.candidature.compte.prenom) {
             return 1;
           }
           return 0;
@@ -340,13 +374,13 @@ this.getEntretiens();
     return entretiens;
   }
 
-  
+
   handleSearchValue(event: any) {
     this.searchValue = event.target.value;
 
     if (this.searchValue !== '') {
-      let result = this.searchEntretiens.filter(entretiens => (entretiens.candidat.compte.name.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || 
-      (entretiens.candidat.compte.prenom.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || (entretiens.jury.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1)
+      let result = this.searchEntretiens.filter(entretiens => (entretiens.candidature.compte.name.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) ||
+        (entretiens.candidature.compte.prenom.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1) || (entretiens.jury.toLowerCase().indexOf(this.searchValue.toLowerCase()) > -1)
       );
 
       this.entretiens = result;
@@ -369,7 +403,7 @@ this.getEntretiens();
       this.getCentre(this.centre.id ?? 0);
     }
   }
-  
+
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -398,6 +432,7 @@ this.getEntretiens();
       }
     })
   }
+
   getCentres() {
     this.centreSrv.liste().subscribe({
       next: (value: Centre[]) => {
@@ -409,4 +444,11 @@ this.getEntretiens();
     });
   }
 
+  onRowSelect(event: any) {
+
+  }
+
+  onRowUnselect(event: any) {
+
+  }
 }

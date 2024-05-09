@@ -38,9 +38,12 @@ export class Entretien {
     cycle!: string;
     note?: number;
     centre!: string;
-    candidat!: Candidature;
+    candidat!: string;
+    commentaires!: string;
+    candidature!: Candidature;
     debut_entretien!: Date;
     fin_entretien!: Date;
+    done!: boolean;
 }
 
 export class NoteResponse {
@@ -48,12 +51,12 @@ export class NoteResponse {
     compteid!: number;
     candidatureid!: number;
     commentaires!: string;
+    done!: boolean;
     debut_entretien!: Date;
     fin_entretien!: Date;
     compte!: Compte;
     candidature!: Candidature;
     noteParcoursList!: NoteParcours[];
-    status!: string;
 }
 
 export class NoteParcours {

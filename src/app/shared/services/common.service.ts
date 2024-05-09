@@ -24,33 +24,31 @@ export class CommonService {
   }
 
   getStatuses(): {
-    label: string;
+    label: boolean;
     value: string;
   }[] {
     return [
-      { label: 'ToDo', value: 'A faire' },
-      { label: 'Realised', value: 'Réalisé' },
+      { label: false, value: 'A faire' },
+      { label: true, value: 'Réalisé' },
     ];
   }
 
-  getSeverity(status: string) {
-    switch (status.toLowerCase()) {
-      case 'ToDo':
+  getSeverity(status: boolean) {
+    switch (status) {
+      case false:
         return 'danger';
-
-      case 'Realised':
+      case true:
         return 'success';
       default:
         return 'warning';
     }
   }
 
-  getStatusLabel(status: string) {
+  getStatusLabel(status: boolean) {
     switch (status) {
-      case 'ToDo':
+      case false:
         return 'A faire';
-
-      case 'Realised':
+      case true:
         return 'Réalisé';
       default:
         return '';

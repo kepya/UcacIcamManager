@@ -92,7 +92,8 @@ const routes: Routes = [
   {
     path: 'gestion_entretiens',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/gestion-entretien/gestion-entretien.module').then(s => s.GestionEntretienModule),
+    // loadChildren: () => import('./menu-entretien/gestion-entretien/gestion-entretien.module').then(s => s.GestionEntretienModule),
+    loadChildren: () => import('./menu-entretien/visualize-interview/visualize-interview.module').then(s => s.VisualizeInterviewModule),
   },
   {
     path: 'gestion_disponibilites',

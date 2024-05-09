@@ -1,9 +1,8 @@
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GestionEntretienRoutingModule } from './gestion-entretien-routing.module';
-import { GestionEntretienComponent } from './gestion-entretien.component';
+import { VisualizeInterviewRoutingModule } from './visualize-interview-routing.module';
+import { VisualizeInterviewComponent } from './visualize-interview.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
@@ -13,14 +12,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
-    GestionEntretienComponent
+    VisualizeInterviewComponent
   ],
   imports: [
     CommonModule,
-    GestionEntretienRoutingModule,
+    VisualizeInterviewRoutingModule,
     ToastModule,
     ConfirmPopupModule,
     ButtonModule,
@@ -34,4 +35,4 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule
   ]
 })
-export class GestionEntretienModule { }
+export class VisualizeInterviewModule { }

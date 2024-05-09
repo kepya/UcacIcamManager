@@ -8,6 +8,7 @@ import { Role } from 'src/app/shared/enums/role.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { CompteDisponibilite, Disponibility } from 'src/app/shared/models/entretient';
 import { NoteRequest } from 'src/app/shared/models/note';
+import { Session } from 'src/app/shared/models/session';
 import { Zone } from 'src/app/shared/models/zone';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
@@ -50,6 +51,7 @@ export class ScheduleInterviewerComponent implements OnInit {
   indexCurrentDate: number = 0;
 
   datesOfEntretiens: Date[] = [];
+  session!: Session;
 
   noteRequests: NoteRequest[] = [];
   noteRequestMaps!: Map<string, NoteRequest>;
@@ -289,6 +291,7 @@ export class ScheduleInterviewerComponent implements OnInit {
     this.juriesByDispo = new Map();
     this.noteRequestMaps = new Map();
     this.selectCandidatMap = new Map();
+    this.getActiveSession();
     this.getDisponibilities();
     this.getCandidatures();
   }
@@ -424,6 +427,15 @@ export class ScheduleInterviewerComponent implements OnInit {
   handleFormationSelect(event: any): void {
     let formation = event.value as unknown as { name: string; code: string };
     this.filterGroupedFormations = this.groupedFormations.filter(f => f.label == formation.code);
+  }
+
+  
+  getActiveSession() {
+    this.sessionSrv.getActive().subscribe({
+      next: (value) => {
+        this.session = value;
+      },
+    })
   }
 
   handleCandidatSelect(event: any, horaire: string, rowIndex: number) {

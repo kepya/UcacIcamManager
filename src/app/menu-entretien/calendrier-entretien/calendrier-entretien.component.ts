@@ -4,7 +4,7 @@ import { SessionExamenService } from 'src/app/session-examen-page/session-examen
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteDisponibilite, Disponibility } from 'src/app/shared/models/entretient';
-import { Note } from 'src/app/shared/models/note';
+import { Note, NoteResponse } from 'src/app/shared/models/note';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
 import { NoteService } from 'src/app/shared/services/note.service';
@@ -77,7 +77,7 @@ this.getCompteDisponibilite();
 
   getEntretiens() {
     this.noteService.liste().subscribe({
-      next: (result: Note[]) => {
+      next: (result: NoteResponse[]) => {
         let value = result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === this.interviewer);
 
         value.sort((a, b) => new Date(a.fin_entretien).getTime() - new Date(b.fin_entretien).getTime());

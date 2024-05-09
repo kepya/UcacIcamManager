@@ -6,10 +6,13 @@ import { Genre } from 'src/app/shared/enums/genre.enum';
 import { Langue } from 'src/app/shared/enums/langue.enum';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Statut } from 'src/app/shared/enums/statut.enum';
-import { NoteResponse } from 'src/app/shared/models/note';
+import { Candidature, Compte } from 'src/app/shared/models/compte';
+import { Entretien, NoteResponse } from 'src/app/shared/models/note';
 import { Session } from 'src/app/shared/models/session';
 import { StatCandidatures } from 'src/app/shared/models/stat-candidature';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { NoteService } from 'src/app/shared/services/note.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
 @Component({
   selector: 'app-jury-home',
@@ -19,6 +22,7 @@ import { CommonService } from 'src/app/shared/services/common.service';
 })
 export class JuryHomeComponent implements OnInit, AfterViewInit {
   loading: boolean = false;
+  entretiens: Entretien[] = [];
 
   public chart: any;
   @Input() statCandidatures!: StatCandidatures;
@@ -47,123 +51,45 @@ export class JuryHomeComponent implements OnInit, AfterViewInit {
   }[];
   @Input() labelsCandidatEntretenuParConcour!: string[];
 
-  entretiens: NoteResponse[] = [];
+  compte!: Compte;
 
   statuses!: any[];
 
-  constructor(public commonService: CommonService) { }
+  constructor( private storageService: StorageService, private noteService: NoteService, public commonService: CommonService) { }
 
   ngAfterViewInit(): void {
     this.createChartCandidatByConcour();
   }
 
   ngOnInit(): void {
+    this.compte = this.storageService.getUserConnected();
     this.statuses = this.commonService.getStatuses();
-
-    this.entretiens = [
-      {
-        candidature: {
-          centreExamenId: 0,
-          lieu_de_naissance: '',
-          date_naissance: '',
-          nationalite: '',
-          dernier_Etablissement: '',
-          email_parents: '',
-          tel_parents: '',
-          formation1: '',
-          formation2: '',
-          formation3: '',
-          centre: '',
-          paiement: '',
-          reference_paiement: '',
-          image: '',
-          telephone_paiement: '',
-          ville: '',
-          code_examen: 0,
-          nombre_choix: 0,
-          compteID: 0,
-          cycle: Cycle.premier,
-          statut: Statut.Echec,
-          genre: Genre.M,
-          langue: Langue.Francais,
-          compte: {
-            name: 'Arthur',
-            prenom: 'Scoty',
-            email: '',
-            telephone: '',
-            role: Role.CANDIDAT,
-            idZone: 0
-          }
-        },
-        compte: {
-          name: 'Christian',
-          prenom: 'Yomba',
-          email: '',
-          telephone: '',
-          role: Role.JURY,
-          idZone: 0
-        },
-        commentaires: "Mauvais",
-        debut_entretien: new Date(),
-        fin_entretien: new Date(),
-        noteParcoursList: [],
-        id: 2,
-        compteid: 3,
-        candidatureid: 75,
-        status: 'ToDo'
+this.getEntretiens();
+  }
+    
+  getEntretiens() {
+    this.noteService.liste().subscribe({
+      next: (result: NoteResponse[]) => {
+        let entretiens:Entretien[] = result.map((v) => {
+          return {
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires, 
+            done: v.done,
+            cycle: v.candidature!.cycle.toString(),
+            centre: v.candidature?.centre || '',
+            jury: v.compte?.name + ' ' + v.compte?.prenom,
+            candidature: v.candidature as unknown as Candidature,
+            debut_entretien: new Date(v.debut_entretien),
+            fin_entretien: new Date(v.fin_entretien),
+          };
+        });
+        entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
       },
-      {
-        candidature: {
-          centreExamenId: 0,
-          lieu_de_naissance: '',
-          date_naissance: '',
-          nationalite: '',
-          dernier_Etablissement: '',
-          email_parents: '',
-          tel_parents: '',
-          formation1: '',
-          formation2: '',
-          formation3: '',
-          centre: '',
-          paiement: '',
-          reference_paiement: '',
-          image: '',
-          telephone_paiement: '',
-          ville: '',
-          code_examen: 0,
-          nombre_choix: 0,
-          compteID: 0,
-          cycle: Cycle.premier,
-          statut: Statut.Echec,
-          genre: Genre.M,
-          langue: Langue.Francais,
-          compte: {
-            name: 'Arthur',
-            prenom: 'Scoty',
-            email: '',
-            telephone: '',
-            role: Role.CANDIDAT,
-            idZone: 0
-          }
-        },
-        compte: {
-          name: 'Christian',
-          prenom: 'Yomba',
-          email: '',
-          telephone: '',
-          role: Role.JURY,
-          idZone: 0
-        },
-        commentaires: "Mauvais",
-        debut_entretien: new Date("2022-03-03"),
-        fin_entretien: new Date(),
-        noteParcoursList: [],
-        id: 2,
-        compteid: 3,
-        candidatureid: 75,
-        status: 'ToDo'
-      },
-    ];
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 
   createChartCandidatByConcour() {

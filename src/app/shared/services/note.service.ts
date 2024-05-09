@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Note, NoteRequest } from '../models/note';
+import { Note, NoteRequest, NoteResponse } from '../models/note';
 import { BaseUrlService } from './base-url.service';
 
 @Injectable({
@@ -16,20 +16,20 @@ export class NoteService {
     this.url += 'note/';
   }
 
-  public liste(): Observable<Note[]> {
-    return this.http.get<Note[]>(this.url + "all");
+  public liste(): Observable<NoteResponse[]> {
+    return this.http.get<NoteResponse[]>(this.url + "all");
   }
 
-  public getOne(id: number): Observable<Note> {
-    return this.http.get<Note>(this.url + id);
+  public getOne(id: number): Observable<NoteResponse> {
+    return this.http.get<NoteResponse>(this.url + id);
   }
 
-  public create(note: NoteRequest): Observable<Note> {
-    return this.http.post<Note>(this.url + "create", note);
+  public create(note: NoteRequest): Observable<NoteResponse> {
+    return this.http.post<NoteResponse>(this.url + "create", note);
   }
 
-  public update(note: Note): Observable<Note> {
-    return this.http.patch<Note>(this.url + note?.id, note);
+  public update(note: Note): Observable<NoteResponse> {
+    return this.http.patch<NoteResponse>(this.url + note?.id, note);
   }
 
   public delete(idNote: number): Observable<void> {
