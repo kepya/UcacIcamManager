@@ -23,6 +23,8 @@ export class DefineNoteInterviewComponent implements OnInit {
     1, 2, 3, 4
   ];
 
+  hasBourse: boolean = false;
+
   timeout: boolean = false;
   comment!: string;
 
@@ -73,6 +75,7 @@ export class DefineNoteInterviewComponent implements OnInit {
 
     this.noteService.getOne(idNote).subscribe({
       next: (result: NoteResponse) => {
+        this.hasBourse = result.candidature!.has_exchange || false;
         this.nombre_choix = result.candidature.nombre_choix;
         for (let index = 0; index < result.candidature.nombre_choix; index++) {
           this.formations.push({

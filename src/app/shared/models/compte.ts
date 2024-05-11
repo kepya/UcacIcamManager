@@ -45,4 +45,5 @@ export class Candidature {
     compte!: Compte;
     candidatureActif?: boolean;
     solvable?: boolean;
+    has_exchange?: boolean;
 }
