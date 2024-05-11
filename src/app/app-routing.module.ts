@@ -138,9 +138,9 @@ const routes: Routes = [
     loadChildren: () => import('./menu-evaluation/gestion-epreuve/gestion-epreuve.module').then(s => s.GestionEpreuveModule),
   },
   {
-    path: 'planning',
-    data: { title: `Planning` },
-    loadChildren: () => import('./menu-entretien/planning/planning.module').then(s => s.PlanningModule),
+    path: 'define_note_planning',
+    data: { title: `Note entretien` },
+    loadChildren: () => import('./menu-entretien/define-note-interview/define-note-interview.module').then(s => s.DefineNoteInterviewModule),
   },
   {
     path: '**',

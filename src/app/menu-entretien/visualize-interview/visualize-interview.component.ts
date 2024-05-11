@@ -14,6 +14,7 @@ import { Zone } from 'src/app/shared/models/zone';
 import { Centre } from 'src/app/shared/models/centre';
 import { Site } from 'src/app/shared/models/site';
 import { Session } from 'src/app/shared/models/session';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visualize-interview',
@@ -25,7 +26,7 @@ export class VisualizeInterviewComponent implements OnInit {
   loading: boolean = false;
 
   entretiens: Entretien[] = [];
- 
+
   compte!: Compte;
   session!: Session;
   statuses!: any[];
@@ -35,7 +36,7 @@ export class VisualizeInterviewComponent implements OnInit {
 
   constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService,
     private messageService: MessageService, public commonService: CommonService, private confirmationService: ConfirmationService,
-     private noteService: NoteService, private compteDisponibiliteService: CompteDisponibiliteService,
+    private noteService: NoteService, private router: Router,
     private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
@@ -55,15 +56,15 @@ export class VisualizeInterviewComponent implements OnInit {
       },
     })
   }
-  
+
   getEntretiens() {
     this.noteService.liste().subscribe({
       next: (result: NoteResponse[]) => {
-        let entretiens:Entretien[] = result.map((v) => {
+        let entretiens: Entretien[] = result.map((v) => {
           return {
             id: v!.id ?? 0,
             candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
-            commentaires: v.commentaires, 
+            commentaires: v.commentaires,
             done: v.done,
             cycle: v.candidature!.cycle.toString(),
             centre: v.candidature?.centre || '',
@@ -87,9 +88,9 @@ export class VisualizeInterviewComponent implements OnInit {
   }
 
   goToPlanificationPage(entretien: Entretien) {
-
+    this.router.navigate(['/define_note_planning/' + entretien.id]);
   }
-  
+
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
