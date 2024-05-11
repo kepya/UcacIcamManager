@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
+import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
-import { Compte } from 'src/app/shared/models/compte';
-import { Note, NoteResponse } from 'src/app/shared/models/note';
+import { Candidature, Compte } from 'src/app/shared/models/compte';
+import { Entretien, Note, NoteResponse } from 'src/app/shared/models/note';
+import { Session } from 'src/app/shared/models/session';
 import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { NoteService } from 'src/app/shared/services/note.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/site-page/site.service';
+import { Zone } from 'src/app/shared/models/zone';
 
 @Component({
   selector: 'app-note-entretien',
@@ -17,334 +23,119 @@ import { SiteService } from 'src/app/site-page/site.service';
   ]
 })
 export class NoteEntretienComponent implements OnInit {
+  loading: boolean = false;
+
+  entretiens: Entretien[] = [];
+
   compte!: Compte;
-  notes: Note[] = [];
-  note!: Note;
-  sites: Site[] = [];
-  searchNotes: Note[] = [];
-  loading: boolean = true;
-  sortIcon!: string;
-  sortProperty!: string;
-  isAsc!: boolean;
-  downUpIcon!: string;
-  searchValue!: string;
-  page!: number;
-  pageSize!: number;
-  collectionSize!: number;
-  nbrOfPage!: number;
-  isFormNote!: boolean;
+  session!: Session;
+  statuses!: any[];
 
+  zones!: Zone[];
+  zone!: Zone;
+
+  selectedEntretien: any;
   isJury: boolean = false;
-  isSuperAdmin: boolean = false;
-  isAdmin: boolean = false;
 
-  formNote: FormGroup = new FormGroup({
-    nom: new FormControl('', [Validators.required]),
-    prenom: new FormControl('', [Validators.required]),
-    horaire: new FormControl('', [Validators.required]),
-    centre: new FormControl('', [Validators.required]),
-    noteL: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-    noteX: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-    noteOP: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-  });
-
-  updateFormNote: FormGroup = new FormGroup({
-    nom: new FormControl('', [Validators.required]),
-    prenom: new FormControl('', [Validators.required]),
-    noteOP: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-    noteL: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-    noteX: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(4)]),
-  });
-
-  constructor(private noteSrv: NoteService, private storageService: StorageService, private messageService: MessageService, private commonService: CommonService, private siteSrv: SiteService) { }
+  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService,
+    private messageService: MessageService, public commonService: CommonService, private confirmationService: ConfirmationService,
+    private noteService: NoteService, private router: Router,
+    private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
-    this.sortProperty = "horaire";
-    this.sortIcon = "fa-solid fa-arrow-down-short-wide";
-    this.downUpIcon = "pi pi-sort-alt";
-    this.pageSize = 10;
-    this.page = 1;
     this.compte = this.storageService.getUserConnected();
     this.isJury = this.compte.role == Role.JURY ? true : false;
-    this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
-    this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
-    // this.getSites();
-    // this.getNotes();
+
+    this.statuses = this.commonService.getStatuses();
+    this.compte = this.storageService.getUserConnected();
+    this.getActiveSession();
+    this.getEntretiens();
+    this.getZones();
   }
 
-  // sort(property: string, notes: NoteResponse[] = this.notes) {
-  //   this.sortProperty = property;
-  //   this.isAsc = !this.isAsc;
-  //   this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
+  getActiveSession() {
+    this.sessionSrv.getActive().subscribe({
+      next: (value) => {
+        this.session = value;
+      },
+    })
+  }
 
-  //   if (property === 'nom') {
-  //     if (this.isAsc) {
-  //       notes.sort((a, b) => {
-  //         if (a.candidature!.compte!.name > b.candidature!.compte!.name) {
-  //           return 1;
-  //         }
-  //         if (b.candidature!.compte!.name > a.candidature!.compte!.name) {
-  //           return -1;
-  //         }
-  //         return 0;
-  //       });
-  //     } else {
-  //       notes.sort((a, b) => {
-  //         if (a.candidature!.compte!.name > b.candidature!.compte!.name) {
-  //           return -1;
-  //         }
-  //         if (b.candidature!.compte!.name > a.candidature!.compte!.name) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //     }
-  //   }
-  //   if (property === 'prenom') {
-  //     if (this.isAsc) {
-  //       notes.sort((a, b) => {
-  //         if (a.candidature!.compte!.prenom > b.candidature!.compte!.prenom) {
-  //           return 1;
-  //         }
-  //         if (b.candidature!.compte!.prenom > a.candidature!.compte!.prenom) {
-  //           return -1;
-  //         }
-  //         return 0;
-  //       });
-  //     } else {
-  //       notes.sort((a, b) => {
-  //         if (a.candidature!.compte!.prenom > b.candidature!.compte!.prenom) {
-  //           return -1;
-  //         }
-  //         if (b.candidature!.compte!.prenom > a.candidature!.compte!.prenom) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //     }
-  //   }
+  getZones() {
+    this.zoneService.liste().subscribe({
+      next: (value: Zone[]) => {
+      this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 
-  //   if (property === 'noteL') {
-  //     if (this.isAsc) {
-  //       notes.sort((a, b) => {
-  //         if (a.noteL > b.noteL) {
-  //           return 1;
-  //         }
-  //         if (b.noteL > a.noteL) {
-  //           return -1;
-  //         }
-  //         return 0;
-  //       });
-  //     } else {
-  //       notes.sort((a, b) => {
-  //         if (a.noteL > b.noteL) {
-  //           return -1;
-  //         }
-  //         if (b.noteL > a.noteL) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //     }
+  getEntretiens() {
+    this.noteService.liste().subscribe({
+      next: (result: NoteResponse[]) => {
+        let entretiens: Entretien[] = result.map((v) => {
+          return {
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires,
+            done: v.done,
+            cycle: v.candidature!.cycle.toString(),
+            centre: v.candidature?.centre || '',
+            jury: v.compte?.name + ' ' + v.compte?.prenom,
+            candidature: v.candidature as unknown as Candidature,
+            debut_entretien: new Date(v.debut_entretien),
+            fin_entretien: new Date(v.fin_entretien),
+          };
+        });
 
-  //   }
-  //   if (property === 'noteX') {
-  //     if (this.isAsc) {
-  //       notes.sort((a, b) => {
-  //         if (a.noteX > b.noteX) {
-  //           return 1;
-  //         }
-  //         if (b.noteX > a.noteX) {
-  //           return -1;
-  //         }
-  //         return 0;
-  //       });
-  //     } else {
-  //       notes.sort((a, b) => {
-  //         if (a.noteX > b.noteX) {
-  //           return -1;
-  //         }
-  //         if (b.noteX > a.noteX) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //     }
-  //   }
+        if (this.compte.role == Role.JURY) {
+          this.entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
+        } else {
+          this.entretiens = entretiens;
+        }
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 
-  //   if (property === 'noteOP') {
-  //     if (this.isAsc) {
-  //       notes.sort((a, b) => {
-  //         if (a.noteOP > b.noteOP) {
-  //           return 1;
-  //         }
-  //         if (b.noteOP > a.noteOP) {
-  //           return -1;
-  //         }
-  //         return 0;
-  //       });
-  //     } else {
-  //       notes.sort((a, b) => {
-  //         if (a.noteOP > b.noteOP) {
-  //           return -1;
-  //         }
-  //         if (b.noteOP > a.noteOP) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //     }
-  //   }
+  goToPlanificationPage(entretien: Entretien) {
+    this.router.navigate(['/define_note_planning/' + entretien.id]);
+  }
 
-  //   return notes;
-  // }
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteEntretien(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
+  }
 
-  // get formNoteControl(): { [key: string]: AbstractControl } {
-  //   return this.formNote.controls;
-  // }
+  deleteEntretien(id: number) {
+    this.noteService.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getEntretiens();
+        this.messageService.add({ severity: 'success', summary: "Suppression de l'entretien", detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
+  }
 
-  // get updateFormNoteControl(): { [key: string]: AbstractControl } {
-  //   return this.updateFormNote.controls;
-  // }
-
-  // handlePageSize(event: any) {
-  //   this.page = 1;
-  //   this.getNotes();
-  // }
-
-  // handleSearchValue(event: any) {
-  //   this.searchValue = event.target.value;
-
-  //   if (this.searchValue !== '') {
-  //     let names = this.searchNotes.map(note => note.candidature?.compte?.name);
-  //     let name = names.filter(name => name!.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
-
-  //     if (name.length === 0) {
-  //       this.notes = [];
-  //     } else {
-  //       let notes: Note[] = [];
-  //       for (let index = 0; index < name.length; index++) {
-  //         const element = name[index];
-  //         let z = this.searchNotes.filter(note => note.candidature!.compte!.name.indexOf('' + element) > -1);
-  //         notes.push(...z);
-  //       }
-  //       this.notes = notes;
-  //     }
-  //   } else {
-  //     this.notes = this.searchNotes;
-  //   }
-  // }
-
-  // next() {
-  //   this.page++;
-  //   this.getNotes();
-  // }
-
-  // previous() {
-  //   this.page--;
-  //   this.getNotes();
-  // }
-
-  // getSites() {
-  //   this.siteSrv.liste().subscribe({
-  //     next: (value: Site[]) => {
-  //       this.sites = value;
-  //     },
-  //     error: (err) => {
-  //       console.log('error: ', err);
-  //     }
-  //   });
-  // }
-
-  // getNotes() {
-  //   this.noteSrv.liste().subscribe({
-  //     next: (res: NoteResponse[]) => {
-  //       let value = this.isJury ? res.filter((v) => v.compteid === this.compte.id) : res;
-
-  //       value = this.sort('nom', value);
-  //       this.searchNotes = [];
-  //       this.searchNotes = value;
-  //       this.notes = value
-  //         .map((mis, i) => ({ id: i + 1, ...mis }))
-  //         .slice(
-  //           (this.page - 1) * this.pageSize,
-  //           (this.page - 1) * this.pageSize + this.pageSize
-  //         );
-  //       this.collectionSize = value.length;
-  //       this.nbrOfPage = Math.ceil(value.length / this.pageSize);
-  //     },
-  //     error: (err) => {
-  //       console.log('error: ', err);
-  //     }
-  //   });
-  // }
-
-  // viewNote(view: string = 'data') {
-  //   if (view === 'data') {
-  //     this.note = new Note();
-  //     this.isFormNote = false;
-  //   } else {
-  //     this.isFormNote = true;
-  //   }
-  // }
-
-  // getHoraire(note: Note) {
-  //   let startTime = this.commonService.formatDate(note.debut_entretien);
-  //   let endTime = this.commonService.formatDate(note.fin_entretien);
-  //   return startTime + ' - ' + endTime;
-  // }
-
-  // updateNote(note: Note) {
-  //   this.isFormNote = true;
-  //   this.note = note;
-  //   this.updateFormNote.patchValue({
-  //     nom: note.candidature?.compte?.name,
-  //     prenom: note.candidature?.compte?.prenom,
-  //     noteL: note.noteL,
-  //     noteOP: note.noteOP,
-  //     noteX: note.noteX,
-  //   });
-  // }
-
-  // createNote() {
-  //   let d = { ...this.formNote.value };
-  //   delete d.note;
-  //   d = {
-  //     ...d,
-  //     noteL: parseInt(this.formNote.value.noteL, 10),
-  //     noteOP: parseInt(this.formNote.value.noteOP, 10),
-  //     noteX: parseInt(this.formNote.value.noteX, 10),
-  //   };
-
-  //   this.noteSrv.create(d).subscribe({
-  //     next: (value) => {
-  //       this.getNotes();
-  //       this.note = new Note();
-  //       this.formNote.reset();
-  //       this.isFormNote = false;
-  //     },
-  //     error: (err) => {
-  //       console.log("Error: ", err);
-  //     }
-  //   });
-  // }
-
-  // updateNoteObjet() {
-  //   this.note.noteL = parseInt(this.updateFormNote.value.noteL, 10);
-  //   this.note.noteOP = parseInt(this.updateFormNote.value.noteOP, 10);
-  //   this.note.noteX = parseInt(this.updateFormNote.value.noteX, 10);
-  //   this.noteSrv.update({ ...this.note }).subscribe({
-  //     next: (value) => {
-  //       this.getNotes();
-  //       this.note = new Note();
-  //       this.updateFormNote.reset();
-  //       this.isFormNote = false;
-  //       this.messageService.add({ severity: 'success', summary: 'Modification de la note', detail: 'Modification de la note des entretiens effectuée avec success' });
-  //     },
-  //     error: (err) => {
-  //       this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
-  //       console.log("Error: ", err);
-  //     }
-  //   })
-  // }
+  getEventValue(event: any) {
+    return event.target != null ? event.target.value : '';
+  }
 }
