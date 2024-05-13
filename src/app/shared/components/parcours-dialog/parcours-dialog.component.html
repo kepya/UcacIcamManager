@@ -1,6 +1,9 @@
 <p-dialog header="Sélection du parcous et du cycle" [closable]="true" [(visible)]="visible" [modal]="true" [maximizable]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    
+    <button pButton (click)="exportToExcel()" pRipple label="Exporter toutes les candidatures" icon="pi pi-check" class="w-full mt-5"></button>
+     <div>&nbsp;</div>
     <p class="m-0">
-        Bienvenue à vous, veuillez indiquer s'il vous plaît le parcours de formation et le cycle à utiliser pour la prévisualisation de la page.
+        OU Exporter par parcours et par cycle de formation
     </p>
 
         <div class="w-full parcours-dialog-form">

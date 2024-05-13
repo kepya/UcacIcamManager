@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ExportExcelService } from '../../services/export-excel.service';
 
 @Component({
   selector: 'app-parcours-dialog',
@@ -22,6 +23,7 @@ export class ParcoursDialogComponent implements OnInit {
 
   public formation!: any;
   public cycle!: any;
+  loading: boolean = false;
 
   @Output() criteria: EventEmitter<{
     cycle: string,
@@ -30,7 +32,7 @@ export class ParcoursDialogComponent implements OnInit {
 
   @Input() visible!: boolean;
 
-  constructor() { }
+  constructor(private exportExcelService: ExportExcelService) { }
 
   ngOnInit(): void {
   }
@@ -44,5 +46,26 @@ export class ParcoursDialogComponent implements OnInit {
     }
 
   }
+
+  exportToExcel() {
+    this.loading = true;
+    this.exportExcelService.downloadCandidatureExcel().subscribe(response => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    });
+  }
+
+  /*validateAll() {
+    this.criteria.emit({
+      cycle: this.cycle,
+      formation: this.formation
+    });
+  }*/
 
 }
