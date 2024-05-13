@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Entretien, Note, NoteResponse } from 'src/app/shared/models/note';
-import { Session } from 'src/app/shared/models/session';
-import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
+import { CompteDisponibiliteService } from 'src/app/shared/services/compte-disponibilite.service';
 import { NoteService } from 'src/app/shared/services/note.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
-import { SiteService } from 'src/app/site-page/site.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { Centre } from 'src/app/shared/models/centre';
+import { Site } from 'src/app/shared/models/site';
+import { Session } from 'src/app/shared/models/session';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-note-entretien',
-  templateUrl: './note-entretien.component.html',
+  selector: 'app-visualize-interview',
+  templateUrl: './visualize-interview.component.html',
   styles: [
   ]
 })
-export class NoteEntretienComponent implements OnInit {
+export class VisualizeInterviewComponent implements OnInit {
   loading: boolean = false;
 
   entretiens: Entretien[] = [];
@@ -30,9 +30,6 @@ export class NoteEntretienComponent implements OnInit {
   compte!: Compte;
   session!: Session;
   statuses!: any[];
-
-  zones!: Zone[];
-  zone!: Zone;
 
   selectedEntretien: any;
   isJury: boolean = false;
@@ -50,7 +47,6 @@ export class NoteEntretienComponent implements OnInit {
     this.compte = this.storageService.getUserConnected();
     this.getActiveSession();
     this.getEntretiens();
-    this.getZones();
   }
 
   getActiveSession() {
@@ -59,17 +55,6 @@ export class NoteEntretienComponent implements OnInit {
         this.session = value;
       },
     })
-  }
-
-  getZones() {
-    this.zoneService.liste().subscribe({
-      next: (value: Zone[]) => {
-      this.zones = value;
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
   }
 
   getEntretiens() {
@@ -138,4 +123,5 @@ export class NoteEntretienComponent implements OnInit {
   getEventValue(event: any) {
     return event.target != null ? event.target.value : '';
   }
+
 }

@@ -1,0 +1,60 @@
+<section class="compte-page schedule-disponibility page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Gestion de votre disponibilité</h1>
+    <div class="page-header">
+        <div class="header">
+            <h3 class="title">Ajoutez votre disponibilité</h3>
+            <h4 class="subtitle">Comment Planifier :</h4>
+            <p class="text">Veuillez sélectionner une plage horaire disponible et nous vous attribuerons un créneau
+                horaire spécifique pour votre entretien. Merci de tenir compte des plages horaires mentionnées ci-dessus
+                lors de votre choix.</p>
+        </div>
+        <div class="line"></div>
+    </div>
+    <div class="mt-2 plage-content">
+        <div class="plage-header v-center">
+            <div class="vh-center plage_title">
+                <span>Plage des entretiens</span>
+            </div>
+
+            <div class="vh-center">
+                <span>{{beginDate | date: 'dd MMMM yyyy': 'fr'}}</span>
+            </div>
+            <div class="limit">
+                <span>au</span>
+            </div>
+            <div class="vh-center">
+                <span>{{endDate | date: 'dd MMMM yyyy': 'fr'}}</span>
+            </div>
+        </div>
+        <div class="main">
+            <div class="card">
+                <p-carousel [value]="disponibilities" [numVisible]="4" [numScroll]="4" [circular]="true"
+                    [responsiveOptions]="responsiveOptions">
+                    <ng-template let-disponibility pTemplate="item">
+                        <div class="p-1">
+                            <div class="disponibility-card ">
+                                <h3 class="disponibility_title">{{disponibility.jour | date: 'EEEE dd MMMM yyyy': 'fr'}}</h3>
+                                <div class="flex flex-column gap-3  mb-1">
+                                    <div *ngFor="let horaire of disponibility.horaires, index as i" class="field-checkbox mb-1">
+                                        <input type="radio" id="radio{{i}}" name="{{disponibility.key}}" [value]="horaire"
+                                        (change)="selectHoraire($event, disponibility,i)">
+                                        <label [for]="horaire" class="ml-2">
+                                            {{ horaire }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-carousel>
+            </div>
+
+            <div class="mt-2 vh-end ">
+            <button pButton pRipple type="button" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

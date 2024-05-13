@@ -1,29 +1,35 @@
 import { Candidature, Compte } from 'src/app/shared/models/compte';
 import { Cycle } from '../enums/cycle.enum';
 export class Note {
-    id?: number;
     noteL!: number;
     noteOP!: number;
     noteX!: number;
     compte?: Compte;
-    compteid!: number;
 
     jury?: Compte;
     juryid!: number;
-    candidatureid!: number;
     debut_entretien!: Date;
     fin_entretien!: Date;
     candidature?: Candidature;
+
+
+    id?: number;
+    candidatureid!: number;
+    compteid!: number;
+    commentaires!: string;
 }
 
 export class NoteRequest {
-    noteL!: number;
-    noteOP!: number;
-    noteX!: number;
+    noteL?: number;
+    noteOP?: number;
+    noteX?: number;
+
+    
     compteid!: number;
     candidatureid!: number;
     debut_entretien!: Date;
     fin_entretien!: Date;
+    commentaires?: string;
 }
 
 export class Entretien {
@@ -32,9 +38,12 @@ export class Entretien {
     cycle!: string;
     note?: number;
     centre!: string;
-    candidat!: Candidature;
+    candidat!: string;
+    commentaires!: string;
+    candidature!: Candidature;
     debut_entretien!: Date;
     fin_entretien!: Date;
+    done!: boolean;
 }
 
 export class NoteResponse {
@@ -42,18 +51,18 @@ export class NoteResponse {
     compteid!: number;
     candidatureid!: number;
     commentaires!: string;
+    done!: boolean;
     debut_entretien!: Date;
     fin_entretien!: Date;
     compte!: Compte;
     candidature!: Candidature;
     noteParcoursList!: NoteParcours[];
-    status!: string;
 }
 
 export class NoteParcours {
     id!: number;
     noteId!: number;
     cycle!: Cycle;
-parcours!:string;
-note!: number;
+    parcours!: string;
+    note!: number;
 }

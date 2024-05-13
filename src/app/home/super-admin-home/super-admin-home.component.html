@@ -51,7 +51,7 @@
         <div class="information">
           <p class="label">Compte à rebours</p>
           <p class="value">
-            {{ compteARebour }}
+            {{ compteARebour }} {{ compteARebour < 0 ? 'Jours' : 'Jour' }} 
           </p>
         </div>
       </section>

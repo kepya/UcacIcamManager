@@ -12,7 +12,7 @@
         </div>
         <div class="stat">
           <p class="label">Candidature total</p>
-          <p class="value">{{ statCandidatures?.nbCandidaturesTotal ?? 0  }}</p>
+          <p class="value">{{ statCandidatures?.nbCandidaturesTotal ?? 0 }}</p>
         </div>
       </section>
 
@@ -45,17 +45,16 @@
           <p class="label">Prochaine Session</p>
           <p class="value">
             {{
-              nextSession != null
-                ? (nextSession.date_examen | date)
-                : "Non defini"
+            nextSession != null
+            ? (nextSession.date_examen | date)
+            : "Non defini"
             }}
           </p>
         </div>
         <div class="information">
           <p class="label">Compte à rebours</p>
           <p class="value">
-            {{ compteARebour }} {{ compteARebour < 0 ? 'Jours' : 'Jour'}}
-          </p>
+            {{ compteARebour }} {{ compteARebour < 0 ? 'Jours' : 'Jour' }} </p>
         </div>
       </section>
     </section>
@@ -77,120 +76,118 @@
   </section>
   <section>
     <h1 class="title">Candidats entrenu par sites</h1>
-    <app-pie-chart
-      [datasets]="datasetsCandidatEntretenuParSite"
-      [labels]="labelsCandidatEntretenuParSite"
-    ></app-pie-chart>
+    <app-pie-chart [datasets]="datasetsCandidatEntretenuParSite"
+      [labels]="labelsCandidatEntretenuParSite"></app-pie-chart>
   </section>
   <section>
     <h1 class="title">Candidats entrenu par zones</h1>
-    <app-bar-chart
-      [datasets]="datasetsCandidatEntretenuParZone"
-      [labels]="labelsCandidatEntretenuParZone"
-    ></app-bar-chart>
+    <app-bar-chart [datasets]="datasetsCandidatEntretenuParZone"
+      [labels]="labelsCandidatEntretenuParZone"></app-bar-chart>
   </section>
-  <!-- <section>
+  <section>
     <h1 class="title">Nombre de candidats entrenu par formation</h1>
     <div class="chart-container">
       <canvas id="MyConcourChart"></canvas>
     </div>
-  </section> -->
+  </section>
 </section>
 
-<section style="    margin-top: 3rem;">
-    <div class="card">
-        <p-table
-    #dt1
-    [value]="entretiens"
-    dataKey="id"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading"
-    [paginator]="true"
-    currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
-    [globalFilterFields]="['compte.name','candidature.compte.prenom', 'candidature.compte.name', 'candidature.centre','debut_entretien']"
->
-    <ng-template pTemplate="caption">
-        <div class="vh-space-between flex justify-content-between ">
-            <div>
-                <h3 class="text-lg font-bold">Entretiens programmés</h3>
-                <span class="text-sm font-semibold" style="color: var(--clr-primary-500);">Session de {{session?.date_examen | date:'MMMM':'fr'}}</span>
-            </div>
-            <div>
-                <button pButton label="Reiniatialiser" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
-                <span class="ml-2 p-input-icon-left ml-auto">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt1.filterGlobal(getEventValue($event), 'contains')" placeholder="Rechercher" />
-                </span>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-        <tr>
-            <th style="min-width:15rem">
-                <div class="flex align-items-center">
-                    Candidat
-                    <p-columnFilter type="text" field="candidature.compte.name" display="menu"></p-columnFilter>
-                </div>
-            </th>
-            <th style="min-width:15rem">
-                <div class="flex align-items-center">
-                    Centre
-                    <p-columnFilter type="text" field="candidature.centre" display="menu"></p-columnFilter>
-                </div>
-            </th>
-            <th style="min-width:10rem">
-                <div class="flex align-items-center">
-                    Date
-                    <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
-                </div>
-            </th>
-            <th style="min-width:10rem">
-                <div class="flex align-items-center">
-                    Heure
-                </div>
-            </th>
-            <th style="min-width:10rem">
-                <div class="flex align-items-center">
-                    Status
-                    <p-columnFilter field="status" matchMode="equals" display="menu">
-                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                            <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
-                                <ng-template let-option pTemplate="item">
-                                    <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
-                                </ng-template>
-                            </p-dropdown>
-                        </ng-template>
-                    </p-columnFilter>
-                </div>
-            </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-entretien>
-        <tr>
-            <td>
-                {{ entretien.candidature.compte.name }} {{ entretien.candidature.compte.prenom }}
-            </td>
-            <td>
-                {{ entretien.candidature.centre }}
-            </td>
-            <td>
-                {{ entretien.debut_entretien | date: 'MM/dd/yyyy' }}
-            </td>
-            <td>
-                {{ entretien.debut_entretien | date: 'H:mm:ss' }}
-            </td>
-            <td>
-                <p-tag [value]="getStatusLabel(entretien.status)" [severity]="getSeverity(entretien.status)"></p-tag>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="6">Aucun entretien programmé pour le moment.</td>
-        </tr>
-    </ng-template>
+<section style="margin-top: 3rem;">
+  <div class="card">
+    <p-table #dt1 selectionMode="single" dataKey="candidat" 
+    responsiveLayout="scroll" [value]="entretiens" dataKey="id" [rows]="5"
+   [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10, 25, 50]" [loading]="loading"
+   [paginator]="true" currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+   [globalFilterFields]="['candidat','jury','done',  'centre','debut_entretien']">
+   <ng-template pTemplate="caption">
+       <div class="vh-space-between flex justify-content-between ">
+           <div>
+
+               <h2 class="text-lg font-bold">Entretiens programmés</h2>
+               <h4 class="text-orange-500 ">Session de {{session?.date_examen
+                   | date:'MMMM':'fr'}}</h4>
+           </div>
+           <div>
+               <button pButton label="Reiniatialiser" class="p-button-outlined mr-2"
+                   icon="pi pi-filter-slash" (click)="commonService.clear(dt1)"></button>
+               <span class="ml-2 p-input-icon-left ml-auto">
+                   <i class="pi pi-search"></i>
+                   <input pInputText type="text"
+                       (input)="dt1.filterGlobal(getEventValue($event), 'contains')"
+                       placeholder="Rechercher" />
+               </span>
+           </div>
+       </div>
+   </ng-template>
+   <ng-template pTemplate="header">
+       <tr>
+           <th style="min-width:15rem">
+               <div class="flex align-items-center">
+                   Candidat
+                   <p-columnFilter type="text" field="candidat"
+                       display="menu"></p-columnFilter>
+               </div>
+           </th>
+           <th style="min-width:15rem">
+               <div class="flex align-items-center">
+                   Centre
+                   <p-columnFilter type="text" field="centre" display="menu"></p-columnFilter>
+               </div>
+           </th>
+           <th style="min-width:10rem">
+               <div class="flex align-items-center">
+                   Date
+                   <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
+               </div>
+           </th>
+           <th style="min-width:10rem">
+               <div class="flex align-items-center">
+                   Heure
+               </div>
+           </th>
+           <th style="min-width:10rem">
+               <div class="flex align-items-center">
+                   Status
+                   <p-columnFilter field="status" matchMode="equals" display="menu">
+                       <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                           <p-dropdown [ngModel]="value" [options]="statuses"
+                               (onChange)="filter($event.value)" placeholder="Any">
+                               <ng-template let-option pTemplate="item">
+                                   <p-tag [value]="option.value"
+                                       [severity]="commonService.getSeverity(option.label)"></p-tag>
+                               </ng-template>
+                           </p-dropdown>
+                       </ng-template>
+                   </p-columnFilter>
+               </div>
+           </th>
+       </tr>
+   </ng-template>
+   <ng-template pTemplate="body" let-entretien>
+       <tr>
+           <td>
+               {{ entretien.candidat }} 
+           </td>
+           <td>
+               {{ entretien.centre }}
+           </td>
+           <td>
+               {{ entretien.debut_entretien | date: 'MM/dd/yyyy' }}
+           </td>
+           <td>
+               {{ entretien.debut_entretien | date: 'H:mm:ss' }}
+           </td>
+           <td>
+               <p-tag [value]="commonService.getStatusLabel(entretien.done)"
+                   [severity]="commonService.getSeverity(entretien.done)"></p-tag>
+           </td>
+       </tr>
+   </ng-template>
+   <ng-template pTemplate="emptymessage">
+       <tr>
+           <td colspan="6">Aucun entretien programmé pour le moment.</td>
+       </tr>
+   </ng-template>
 </p-table>
-    </div>
+  </div>
 </section>

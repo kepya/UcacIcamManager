@@ -4,6 +4,8 @@ import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { Zone } from "src/app/shared/models/zone";
 
 @Component({
   selector: 'app-administrateur',
@@ -13,6 +15,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 })
 export class AdministrateurComponent implements OnInit {
 
+  zones: Zone[] = [];
   comptes: Compte[] = [];
   compte!: Compte;
   searchComptes: Compte[] = [];
@@ -30,6 +33,7 @@ export class AdministrateurComponent implements OnInit {
 
   formCompte: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
+    idZone: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -37,7 +41,7 @@ export class AdministrateurComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private confirmationService: ConfirmationService, private compteSrv: CompteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService,private zoneSrv: ZoneService, private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -46,6 +50,7 @@ export class AdministrateurComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getComptes();
+    this.getZones();
   }
 
 
@@ -212,6 +217,18 @@ export class AdministrateurComponent implements OnInit {
     this.getComptes();
   }
 
+  getZones() {
+    this.zoneSrv.liste().subscribe({
+      next: (value: Zone[]) => {
+        this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+
   getComptes() {
     this.compteSrv.findByRole(Role.ADMIN).subscribe({
       next: (response: Compte[]) => {
@@ -240,8 +257,20 @@ export class AdministrateurComponent implements OnInit {
   updateCompte(compte: Compte) {
     this.isFormCompte = true;
     this.compte = compte;
-    this.formCompte.setValue({
+
+    this.formCompte.get("password")?.removeValidators([Validators.required]);
+    this.formCompte.get("password")?.updateValueAndValidity();
+    this.formCompte.get("confirm_password")?.removeValidators([Validators.required]);
+    this.formCompte.get("confirm_password")?.updateValueAndValidity();
+    this.formCompte.updateValueAndValidity();
+
+
+    console.log('compte: ', compte);
+    
+    this.formCompte.patchValue({
       nom: compte.name,
+      name: compte.name,
+      idZone: compte.idZone,
       prenom: compte.prenom,
       telephone: compte.telephone,
       email: compte.email
@@ -260,7 +289,7 @@ export class AdministrateurComponent implements OnInit {
         },
         error: (err) => {
           console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail:  err.error });
         }
       })
     } else {
@@ -275,7 +304,7 @@ export class AdministrateurComponent implements OnInit {
         },
         error: (err) => {
           console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail:  err.error });
         }
       })
     }

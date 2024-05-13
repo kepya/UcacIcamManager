@@ -92,7 +92,8 @@ const routes: Routes = [
   {
     path: 'gestion_entretiens',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/gestion-entretien/gestion-entretien.module').then(s => s.GestionEntretienModule),
+    // loadChildren: () => import('./menu-entretien/gestion-entretien/gestion-entretien.module').then(s => s.GestionEntretienModule),
+    loadChildren: () => import('./menu-entretien/visualize-interview/visualize-interview.module').then(s => s.VisualizeInterviewModule),
   },
   {
     path: 'gestion_disponibilites',
@@ -102,7 +103,8 @@ const routes: Routes = [
   {
     path: 'calendrier_disponibilites',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule),
+    // loadChildren: () => import('./menu-entretien/calendrier-disponibilite/calendrier-disponibilite.module').then(s => s.CalendrierDisponibiliteModule),
+    loadChildren: () => import('./menu-entretien/schedule-interviewer/schedule-interviewer.module').then(s => s.ScheduleInterviewerModule),
   },
   {
     path: 'note_entretiens',
@@ -117,7 +119,8 @@ const routes: Routes = [
   {
     path: 'intervenant_entretiens',
     data: { title: `Entretien` },
-    loadChildren: () => import('./menu-entretien/intervenant-entretien/intervenant-entretien.module').then(s => s.IntervenantEntretienModule),
+    // loadChildren: () => import('./menu-entretien/intervenant-entretien/intervenant-entretien.module').then(s => s.IntervenantEntretienModule),
+    loadChildren: () => import('./menu-entretien/schedule-disponibility/schedule-disponibility.module').then(s => s.ScheduleDisponibilityModule),
   },
   {
     path: 'calendrier_entretiens',
@@ -133,6 +136,11 @@ const routes: Routes = [
     path: 'gestion_epreuves',
     data: { title: `Evaluations` },
     loadChildren: () => import('./menu-evaluation/gestion-epreuve/gestion-epreuve.module').then(s => s.GestionEpreuveModule),
+  },
+  {
+    path: 'define_note_planning',
+    data: { title: `Note entretien` },
+    loadChildren: () => import('./menu-entretien/define-note-interview/define-note-interview.module').then(s => s.DefineNoteInterviewModule),
   },
   {
     path: '**',
