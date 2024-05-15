@@ -34,9 +34,10 @@
         <div class="mb-4">
             <textarea class="w-full" placeholder="Ajoutez un commentaire" pInputTextarea [(ngModel)]="comment"
                 [rows]="10" [autoResize]='true'></textarea>
-            <p *ngIf="hasBourse">
-                Ce candidat a souscrit à la bourse.
-            </p>    
+                <div class="field-checkbox">
+                    <p-checkbox [(ngModel)]="hasBourse" [binary]="true" inputId="binary"></p-checkbox>
+                    <label for="binary">Ce candidat a t'il souscrit à une bourse ?</label>
+                </div>
         </div>
     </div>
     <div class="vh-end">

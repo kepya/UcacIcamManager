@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
     TableModule,
     InputTextModule,
     DialogModule,
-    InputTextareaModule
+    InputTextareaModule,
+    CheckboxModule
   ]
 })
 export class DefineNoteInterviewModule { }

@@ -1,3 +1,4 @@
+import { CandidatureService } from 'src/app/menu-candidature/candidature.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -48,7 +49,9 @@ export class DefineNoteInterviewComponent implements OnInit {
 
   formations: NoteParcours[] = [];
 
-  constructor(private messageService: MessageService, private noteService: NoteService, private noteParcoursService: NoteParcoursService, private route: ActivatedRoute, private confirmationService: ConfirmationService) { }
+  constructor(private messageService: MessageService, private noteService: NoteService, 
+    private noteParcoursService: NoteParcoursService, private route: ActivatedRoute, 
+    private confirmationService: ConfirmationService, private candidatService:CandidatureService) { }
 
   ngOnInit(): void {
     if (this.route.snapshot.params['idEntretien']) {
@@ -70,9 +73,22 @@ export class DefineNoteInterviewComponent implements OnInit {
     return '';
   }
 
+  updateCandidatAccount() {
+    if (this.hasBourse) {
+      let candidat = this.entretien.candidature;
+      candidat.has_exchange = true;
+      this.candidatService.update(candidat.id || 0 , candidat).subscribe({
+        next: (value) => {
+          this.messageService.add({ severity: 'success', summary: 'Modification de compte candidat', detail: 'Modification effectuée avec success' });
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.error });
+        }
+      })
+    }
+  }
+
   getEntretien(idNote: number) {
-
-
     this.noteService.getOne(idNote).subscribe({
       next: (result: NoteResponse) => {
         this.hasBourse = result.candidature!.has_exchange || false;
@@ -186,6 +202,8 @@ export class DefineNoteInterviewComponent implements OnInit {
         }
       });
     }
+
+    this.updateCandidatAccount();
   }
 
   validateNotation() {
