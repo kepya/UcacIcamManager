@@ -395,6 +395,23 @@
           </li>
         </ul>
       </li>
+      <li
+      [ngClass]="{ 'active-link': url.indexOf('liste_solvable') > -1 }"
+      #list
+      (click)="showMenuChild(list)"
+    >
+      <a class="link"
+        ><i class="fa fa-list"></i> Listes
+        <span class="fa fa-chevron-down"></span
+      ></a>
+      <ul class="nav child_menu child_menu_one_line">
+        <li>
+          <a class="sub-link" (click)="goToUrl('liste_solvable')"
+            >Liste des solvables</a
+          >
+        </li>
+      </ul>
+    </li>
     </ul>
   </div>
 </div>

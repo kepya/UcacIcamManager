@@ -46,6 +46,21 @@ export class Entretien {
     done!: boolean;
 }
 
+
+export class NoteEntretien {
+    id!: number;
+    jury!: string;
+    cycle!: string;
+    note?: number;
+    centre!: string;
+    candidat!: string;
+    commentaires!: string;
+    candidature!: Candidature;
+    debut_entretien!: Date;
+    fin_entretien!: Date;
+    done!: boolean;
+}
+
 export class NoteResponse {
     id!: number;
     compteid!: number;
