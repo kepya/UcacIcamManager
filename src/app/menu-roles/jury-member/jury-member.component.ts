@@ -4,6 +4,8 @@ import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { Zone } from "src/app/shared/models/zone";
 
 @Component({
   selector: 'app-jury-member',
@@ -12,7 +14,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   ]
 })
 export class JuryMemberComponent implements OnInit {
-
+  zones: Zone[] = [];
   comptes: Compte[] = [];
   compte!: Compte;
   searchComptes: Compte[] = [];
@@ -29,6 +31,7 @@ export class JuryMemberComponent implements OnInit {
   isFormCompte!: boolean;
 
   formCompte: FormGroup = new FormGroup({
+    idZone: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
@@ -37,7 +40,7 @@ export class JuryMemberComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private confirmationService: ConfirmationService, private compteSrv: CompteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService,private zoneSrv: ZoneService, private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "name";
@@ -46,8 +49,19 @@ export class JuryMemberComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getComptes();
+    this.getZones();
   }
 
+  getZones() {
+    this.zoneSrv.liste().subscribe({
+      next: (value: Zone[]) => {
+        this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
@@ -243,6 +257,7 @@ export class JuryMemberComponent implements OnInit {
     this.formCompte.patchValue({
       name: compte.name,
       prenom: compte.prenom,
+      idZone: compte.idZone,
       telephone: compte.telephone,
       email: compte.email
     })

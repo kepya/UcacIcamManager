@@ -237,7 +237,22 @@
                             </div>
                         </div>
                     </div>
-
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Zone d'appartenance *</label>
+                            <select formControlName="idZone" [ngClass]="{required: formCompte.get('idZone')!.invalid}">
+                                <option value="">Zone d'appartenance</option>
+                                <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="alert" *ngIf="formCompteControl['idZone'].errors">
+                            <div *ngIf="formCompteControl['idZone'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="footer">
