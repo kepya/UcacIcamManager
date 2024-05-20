@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Note, NoteRequest, NoteResponse } from '../models/note';
+import { Note, NoteInterviewerResponse, NoteRequest, NoteResponse } from '../models/note';
 import { BaseUrlService } from './base-url.service';
 
 @Injectable({
@@ -14,6 +14,10 @@ export class NoteService {
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.interviewPath}`;
     this.url += 'note/';
+  }
+
+  public allNotesEntretien(): Observable<NoteInterviewerResponse[]> {
+    return this.http.get<NoteInterviewerResponse[]>(this.url + "allNotesEntretien");
   }
 
   public liste(): Observable<NoteResponse[]> {

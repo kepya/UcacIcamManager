@@ -19,10 +19,10 @@
 
         <section class="mt-3">
             <p-table #dt1 selectionMode="single" [(selection)]="selectedEntretien" dataKey="candidat" 
-                 responsiveLayout="scroll" [value]="entretiens" dataKey="id" [rows]="5"
+                 responsiveLayout="scroll" [value]="notes" dataKey="id" [rows]="5"
                 [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10, 25, 50]" [loading]="loading"
                 [paginator]="true" currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
-                [globalFilterFields]="['candidat','jury','done',  'centre','debut_entretien']">
+                [globalFilterFields]="['nom','prenom','nationalite',  'centre','has_exchange']">
                 <ng-template pTemplate="caption">
                     <div class="vh-space-between flex justify-content-between ">
                         <div>
@@ -47,8 +47,15 @@
                     <tr>
                         <th style="min-width:15rem">
                             <div class="flex align-items-center">
-                                Candidat
-                                <p-columnFilter type="text" field="candidat"
+                                Nom
+                                <p-columnFilter type="text" field="nom"
+                                    display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Prenom
+                                <p-columnFilter type="text" field="prenom"
                                     display="menu"></p-columnFilter>
                             </div>
                         </th>
@@ -60,44 +67,35 @@
                         </th>
                         <th style="min-width:15rem">
                             <div class="flex align-items-center">
-                                Jury 1
-                                <p-columnFilter type="text" field="jury" display="menu"></p-columnFilter>
+                                Nationalité
+                                <p-columnFilter type="text" field="nationalite" display="menu"></p-columnFilter>
                             </div>
                         </th>
                         <th style="min-width:10rem">
                             <div class="flex align-items-center">
-                                Date
-                                <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
+                                Veut la bourse
+                                <p-columnFilter type="text" field="has_exchange" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th style="min-width:10rem">
-                            <div class="flex align-items-center">
-                                Jury 2
-                                <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        
-                        <th style="width:4rem">Note globale
-                            <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
-                        </th>
+                        <th style="width:4rem"></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-entretien>
                     <tr>
                         <td>
-                            {{ entretien.candidat }} 
+                            {{ entretien.nom }} 
+                        </td>
+                        <td>
+                            {{ entretien.prenom }} 
                         </td>
                         <td>
                             {{ entretien.centre }}
                         </td>
                         <td>
-                            {{ entretien.jury1 }}
+                            {{ entretien.nationalite }}
                         </td>
                         <td>
-                            {{ entretien.debut_entretien | date: 'MM/dd/yyyy' }}
-                        </td>
-                        <td>
-                            {{ entretien.jury2 }}
+                            {{ entretien.has_exchange ? "Oui" : "Non" }}
                         </td>
                         <td>
                             <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"></button>

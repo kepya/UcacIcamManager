@@ -6,7 +6,7 @@ import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.se
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
-import { Entretien, Note, NoteResponse } from 'src/app/shared/models/note';
+import { Entretien, Note, NoteInterviewerResponse, NoteResponse } from 'src/app/shared/models/note';
 import { Session } from 'src/app/shared/models/session';
 import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -24,6 +24,14 @@ import { Zone } from 'src/app/shared/models/zone';
 })
 export class NoteEntretienComponent implements OnInit {
   loading: boolean = false;
+
+  notes: {
+    nom: string,
+    prenom:string,
+    centre:string,
+    nationalite:string,
+    has_exchange:boolean
+  }[] = [];
 
   entretiens: Entretien[] = [];
 
@@ -48,6 +56,7 @@ export class NoteEntretienComponent implements OnInit {
 
     this.statuses = this.commonService.getStatuses();
     this.compte = this.storageService.getUserConnected();
+    this.getNotes();
     this.getActiveSession();
     this.getEntretiens();
     this.getZones();
@@ -70,6 +79,24 @@ export class NoteEntretienComponent implements OnInit {
         console.log('error: ', err);
       }
     });
+  }
+
+  getNotes() {
+    this.noteService.allNotesEntretien().subscribe({
+      next: (result: NoteInterviewerResponse[]) => {
+// this.notes = notes;
+this.notes  = result.map(r => ({
+  nom: r.candidature.compte.name ,
+  prenom: r.candidature.compte.prenom,
+  centre: r.candidature.centre,
+  nationalite: r.candidature.nationalite,
+  has_exchange:r.candidature.has_exchange ||  false
+}));
+      },
+    error: (err) => {
+      console.log('error: ', err);
+    }
+  });
   }
 
   getEntretiens() {

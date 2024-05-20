@@ -81,3 +81,21 @@ export class NoteParcours {
     parcours!: string;
     note!: number;
 }
+
+export class NoteParcoursJury {
+    cycle!: Cycle;
+    parcours!: string;
+    moyenne!: number;
+    notes!: {
+        note: number;
+        commentaires: string;
+        jury: Compte
+    }[]
+}
+
+export class NoteInterviewerResponse {
+    id!: number;
+    candidature!: Candidature;
+    nbrEntretiens!: number;
+    noteParcoursJuryList!: NoteParcoursJury[];
+}
