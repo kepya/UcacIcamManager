@@ -46,6 +46,8 @@ export class ScheduleInterviewerComponent implements OnInit {
   canSave: boolean = false;
   visibleMainPlage: boolean = false;
 
+  numberOfCandidatToInterview = 0;
+
   selectCandidatMap: Map<string, { label: string; candidat: Candidature }> = new Map<string, any>();
 
   indexCurrentDate: number = 0;
@@ -135,54 +137,54 @@ export class ScheduleInterviewerComponent implements OnInit {
       {
         "label": "Minyemeck danielle",
         "candidat": {
+          "id": 27,
+          "centreExamenId": 17,
+          "sessionId": 1,
+          "langue": "Anglais",
+          "serie_bac": null,
+          "nom_parent1": null,
+          "nom_parent2": null,
+          "email_pere": null,
+          "telephone_pere": null,
+          "email_tuteur": null,
+          "telephone_tuteur": null,
+          "email_mere": null,
+          "telephone_mere": null,
+          "telephone_paiement": null,
+          "has_exchange": false,
+          "formation_principal": null,
+          "datePaiement": null,
+          "statut": "Admis",
+          "solvable": false,
+          "code_examen": "24",
+          "cycle": "second",
+          "diplome_universitaire": null,
+          "compte": {
             "id": 27,
-            "centreExamenId": 17,
-            "sessionId": 1,
-            "langue": "Anglais",
-            "serie_bac": null,
-            "nom_parent1": null,
-            "nom_parent2": null,
-            "email_pere": null,
-            "telephone_pere": null,
-            "email_tuteur": null,
-            "telephone_tuteur": null,
-            "email_mere": null,
-            "telephone_mere": null,
-            "telephone_paiement": null,
-            "has_exchange": false,
-            "formation_principal": null,
-            "datePaiement": null,
-            "statut": "Admis",
-            "solvable": false,
-            "code_examen": "24",
-            "cycle": "second",
-            "diplome_universitaire": null,
-            "compte": {
-                "id": 27,
-                "name": "Minyemeck",
-                "prenom": "danielle",
-                "password": "$2a$10$iyL5gzCHSQtqTRhUu.k8Q.yZ7e.W3sJRrs7ZNwB278BLRadnZ2e3q",
-                "email": "vassistanthub@gmail.com",
-                "telephone": "675272892",
-                "role": "CANDIDAT",
-                "id_disponibilite": 0
-            },
-            "centre": "Maroua",
-            "nombre_choix": 1,
-            "candidatureActif": true,
-            "formation1": "FA",
-            "formation2": "",
-            "formation3": "",
-            "paiement": "20 000 FCFA",
-            "reference_paiement": "DE33",
-            "image": "",
-            "genre": "F",
-            "nationalite": "Camerounaise",
-            "lieu_de_naissance": "Koyom",
-            "date_naissance": "2023-02-28",
-            "dernier_Etablissement": "Leti"
+            "name": "Minyemeck",
+            "prenom": "danielle",
+            "password": "$2a$10$iyL5gzCHSQtqTRhUu.k8Q.yZ7e.W3sJRrs7ZNwB278BLRadnZ2e3q",
+            "email": "vassistanthub@gmail.com",
+            "telephone": "675272892",
+            "role": "CANDIDAT",
+            "id_disponibilite": 0
+          },
+          "centre": "Maroua",
+          "nombre_choix": 1,
+          "candidatureActif": true,
+          "formation1": "FA",
+          "formation2": "",
+          "formation3": "",
+          "paiement": "20 000 FCFA",
+          "reference_paiement": "DE33",
+          "image": "",
+          "genre": "F",
+          "nationalite": "Camerounaise",
+          "lieu_de_naissance": "Koyom",
+          "date_naissance": "2023-02-28",
+          "dernier_Etablissement": "Leti"
         }
-    }
+      }
     ]
   };
 
@@ -204,13 +206,18 @@ export class ScheduleInterviewerComponent implements OnInit {
 
 
   getCandidatures() {
-    this.candidatureSrv.liste().subscribe({
+    this.candidatureSrv.nonEntretenu().subscribe({
       next: (candidatures) => {
+        candidatures = candidatures.filter(c => c.solvable == true && c.statut == "Admissible");
+        this.numberOfCandidatToInterview = candidatures.length;
+        console.log('result: ', this.numberOfCandidatToInterview);
+        
         this.candidats = candidatures;
+
         this.groupedFormations = [];
 
         let faCandidats = candidatures.filter(v => v.formation1 === "FA").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -222,7 +229,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         let ipCandidats = candidatures.filter(v => v.formation1 === "IP").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -234,7 +241,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         let iCandidats = candidatures.filter(v => v.formation1 === "I").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -246,7 +253,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         let xCandidats = candidatures.filter(v => v.formation1 === "X").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -258,7 +265,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         let lCandidats = candidatures.filter(v => v.formation1 === "L").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -270,7 +277,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         let opCandidats = candidatures.filter(v => v.formation1 === "OP").map((r) => ({
-          label: r.compte.name + " " + r.compte.prenom,
+          label: r?.compte?.name + " " + r?.compte?.prenom,
           candidat: r
         }));
 
@@ -282,6 +289,7 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         this.filterGroupedFormations = this.groupedFormations;
+
       }
     })
   }
@@ -391,12 +399,10 @@ export class ScheduleInterviewerComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: "Ce jury a déjà été utilisé pour cette plage veuillez changer de jury" });
     } else {
       let key = this.currentDay.getDate() + ' - ' + this.currentDay.getFullYear() + ' - ' + this.activeHoraire + ' - ' + rowIndex;
-      console.log("key: ",key);
-      console.log("test: ", this.noteRequestMaps.values());
 
       if (this.noteRequestMaps.has(key)) {
         console.log("test: ", this.noteRequestMaps.values());
-        
+
         let noteRequest = this.noteRequestMaps.get(key);
         this.noteRequestMaps.set(key, {
           compteid: parseInt(jury.value),
@@ -429,7 +435,7 @@ export class ScheduleInterviewerComponent implements OnInit {
     this.filterGroupedFormations = this.groupedFormations.filter(f => f.label == formation.code);
   }
 
-  
+
   getActiveSession() {
     this.sessionSrv.getActive().subscribe({
       next: (value) => {
@@ -439,8 +445,6 @@ export class ScheduleInterviewerComponent implements OnInit {
   }
 
   handleCandidatSelect(event: any, horaire: string, rowIndex: number) {
-    console.log('event.value: ', event.value);
-    
     let candidat = event.value as unknown as { label: string; candidat: Candidature };
 
     let result = this.alreadyUseCandidats.find(c => c.id == candidat.candidat.id);
@@ -449,8 +453,6 @@ export class ScheduleInterviewerComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: "Ce candidat a déjà été utilisé pour cette plage veuillez changer de candidat" });
     } else {
       let key = this.currentDay.getDate() + ' - ' + this.currentDay.getFullYear() + ' - ' + this.activeHoraire + ' - ' + rowIndex;
-      console.log("key: ",key);
-      console.log("test: ", this.noteRequestMaps.values());
 
       if (this.noteRequestMaps.has(key)) {
         let noteRequest = this.noteRequestMaps.get(key);
@@ -510,8 +512,8 @@ export class ScheduleInterviewerComponent implements OnInit {
 
   randomizeCandidatDisplay() {
     let Juryslength = (this.juriesByDispo.get(this.activeHoraire) || []).length;
-    if (this.alreadyUseCandidats.length == Juryslength &&
-      this.alreadyUseJuries.length == Juryslength
+    if ((this.alreadyUseCandidats.length == Juryslength &&
+      this.alreadyUseJuries.length == Juryslength) || (this.numberOfCandidatToInterview == 1)
     ) {
       for (let index = 0; index < Juryslength; index++) {
         let row = (index == (Juryslength - 1)) ? 0 : index + 1;
@@ -520,20 +522,22 @@ export class ScheduleInterviewerComponent implements OnInit {
         let dates = this.commonService.buildDate(this.currentDay, this.plage2);
         let key = this.currentDay.getTime() + ' - ' + this.activeHoraire + ' - ' + index + ' - ' + this.plage2;
 
-        this.noteRequestMaps.set(key, {
-          compteid: jury.id,
-          candidatureid: candidat.id,
-          debut_entretien: new Date(dates.startDate),
-          fin_entretien: new Date(dates.endDate),
-          commentaires: "",
-        });
-
-        let result = this.candidats.find(c => c.id == candidat.id);
-        if (result) {
-          this.selectCandidatMap.set(key, {
-            candidat: result,
-            label: result!.compte.name + " " + result!.compte.prenom,
+        if (candidat?.id) {
+          this.noteRequestMaps.set(key, {
+            compteid: jury?.id,
+            candidatureid: candidat?.id,
+            debut_entretien: new Date(dates.startDate),
+            fin_entretien: new Date(dates.endDate),
+            commentaires: "",
           });
+  
+          let result = this.candidats.find(c => c.id == candidat?.id);
+          if (result) {
+            this.selectCandidatMap.set(key, {
+              candidat: result,
+              label: result!.compte.name + " " + result!.compte.prenom,
+            });
+          }
         }
       }
       this.canSave = true;
@@ -565,10 +569,10 @@ export class ScheduleInterviewerComponent implements OnInit {
         }
 
         this.datesOfEntretiens = [...(new Set(dates))] || [];
-        this.datesOfEntretiens.sort( (a, b) => {
+        this.datesOfEntretiens.sort((a, b) => {
           return (a.getTime() - b.getTime());
         });
-        
+
 
         this.indexCurrentDate = 0;
         this.currentDay = this.datesOfEntretiens[this.indexCurrentDate];
@@ -592,7 +596,6 @@ export class ScheduleInterviewerComponent implements OnInit {
           let startTime = this.commonService.formatDate(disponibility!.debut_disponibilite);
           let endTime = this.commonService.formatDate(disponibility!.fin_disponibilite);
           let horaire = startTime + ' - ' + endTime;
-          console.log('horaire: ', horaire);
 
           let date = new Date(disponibility!.date_disponibilite);
           date.setHours(0, 0, 0, 0);
@@ -645,36 +648,42 @@ export class ScheduleInterviewerComponent implements OnInit {
   }
 
   validate() {
-console.log(this.selectCandidatMap.values());
-
-
     let nbrSucess = 0;
     let total = 0;
-    for (let noteRequest of this.noteRequestMaps.values()) {
-      this.noteService.create(noteRequest).subscribe({
-        next: (res) => {
-          this.loading = false;
-          nbrSucess++;
-          this.messageService.add({
-            severity: 'success', summary: 'Assignation du jury pour entretien',
-            detail: 'Assignation du jury pour un entretien avec le candidat effectuée avec success pour la date du ' + this.currentDay.toString()
-          });
-        },
-        error: (err) => {
-          this.loading = false;
-          this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: err.error.message });
-          console.log("Error: ", err);
-        }
-      });
-      total++;
+    let noteRequests = this.noteRequestMaps.values();
+    for (let noteRequest of noteRequests) {
+      if (noteRequest?.candidatureid && noteRequest?.candidatureid > 0) {
+        this.noteService.create(noteRequest).subscribe({
+          next: (res) => {
+            this.loading = false;
+            nbrSucess++;
+            this.selectCandidatMap   = new Map();
+            this.alreadyUseJuries = [];
+            this.alreadyUseCandidats = [];
+            this.noteRequests = [];
+            this.noteRequestMaps = new Map();
+  
+            this.messageService.add({
+              severity: 'success', summary: 'Assignation du jury pour entretien',
+              detail: 'Assignation du jury pour un entretien avec le candidat effectuée avec success pour la date du ' + this.currentDay.toString()
+            });
+          },
+          error: (err) => {
+            this.loading = false;
+            this.messageService.add({ severity: 'error', summary: `Erreur d'assignation`, detail: err.error.message });
+          }
+        });
+        total++;
+      }
     }
 
-    if (nbrSucess == total) {
-      this.alreadyUseJuries = [];
-      this.alreadyUseCandidats = [];
-      this.noteRequests = [];
-      this.noteRequestMaps = new Map();
-    }
+    this.selectCandidatMap   = new Map();
+    let comptes = (this.juriesByDispo.get(this.activeHoraire) || [])
+    this.juriesByDispo.set(this.activeHoraire, []);
+    this.getCandidatures();
+    setTimeout(() => {
+      this.juriesByDispo.set(this.activeHoraire, comptes);
+    }, 1000);
   }
 
 }

@@ -31,14 +31,10 @@ export class CalendrierEntretienComponent implements OnInit {
   ngOnInit(): void {
     this.currentDate = new Date();
     this.getActiveSession();
-this.compte = this.storageService.getUserConnected();
-if (this.compte.role == Role.JURY) {
-  this.interviewer = this.compte.name + ' ' + this.compte.prenom;
-  this.getEntretiens();
-}
-this.getCompteDisponibilite();
-
-
+    this.compte = this.storageService.getUserConnected();
+    this.interviewer = this.compte.name + ' ' + this.compte.prenom;
+    this.getEntretiens();
+    this.getCompteDisponibilite();
   }
 
 
@@ -78,7 +74,7 @@ this.getCompteDisponibilite();
   getEntretiens() {
     this.noteService.liste().subscribe({
       next: (result: NoteResponse[]) => {
-        let value = result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === this.interviewer);
+        let value = (this.compte.role == Role.JURY) ? result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === this.interviewer) : result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()));
 
         value.sort((a, b) => new Date(a.fin_entretien).getTime() - new Date(b.fin_entretien).getTime());
 
@@ -95,8 +91,14 @@ this.getCompteDisponibilite();
           };
         });
 
+
+
+
         this.entretiensBeforeBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() <= 12);
         this.entretiensAfterBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() > 12);
+
+        console.log('tes', this.entretiensBeforeBreak);
+        console.log('teys', this.entretiensAfterBreak);
       },
       error: (err) => {
         console.log('error: ', err);
@@ -107,17 +109,17 @@ this.getCompteDisponibilite();
 
   prochaineDate() {
     if (this.indexCurrentDate < this.datesOfEntretiens.length) {
-    this.indexCurrentDate = (this.indexCurrentDate > this.datesOfEntretiens.length) ? this.datesOfEntretiens.length - 1 : this.indexCurrentDate + 1;
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
-     this.getEntretiens();
+      this.indexCurrentDate = (this.indexCurrentDate > this.datesOfEntretiens.length) ? this.datesOfEntretiens.length - 1 : this.indexCurrentDate + 1;
+      this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
+      this.getEntretiens();
     }
   }
 
   previousDate() {
     if (this.indexCurrentDate > 0) {
-    this.indexCurrentDate = (this.indexCurrentDate < 0) ? 0 : this.indexCurrentDate - 1;
-    this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
-     this.getEntretiens();
+      this.indexCurrentDate = (this.indexCurrentDate < 0) ? 0 : this.indexCurrentDate - 1;
+      this.currentDate = this.datesOfEntretiens[this.indexCurrentDate];
+      this.getEntretiens();
     }
   }
 }

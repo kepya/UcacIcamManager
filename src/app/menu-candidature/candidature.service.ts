@@ -21,6 +21,10 @@ export class CandidatureService {
     return this.http.get<Candidature[]>(this.url + "candidats");
   }
 
+  public nonEntretenu(): Observable<Candidature[]> {
+    return this.http.get<Candidature[]>(this.url + "candidats/nonEntretenus");
+  }
+
   public update(idCandidature: number, candidat: Candidature): Observable<Candidature> {
     return this.http.patch<Candidature>(this.url + "candidats/update/" + idCandidature, candidat);
   }

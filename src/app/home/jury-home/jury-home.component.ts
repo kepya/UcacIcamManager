@@ -84,7 +84,8 @@ this.getEntretiens();
             fin_entretien: new Date(v.fin_entretien),
           };
         });
-        entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
+
+        this.entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
       },
       error: (err) => {
         console.log('error: ', err);
