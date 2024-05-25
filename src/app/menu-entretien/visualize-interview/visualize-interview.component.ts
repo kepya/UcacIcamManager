@@ -91,6 +91,10 @@ export class VisualizeInterviewComponent implements OnInit {
     this.router.navigate(['/define_note_planning/' + entretien.id]);
   }
 
+  goToNoteSumaryPage(entretien: Entretien) {
+    this.router.navigate(['/note_summary/' + entretien.id]);
+  }
+
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,

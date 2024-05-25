@@ -138,6 +138,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-evaluation/gestion-epreuve/gestion-epreuve.module').then(s => s.GestionEpreuveModule),
   },
   {
+    path: 'note_summary',
+    data: { title: `Note Entretien` },
+    loadChildren: () => import('./menu-entretien/note-summary/note-summary.module').then(s => s.NoteSummaryModule),
+  },
+  {
     path: 'define_note_planning',
     data: { title: `Note entretien` },
     loadChildren: () => import('./menu-entretien/define-note-interview/define-note-interview.module').then(s => s.DefineNoteInterviewModule),

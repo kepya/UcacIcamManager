@@ -27,10 +27,10 @@ export class NoteEntretienComponent implements OnInit {
 
   notes: {
     nom: string,
-    prenom:string,
-    centre:string,
-    nationalite:string,
-    has_exchange:boolean
+    prenom: string,
+    centre: string,
+    nationalite: string,
+    has_exchange: boolean
   }[] = [];
 
   entretiens: Entretien[] = [];
@@ -73,7 +73,7 @@ export class NoteEntretienComponent implements OnInit {
   getZones() {
     this.zoneService.liste().subscribe({
       next: (value: Zone[]) => {
-      this.zones = value;
+        this.zones = value;
       },
       error: (err) => {
         console.log('error: ', err);
@@ -84,19 +84,19 @@ export class NoteEntretienComponent implements OnInit {
   getNotes() {
     this.noteService.allNotesEntretien().subscribe({
       next: (result: NoteInterviewerResponse[]) => {
-// this.notes = notes;
-this.notes  = result.map(r => ({
-  nom: r.candidature.compte.name ,
-  prenom: r.candidature.compte.prenom,
-  centre: r.candidature.centre,
-  nationalite: r.candidature.nationalite,
-  has_exchange:r.candidature.has_exchange ||  false
-}));
+        // this.notes = notes;
+        this.notes = result.map(r => ({
+          nom: r.candidature.compte.name,
+          prenom: r.candidature.compte.prenom,
+          centre: r.candidature.centre,
+          nationalite: r.candidature.nationalite,
+          has_exchange: r.candidature.has_exchange || false
+        }));
       },
-    error: (err) => {
-      console.log('error: ', err);
-    }
-  });
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 
   getEntretiens() {
