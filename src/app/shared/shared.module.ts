@@ -12,9 +12,10 @@ import { ParcoursDialogComponent } from './components/parcours-dialog/parcours-d
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { PhoneInputComponent } from './components/phone-input/phone-input.component';
 
 @NgModule({
-  declarations: [SidebarComponent, HeaderComponent, FooterComponent, MainTemplateContentComponent, BarChartComponent, PieChartComponent, ParcoursDialogComponent],
+  declarations: [SidebarComponent, HeaderComponent, FooterComponent, MainTemplateContentComponent, BarChartComponent, PieChartComponent, ParcoursDialogComponent, PhoneInputComponent],
   imports: [
     CommonModule,
     MenuModule,

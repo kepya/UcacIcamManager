@@ -3,7 +3,8 @@
         <div class="flex-wrap vh-space-between mt-2">
             <button pButton pRipple type="button" label="Evalution des Candidats"
                 class="p-button-sm p-button-raised p-button-secondary"></button>
-            <p class="text-red-500 font-bold">Temps: {{minute + ' min : ' + second + ' s'}}</p>
+            <p class="text-red-500 font-bold" *ngIf="!twentyMinuteEnd">Temps d'entretien: {{minutesLeft + ' min : ' + secondsLeft + ' s'}}</p>
+            <p class="text-red-500 font-bold" *ngIf="twentyMinuteEnd">Temps additionnel: {{minutesLeft + ' min : ' + secondsLeft + ' s'}}</p>
         </div>
         <div class="flex-wrap vh-space-between mt-4">
             <div class="vh-center">
@@ -20,7 +21,7 @@
                 <input type="text" [readOnly]="true" [disabled]="true" pInputText
                     [ngModel]="'Note ' + formation.parcours" />
                 <div class="flex gap-2">
-                    <button pButton pRipple label="{{note}}" (click)="formation.note = note" type="button"
+                    <button pButton pRipple label="{{note}}" (click)="interviewerIsFinish ? (null) : formation.note = note" type="button"
                         class="p-button-sm p-button-raised p-button-rounded" *ngFor="let note of notes"
                         [ngClass]="{ 'p-button-outlined': (formation.note != note), 'p-button-success':  (formation.note == note)}"></button>
                 </div>
@@ -33,15 +34,15 @@
         </div>
         <div class="mb-4">
             <textarea class="w-full" placeholder="Ajoutez un commentaire" pInputTextarea [(ngModel)]="comment"
-                [rows]="10" [autoResize]='true'></textarea>
+                [rows]="10" [autoResize]='true' [disabled]="interviewerIsFinish"></textarea>
                 <div class="field-checkbox">
                     <p-checkbox [(ngModel)]="hasBourse" [binary]="true" inputId="binary"></p-checkbox>
-                    <label for="binary">Ce candidat a t'il souscrit à une bourse ?</label>
+                    <label for="binary">Ce candidat a souscrit à une bourse</label>
                 </div>
         </div>
     </div>
     <div class="vh-end">
-        <button pButton pRipple type="button" label="Valider" [disabled]="timeout"
+        <button pButton pRipple type="button" label="Valider" [disabled]="interviewerIsFinish"
             class="p-button-sm p-button-raised p-button-success" (click)="confirm($event)"></button>
     </div>
 </section>

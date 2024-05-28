@@ -55,6 +55,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-candidature/gestion-solvable/gestion-solvable.module').then(s => s.GestionSolvableModule),
   },
   {
+    path: 'add_candidature',
+    data: { title: `Candidature` },
+    loadChildren: () => import('./menu-candidature/add-candidature/add-candidature.module').then(s => s.AddCandidatureModule),
+  },
+  {
     path: 'gestion_admis',
     data: { title: `Candidature` },
     loadChildren: () => import('./menu-candidature/gestion-admis/gestion-admis.module').then(s => s.GestionAdmisModule),

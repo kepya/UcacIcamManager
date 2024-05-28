@@ -1,0 +1,38 @@
+<section class="add-candidature-page page-content">
+    <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Ajout de candidat</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Ajout de candidature
+            </h3>
+
+        </div>
+        <div class="line"></div>
+        <div class="flex gap-2 align-items-center justify-content-end">
+            <p-dropdown [tooltipPosition]="'top'" optionValue="id" [options]="sites" [filter]="true" (ngModelChange)="getCenterBySite($event)" [showClear]="true" optionLabel="nom"
+                [(ngModel)]="site1" [showClear]="true" placeholder="Choisir un site"></p-dropdown>
+            <p-dropdown *ngIf="site" [tooltipPosition]="'top'" [options]="centres" [filter]="true" [showClear]="true"
+                optionLabel="nom" [(ngModel)]="centre" [showClear]="true" placeholder="Choisir un centre"></p-dropdown>
+        </div>
+        <div *ngIf="centre && site">
+            <uci-personnal-information-form (newSubmitLoadingEvent)="loading = $event"
+                (newSubmitEvent)="getPersonnalInformation($event)"
+                [ngClass]="{'hidden': activeStep > 1 || activeStep <= 0}"></uci-personnal-information-form>
+            <uci-complementary-information-form (previousStepEvent)="previous($event)"
+                (newSubmitEvent)="getComplementaryInformation($event)"
+                [ngClass]="{'hidden': activeStep > 2 || activeStep <= 1}"></uci-complementary-information-form>
+            <uci-competition-information-form (previousStepEvent)="previous($event)"
+                (newSubmitEvent)="getCompetitionInformation($event)"
+                [ngClass]="{'hidden': activeStep > 3 || activeStep <= 2}"></uci-competition-information-form>
+            <uci-paiement-information-form [site]="site" [centre]="centre" (previousStepEvent)="previous($event)"
+                (newSubmitEvent)="getPaiementInformation($event)"
+                [ngClass]="{'hidden': activeStep > 4 || activeStep <= 3}"></uci-paiement-information-form>
+            <uci-inscription-summary [candidat]="candidatureForm" [compte]="compteResponse"
+                [ngClass]="{'hidden': activeStep > 5 || activeStep <= 4}"></uci-inscription-summary>
+        </div>
+
+
+    </div>
+
+    <p-toast></p-toast>
+</section>

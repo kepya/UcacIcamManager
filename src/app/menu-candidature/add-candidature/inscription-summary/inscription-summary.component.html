@@ -1,0 +1,243 @@
+<section class="inscription-summary-container">
+  <div class="grid" id="recapitulatif">
+    <div class="col-12 md:col-8 lg:col-8">
+      <div class="block-part d-flex flex bg-white my-4 pt-4 pr-4">
+        <div class="vertical-bar">
+          <div class="losange"></div>
+        </div>
+        <div>
+          <h5 class="text-2xl title mb-2 underline">Récapitulatif :</h5>
+          <p class="line-height-2">Vos informations :</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 border-round-md shadow-3 p-4">
+        <div class="flex align-items-center">
+          <div class="w-5rem">
+            <img
+              src="/assets/images/candidat.png"
+              alt=""
+              class="shadow-2 w-4rem border-circle"
+              srcset=""
+            />
+          </div>
+          <div class="ml-2">
+            <p>
+              <span class="font-bold mb-2">Noms: </span>
+              <span> {{ compte?.name }}</span>
+            </p>
+            <p>
+              <span class="font-bold">Prénoms: </span>
+              <span> {{ compte?.prenom }}</span>
+            </p>
+          </div>
+        </div>
+        <div>
+          <p class="font-bold mb-3 underline">
+            Centre d’examen : {{ candidat?.centre }}
+          </p>
+        </div>
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <div class="block-part d-flex flex md:my-0 my-2 pt-4 pr-4">
+              <div class="vertical-bar">
+                <div class="losange border-circle"></div>
+              </div>
+              <div class="informations">
+                <h5 class="text-xl title mb-4 underline">
+                  Informations personnelles :
+                </h5>
+                <ul class="list-none line-height-2">
+                  <li class="mb-4">
+                    <span class="font-semibold">Adresse mail :</span>
+                    <span>{{ compte?.email }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Numero :</span>
+                    <span>{{ compte?.telephone }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Date de naissance :</span>
+                    <span>{{ candidat?.date_naissance }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Nationalité :</span>
+                    <span>{{ candidat?.nationalite }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Ville de naissane :</span>
+                    <span>{{ candidat?.lieu_de_naissance }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Langue parlée :</span>
+                    <span>{{ candidat?.langue }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="block-part d-flex flex md:my-0 my-2 pt-4 pr-4">
+              <div class="vertical-bar">
+                <div class="losange border-circle"></div>
+              </div>
+              <div class="informations">
+                <h5 class="text-xl title mb-4 underline">Concours :</h5>
+                <div class="line-height-2">
+                  <p class="font-semibold mb-4">Formation(s) Choisie(s) :</p>
+                  <ul class="line-height-2">
+                    <li
+                      class="mb-4"
+                      *ngIf="(candidat?.formation1?.length || 0) > 2"
+                    >
+                      {{ candidat?.formation1 }}
+                    </li>
+                    <li
+                      class="mb-4"
+                      *ngIf="(candidat?.formation2?.length || 0) > 2"
+                    >
+                      {{ candidat?.formation2 }}
+                    </li>
+                    <li
+                      class="mb-4"
+                      *ngIf="(candidat?.formation3?.length || 0) > 2"
+                    >
+                      {{ candidat?.formation3 }}
+                    </li>
+                  </ul>
+                </div>
+                <ul class="list-none line-height-2">
+                  <li class="mb-4">
+                    <span class="font-semibold">Cycle :</span>
+                    <span>{{ getCycle(candidat?.cycle || "premier") }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Dernier Etablissement :</span>
+                    <span>{{ candidat?.dernier_Etablissement }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Voulez vous une bourse :</span>
+                    <span>{{
+                      wantExchange(candidat?.has_exchange || "false")
+                    }}</span>
+                  </li>
+
+                  <li class="mb-4">
+                    <span class="font-semibold">Baccalauréat :</span>
+                    <span>{{ candidat?.serie_bac }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-12">
+            <div class="block-part d-flex w-full flex md:my-0 my-2 pt-4 pr-4">
+              <div class="vertical-bar">
+                <div class="losange border-circle"></div>
+              </div>
+              <div class="informations w-full">
+                <h5 class="text-xl title mb-4 underline">
+                  Informations complémentaires :
+                </h5>
+                <div class="grid">
+                  <div class="col-12 md:col-6">
+                    <ul class="list-none line-height-2">
+                      <li class="mb-4">
+                        <span class="font-semibold">Père :</span>
+                        <span>{{ candidat?.nom_parent1 }}</span>
+                      </li>
+
+                      <li class="mb-4">
+                        <span class="font-semibold">Numéro :</span>
+                        <span>{{ candidat?.telephone_pere }}</span>
+                      </li>
+
+                      <li class="mb-4">
+                        <span class="font-semibold">Mère :</span>
+                        <span>{{ candidat?.nom_parent2 }}</span>
+                      </li>
+
+                      <li class="mb-4">
+                        <span class="font-semibold">Numéro :</span>
+                        <span>{{ candidat?.telephone_mere }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <ul class="list-none line-height-2">
+                      <li class="mb-4">
+                        <span class="font-semibold">Tuteur :</span>
+                        <span>{{ candidat?.telephone_tuteur }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vh-center flex-column col-12 md:col-4 lg:col-4">
+      <uci-filling-progression [step]="step"></uci-filling-progression>
+
+      <div class="text-center m-3 p-5">
+        <div>
+          <img
+            src="/assets/icons/success.png"
+            class="w-4rem border-circle"
+            alt=""
+            srcset=""
+          />
+        </div>
+        <div>
+          <p class="text-xl font-semibold mb-2 line-height-2">
+            Candidature enregistrée !!
+          </p>
+          <p class="line-height-2 text-gray-300">
+            Vous avez réussi la premiere étape pour intégrer notre école!!
+            (❁´◡`❁)🚆
+          </p>
+        </div>
+        <div
+          class="mt-4 border-round-md shadow-3 mx-auto my-3 p-3 bg-gray-100 max-w-21rem"
+        >
+          <h5 class="text-xl text-center mb-2">Vos identifiants</h5>
+          <ul class="list-none line-height-2 text-left">
+            <li class="mb-2">
+              <span class="font-semibold">Code d’examen :</span>
+              <span>{{ candidat?.code_examen }}</span>
+            </li>
+            <li class="mb-2">
+              <span class="font-semibold">Votre mail :</span>
+              <span>{{ compte?.email }}</span>
+            </li>
+            <li class="mb-2">
+              <span class="font-semibold">Votre mot de passe :</span>
+              <span>{{ compte?.password }}</span>
+            </li>
+          </ul>
+          <div
+            (click)="print()"
+            class="flex cursor-pointer download_link justify-content-center mt-4 align-items-center"
+          >
+            <img
+              src="/assets/icons/download.png"
+              class="w-1rem"
+              alt=""
+              srcset=""
+            />
+            <span class="ml-2">Télécharger mes identifiants</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

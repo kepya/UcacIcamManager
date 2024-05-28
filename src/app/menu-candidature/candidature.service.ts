@@ -1,21 +1,51 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Candidature } from '../shared/models/compte';
 import { BaseUrlService } from '../shared/services/base-url.service';
 import { StatCandidatures } from '../shared/models/stat-candidature';
+import { ICandidature } from '../shared/interfaces/candidature';
+import { ICodeValidatorModels } from '../shared/interfaces/code-validator-models';
+import { IMailRequest } from '../shared/interfaces/imail-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CandidatureService {
   url = '';
+  urlCodeTest : string = "";
+  urlSendEmail : string = "";
+  urlUploadImage : string = "";
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.candidaturePath}`;
+    this.urlCodeTest = this.url + 'candidature/all-codes';
+    this.urlUploadImage = this.url + 'candidature/file/uploadFile';
+    this.urlSendEmail = this.url + "email/send";
     this.url += 'candidature/';
+
   }
+
+  uploadImage(file: File, candidatureId: number): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(this.urlUploadImage+candidatureId, formData);
+  }
+
+  sendEmail(mailRequest: IMailRequest): Observable<string> {
+    return this.http.post(this.urlSendEmail, mailRequest, { responseType: 'text' });
+  }
+
+  
+  addCandidature(candidature: ICandidature): Observable<ICandidature> {
+    return this.http.post<ICandidature>(this.url, candidature);
+  }
+
+  allCodes(): Observable<ICodeValidatorModels> {
+    return this.http.get<ICodeValidatorModels>(this.urlCodeTest);
+  }
+
 
   public liste(): Observable<Candidature[]> {
     return this.http.get<Candidature[]>(this.url + "candidats");

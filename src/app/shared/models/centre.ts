@@ -1,4 +1,5 @@
 import { Site } from './site';
+import { Zone } from "./zone";
 export class Centre {
     id?: number;
     siteid!: number;

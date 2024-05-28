@@ -15,9 +15,13 @@ import { NoteService } from 'src/app/shared/services/note.service';
   ]
 })
 export class DefineNoteInterviewComponent implements OnInit {
-  counterSubscription!: Subscription;
-  second: number = 0;
-  minute: number = 20;
+  totalSeconds = 1 * 60; // 20 minutes in seconds
+  minutesLeft = 0;
+  secondsLeft = 0;
+  interviewerIsFinish: boolean = false;
+  twentyMinuteEnd: boolean = false;
+  intervalId: any;
+
   nombre_choix: number = 0;
   entretien!: Entretien;
   notes = [
@@ -53,10 +57,89 @@ export class DefineNoteInterviewComponent implements OnInit {
     private noteParcoursService: NoteParcoursService, private route: ActivatedRoute, 
     private confirmationService: ConfirmationService, private candidatService:CandidatureService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.route.snapshot.params['idEntretien']) {
       this.getEntretien(parseInt(this.route.snapshot.params['idEntretien'], 10));
       this.startTimer()
+    }
+  }
+
+  startTimer() {
+    this.intervalId = setInterval(() => {
+      if (this.totalSeconds > 0) {
+        this.totalSeconds--;
+        this.minutesLeft = Math.floor(this.totalSeconds / 60);
+        this.secondsLeft = this.totalSeconds % 60;
+      } else {
+        if (this.twentyMinuteEnd) {
+          this.interviewerIsFinish = true;
+        } else {
+          this.twentyMinuteEnd = true;
+          this.totalSeconds = 5 * 60;
+          this.startTimer();
+        }
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  confirm(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.validateNotation();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
+  }
+
+  addNote() {
+    this.timeout = true;
+
+    for (let index = 0; index < this.formations.length; index++) {
+      this.noteParcoursService.create(this.formations[index]).subscribe({
+        next: (result: NoteParcours) => {
+          this.messageService.add({ severity: 'success', summary: "Assignation de note", detail: 'Assignation de note effectuée avec success' });
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: "Erreur d'assignation", detail: err.error.message });
+          console.log('error: ', err);
+        }
+      });
+    }
+
+    this.updateCandidatAccount();
+  }
+
+  validateNotation() {
+    if (!this.timeout) {
+      let hasError: boolean = false;
+      for (let index = 0; index < this.formations.length; index++) {
+        const element = this.formations[index];
+        if (element.note == 0) {
+          hasError = true;
+        }
+      }
+
+      if (hasError) {
+        this.messageService.add({ severity: 'error', summary: 'Note manquant', detail: 'Veuillez selectionner les notes pour chaque formation.' });
+      } else {
+        this.addNote();
+      }
+    } else {
+      this.addNote();
     }
   }
 
@@ -145,85 +228,4 @@ export class DefineNoteInterviewComponent implements OnInit {
       }
     });
   }
-
-  startTimer() {
-    const counter = interval(1000);
-    this.counterSubscription = counter.subscribe(
-      {
-        next: (cal) => {
-          if (this.minute == 0) {
-            if (this.second == 0) {
-              this.timeout = true;
-              this.validateNotation();
-            }
-          } else {
-            if (this.second == 0) {
-              this.second = 60;
-              this.minute = this.minute - 1;
-            } else {
-              this.second = this.second - 1;
-            }
-          }
-        },
-        error: (error: any) => { },
-        complete: () => {
-        },
-      }
-    );
-  }
-
-  confirm(event: Event) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Êtes vous sures de vouloir continuer ?',
-      icon: 'pi pi-question',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => {
-        this.validateNotation();
-      },
-      reject: () => {
-        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
-      }
-    });
-  }
-
-  addNote() {
-    this.timeout = true;
-
-    for (let index = 0; index < this.formations.length; index++) {
-      this.noteParcoursService.create(this.formations[index]).subscribe({
-        next: (result: NoteParcours) => {
-          this.messageService.add({ severity: 'success', summary: "Assignation de note", detail: 'Assignation de note effectuée avec success' });
-        },
-        error: (err) => {
-          this.messageService.add({ severity: 'error', summary: "Erreur d'assignation", detail: err.error.message });
-          console.log('error: ', err);
-        }
-      });
-    }
-
-    this.updateCandidatAccount();
-  }
-
-  validateNotation() {
-    if (!this.timeout) {
-      let hasError: boolean = false;
-      for (let index = 0; index < this.formations.length; index++) {
-        const element = this.formations[index];
-        if (element.note == 0) {
-          hasError = true;
-        }
-      }
-
-      if (hasError) {
-        this.messageService.add({ severity: 'error', summary: 'Note manquant', detail: 'Veuillez selectionner les notes pour chaque formation.' });
-      } else {
-        this.addNote();
-      }
-    } else {
-      this.addNote();
-    }
-  }
-
 }

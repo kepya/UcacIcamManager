@@ -1,0 +1,227 @@
+<section class="complementary-information-form-container">
+  <div class="grid">
+    <div class="col-12 md:col-8 lg:col-8">
+      <div class="block-part d-flex flex bg-white my-4 pt-4 pr-4">
+        <div class="vertical-bar">
+          <div class="losange"></div>
+        </div>
+        <div>
+          <h5 class="text-2xl title mb-2 underline">
+            Informations complémentaires
+          </h5>
+          <p class="line-height-2">
+            Dans la section 'Informations Complémentaires', veuillez fournir les
+            détails concernant vos parents. Cela nous aide à mieux comprendre
+            votre profil et à vous offrir un soutien approprié.
+          </p>
+        </div>
+      </div>
+      <form [formGroup]="form" class="formgrid grid" (ngSubmit)="submit()">
+        <div class="field bg-bluegray-50 p-2 text-center col-12 md:col-12">
+          <label class="m-0 text-orange-500 font-semibold">Informations du père</label>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="nom_pere">Noms (*)</label>
+          <input id="nom_pere" type="text" pInputText formControlName="nom_pere" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['nom_pere'].errors &&
+                formControls['nom_pere'].touched,
+              'border-green-700': formControls['nom_pere'].valid
+            }" />
+          <div *ngIf="formControls['nom_pere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['nom_pere'].errors['required']">Nom requis</small>
+            <small class="text-red-500" *ngIf="formControls['nom_pere'].errors['notConform']">Nom non conforme, ce
+              dernier ne doit pas uniquement avoir des
+              espaces ou des chiffres ou des carectères spéciaux</small>
+            <small class="text-red-500" *ngIf="formControls['nom_pere'].errors['minlength']">Nom doit avoir minimun 3
+              caractères</small>
+          </div>
+          <div *ngIf="formControls['nom_pere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="email_pere">Adresse mail(*)</label>
+          <input id="email_pere" type="email" pInputText formControlName="email_pere" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['email_pere'].errors &&
+                formControls['email_pere'].touched,
+              'border-green-700': formControls['email_pere'].valid
+            }" />
+          <div *ngIf="formControls['email_pere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['email_pere'].errors['required']">Email requis</small>
+            <small class="text-red-500" *ngIf="formControls['email_pere'].errors['email_pere']">Email non
+              conforme</small>
+            <small class="text-red-500" *ngIf="formControls['email_pere'].errors['notConform']">Email non
+              conforme</small>
+          </div>
+          <div *ngIf="formControls['email_pere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label class="block" for="telephone_pere">Numéro de téléphone(*)</label>
+          <input id="telephone_pere" type="tel" pInputText formControlName="telephone_pere" class="w-full" [ngClass]="{
+            'ng-invalid ng-dirty':
+              formControls['telephone_pere'].errors &&
+              formControls['telephone_pere'].touched,
+            'border-green-700': formControls['telephone_pere'].valid
+          }" />
+          <div *ngIf="formControls['telephone_pere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['telephone_pere'].errors['required']">Le numéro de téléphone
+              du père
+              requis</small>
+            <small class="text-red-500"
+              *ngIf="formControls['telephone_pere'].errors['minLength'] || formControls['telephone_pere'].errors['minlength']">Le
+              numéro de téléphone
+              du père incorrect</small>
+          </div>
+          <div *ngIf="formControls['telephone_pere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field bg-bluegray-50 p-2 text-center col-12 md:col-12">
+          <label class="m-0 text-orange-500 font-semibold">Informations de la mère</label>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="nom_mere">Noms (*)</label>
+          <input id="nom_mere" type="text" pInputText formControlName="nom_mere" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['nom_mere'].errors &&
+                formControls['nom_mere'].touched,
+              'border-green-700': formControls['nom_mere'].valid
+            }" />
+          <div *ngIf="formControls['nom_mere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['nom_mere'].errors['required']">Nom requis</small>
+            <small class="text-red-500" *ngIf="formControls['nom_mere'].errors['notConform']">Nom non conforme, ce
+              dernier ne doit pas uniquement avoir des
+              espaces ou des chiffres ou des carectères spéciaux</small>
+            <small class="text-red-500" *ngIf="formControls['nom_mere'].errors['minlength']">Nom doit avoir minimun 3
+              caractères</small>
+          </div>
+          <div *ngIf="formControls['nom_mere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="email_mere">Adresse mail</label>
+          <input id="email_mere" type="email" pInputText formControlName="email_mere" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['email_mere'].errors &&
+                formControls['email_mere'].touched,
+              'border-green-700': formControls['email_mere'].valid
+            }" />
+          <div *ngIf="formControls['email_mere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['email_mere'].errors['required']">Email requis</small>
+            <small class="text-red-500" *ngIf="formControls['email_mere'].errors['email_mere']">Email non
+              conforme</small>
+            <small class="text-red-500" *ngIf="formControls['email_mere'].errors['notConform']">Email non
+              conforme</small>
+          </div>
+          <div *ngIf="formControls['email_mere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label class="block" for="telephone_mere">Numéro de téléphone(*)</label>
+          <input id="telephone_mere" type="tel" pInputText formControlName="telephone_mere" class="w-full" [ngClass]="{
+            'ng-invalid ng-dirty':
+              formControls['telephone_mere'].errors &&
+              formControls['telephone_mere'].touched,
+            'border-green-700': formControls['telephone_mere'].valid
+          }" />
+          <div *ngIf="formControls['telephone_mere'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['telephone_mere'].errors['required']">Le numéro de téléphone
+              de la mère
+              requis</small>
+            <small class="text-red-500"
+              *ngIf="formControls['telephone_mere'].errors['minLength'] || formControls['telephone_mere'].errors['minlength']">Le
+              numéro de téléphone
+              de la mère incorrect</small>
+          </div>
+          <div *ngIf="formControls['telephone_mere'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field bg-bluegray-50 p-2 text-center col-12 md:col-12">
+          <label class="m-0 text-orange-500 font-semibold">Informations du tuteur</label>
+        </div>
+        <div class="field col-12 md:col-6">
+          <p>Avez vous un tuteur (*)</p>
+          <div class="formgroup-inline mt-3">
+            <div class="field-radiobutton">
+              <input type="radio" (change)="checkTutorPresence($event)" value="Oui" formControlName="hasTutor" />
+              <label for="inlineRadio3">Oui</label>
+            </div>
+            <div class="field-radiobutton">
+              <input type="radio" value="Non" (change)="checkTutorPresence($event)" formControlName="hasTutor" />
+              <label for="inlineRadio4">Non</label>
+            </div>
+          </div>
+          <div *ngIf="formControls['hasTutor'].errors" class="mt-2">
+            <small class="text-red-500">Réponse requise</small>
+          </div>
+          <div *ngIf="formControls['hasTutor'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6" *ngIf="form.get('hasTutor')?.value == 'Oui'">
+          <label for="email_tuteur">Adresse mail</label>
+          <input id="email_tuteur" type="email" pInputText formControlName="email_tuteur" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['email_tuteur'].errors &&
+                formControls['email_tuteur'].touched,
+              'border-green-700': formControls['email_tuteur'].valid
+            }" />
+          <div *ngIf="formControls['email_tuteur'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['email_tuteur'].errors['email_tuteur']">Email non
+              conforme</small>
+            <small class="text-red-500" *ngIf="formControls['email_tuteur'].errors['notConform']">Email non
+              conforme</small>
+          </div>
+          <div *ngIf="formControls['email_tuteur'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+
+        <div class="field col-12 md:col-6" *ngIf="form.get('hasTutor')?.value == 'Oui'">
+          <label class="block" for="telephone_tuteur">Numéro de téléphone(*)</label>
+          <input id="telephone_tuteur" type="tel" pInputText formControlName="telephone_tuteur" class="w-full"
+            [ngClass]="{
+            'ng-invalid ng-dirty':
+              formControls['telephone_tuteur'].errors &&
+              formControls['telephone_tuteur'].touched,
+            'border-green-700': formControls['telephone_tuteur'].valid
+          }" />
+          <div *ngIf="formControls['telephone_tuteur'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['telephone_tuteur'].errors['required']">Le numéro de
+              téléphone du tuteur
+              requis</small>
+            <small class="text-red-500"
+              *ngIf="formControls['telephone_tuteur'].errors['minLength'] || formControls['telephone_tuteur'].errors['minlength']">Le
+              numéro de téléphone
+              du tuteur incorrect</small>
+          </div>
+          <div *ngIf="formControls['telephone_tuteur'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12 md:col-12 text-right">
+          <button (click)="previous()" type="button" pButton pRipple label="Precedent" raised="true" severity="warning"
+            class="bg-primary mr-3 shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"></button>
+
+          <button [disabled]="
+              form.invalid 
+            " type="submit" pButton pRipple label="Continuer" raised="true" severity="warning"
+            class="bg-primary shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"></button>
+        </div>
+      </form>
+    </div>
+    <div class="vh-center col-12 md:col-4 lg:col-4">
+      <uci-filling-progression [step]="step"></uci-filling-progression>
+    </div>
+  </div>
+</section>
