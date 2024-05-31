@@ -97,7 +97,7 @@ export class CommonService {
   formatDate(date: Date): string {
     let time = formatDate(date, 'shortTime', 'fr-FR');
     let times = time.split(':');
-    return times[0] + 'h' + times[1];
+    return (parseInt(times[0], 10) - 1) + 'h' + times[1];
   }
 
   buildDateWithTime(time: string) {

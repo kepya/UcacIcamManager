@@ -26,6 +26,8 @@ export class CalendrierEntretienComponent implements OnInit {
   indexCurrentDate: number = 0;
   compte!: Compte;
 
+  showForAllInterviwer = false;
+
   constructor(private noteService: NoteService, private storageService: StorageService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
@@ -33,10 +35,26 @@ export class CalendrierEntretienComponent implements OnInit {
     this.getActiveSession();
     this.compte = this.storageService.getUserConnected();
     this.interviewer = this.compte.name + ' ' + this.compte.prenom;
-    this.getEntretiens();
+    if (this.compte.role == Role.JURY) {
+      this.getEntretiens();
+    }
     this.getCompteDisponibilite();
   }
 
+  downloadPlanningEntretien() {
+    window.open(this.noteService.downloadPlanningEntretienUrl(), '_blank');
+  }
+
+  showAllInterviewer() {
+    if (!this.showForAllInterviwer) {
+      this.showForAllInterviwer = true;
+      this.getEntretiens();
+    } else {
+      this.entretiensBeforeBreak = [];
+      this.entretiensAfterBreak = [];
+      this.showForAllInterviwer = false;
+    }
+  }
 
   getCompteDisponibilite() {
     this.compteDisponibiliteService.liste().subscribe({
@@ -68,13 +86,25 @@ export class CalendrierEntretienComponent implements OnInit {
   }
 
   handleInterviewerSelect(event: any) {
-    this.getEntretiens();
+    this.showForAllInterviwer = false;
+    this.getEntretiens(event.value);
   }
 
-  getEntretiens() {
+  getEntretiens(jury?: string) {
     this.noteService.liste().subscribe({
       next: (result: NoteResponse[]) => {
-        let value = (this.compte.role == Role.JURY) ? result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === this.interviewer) : result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()));
+        let value: any[] = [];
+
+        if (jury != null) {
+          value = result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()) && (v.compte?.name + ' ' + v.compte?.prenom) === (jury));
+        } else {
+          value = (this.compte.role == Role.JURY) ?
+            result.filter((v) => (
+              new Date(v.debut_entretien).getDate() === this.currentDate.getDate())
+              && (v.compte?.name + ' ' + v.compte?.prenom) === (this.interviewer))
+            : result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()));
+        }
+
 
         value.sort((a, b) => new Date(a.fin_entretien).getTime() - new Date(b.fin_entretien).getTime());
 
@@ -93,12 +123,9 @@ export class CalendrierEntretienComponent implements OnInit {
 
 
 
-
         this.entretiensBeforeBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() <= 12);
         this.entretiensAfterBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() > 12);
 
-        console.log('tes', this.entretiensBeforeBreak);
-        console.log('teys', this.entretiensAfterBreak);
       },
       error: (err) => {
         console.log('error: ', err);

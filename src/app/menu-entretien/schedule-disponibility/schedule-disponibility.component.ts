@@ -107,17 +107,12 @@ export class ScheduleDisponibilityComponent implements OnInit {
     horaires: string[];
     disponibilityIds: number[];
   }, index: number) {
-    console.log('event', event.target.value);
-    console.log('defaultValue', event.target.defaultValue);
     this.juriesByDispo.set(event.target.value + ' - ' + disponibility.key, disponibility.disponibilityIds[index])
   }
 
   validate() {
     let nbrSucess = 0;
     let total = 0;
-    console.log(this.juriesByDispo.values());
-    console.log(this.juriesByDispo.values);
-    
 
     for (let id of this.juriesByDispo.values()) {
       total = total + 1;

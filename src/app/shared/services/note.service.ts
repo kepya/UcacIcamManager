@@ -20,6 +20,17 @@ export class NoteService {
     return this.http.get<NoteInterviewerResponse[]>(this.url + "allNotesEntretien");
   }
 
+
+  public downloadPlanningEntretien(): Observable<any> {
+    return this.http.get(this.url + "download/planningEntretiens", {
+      responseType: 'arraybuffer'
+    });
+  }
+
+  public downloadPlanningEntretienUrl(): string {
+    return this.url + "download/planningEntretiens";
+  }
+
   public liste(): Observable<NoteResponse[]> {
     return this.http.get<NoteResponse[]>(this.url + "all");
   }

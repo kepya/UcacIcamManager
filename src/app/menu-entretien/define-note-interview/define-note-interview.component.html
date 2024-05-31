@@ -4,7 +4,7 @@
             <button pButton pRipple type="button" label="Evalution des Candidats"
                 class="p-button-sm p-button-raised p-button-secondary"></button>
             <p class="text-red-500 font-bold" *ngIf="!twentyMinuteEnd">Temps d'entretien: {{minutesLeft + ' min : ' + secondsLeft + ' s'}}</p>
-            <p class="text-red-500 font-bold" *ngIf="twentyMinuteEnd">Temps additionnel: {{minutesLeft + ' min : ' + secondsLeft + ' s'}}</p>
+            <p class="text-red-500 font-bold blink_me" *ngIf="twentyMinuteEnd">Temps additionnel: {{minutesLeft + ' min : ' + secondsLeft + ' s'}}</p>
         </div>
         <div class="flex-wrap vh-space-between mt-4">
             <div class="vh-center">

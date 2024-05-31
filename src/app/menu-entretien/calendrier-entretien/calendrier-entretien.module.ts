@@ -5,7 +5,8 @@ import { CalendrierEntretienRoutingModule } from './calendrier-entretien-routing
 import { CalendrierEntretienComponent } from './calendrier-entretien.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { TooltipModule } from 'primeng/tooltip';
+import {ButtonModule} from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CalendrierEntretienRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    TooltipModule,
+    ButtonModule,
     DropdownModule
   ]
 })

@@ -15,12 +15,14 @@ import { NoteService } from 'src/app/shared/services/note.service';
   ]
 })
 export class DefineNoteInterviewComponent implements OnInit {
-  totalSeconds = 1 * 60; // 20 minutes in seconds
+  totalSeconds = 20 * 60; // 20 minutes in seconds
   minutesLeft = 0;
   secondsLeft = 0;
   interviewerIsFinish: boolean = false;
   twentyMinuteEnd: boolean = false;
   intervalId: any;
+
+  note!: NoteResponse;
 
   nombre_choix: number = 0;
   entretien!: Entretien;
@@ -53,9 +55,9 @@ export class DefineNoteInterviewComponent implements OnInit {
 
   formations: NoteParcours[] = [];
 
-  constructor(private messageService: MessageService, private noteService: NoteService, 
-    private noteParcoursService: NoteParcoursService, private route: ActivatedRoute, 
-    private confirmationService: ConfirmationService, private candidatService:CandidatureService) { }
+  constructor(private messageService: MessageService, private noteService: NoteService,
+    private noteParcoursService: NoteParcoursService, private route: ActivatedRoute,
+    private confirmationService: ConfirmationService, private candidatService: CandidatureService) { }
 
   ngOnInit() {
     if (this.route.snapshot.params['idEntretien']) {
@@ -73,6 +75,7 @@ export class DefineNoteInterviewComponent implements OnInit {
       } else {
         if (this.twentyMinuteEnd) {
           this.interviewerIsFinish = true;
+          this.validateNotation();
         } else {
           this.twentyMinuteEnd = true;
           this.totalSeconds = 5 * 60;
@@ -109,7 +112,9 @@ export class DefineNoteInterviewComponent implements OnInit {
     this.timeout = true;
 
     for (let index = 0; index < this.formations.length; index++) {
-      this.noteParcoursService.create(this.formations[index]).subscribe({
+      let note = this.formations[index];
+      note.note = (note.note == 0 ? 4 : note.note);
+      this.noteParcoursService.create(note).subscribe({
         next: (result: NoteParcours) => {
           this.messageService.add({ severity: 'success', summary: "Assignation de note", detail: 'Assignation de note effectuée avec success' });
         },
@@ -119,12 +124,37 @@ export class DefineNoteInterviewComponent implements OnInit {
         }
       });
     }
-
+    this.updateNote();
     this.updateCandidatAccount();
   }
 
+  updateNote() {
+    this.noteService.update({
+      id: this.note?.id || 0,
+      "compteid": this.note.compteid,
+      "candidatureid": this.note.candidatureid,
+      "debut_entretien": this.note.debut_entretien,
+      "fin_entretien": this.note.fin_entretien,
+      "commentaires": this.comment,
+      noteL: 0,
+      noteOP: 0,
+      noteX: 0,
+      juryid: 0,
+    }).subscribe(
+      {
+        next: (result: NoteResponse) => {
+          this.messageService.add({ severity: 'success', summary: "Mise à jour des notes", detail: 'Mise à jour des notes effectuée avec success' });
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: "Erreur d'assignation", detail: err.error.message });
+          console.log('error: ', err);
+        }
+      }
+    )
+  }
+
   validateNotation() {
-    if (!this.timeout) {
+    if (!this.interviewerIsFinish) {
       let hasError: boolean = false;
       for (let index = 0; index < this.formations.length; index++) {
         const element = this.formations[index];
@@ -160,7 +190,8 @@ export class DefineNoteInterviewComponent implements OnInit {
     if (this.hasBourse) {
       let candidat = this.entretien.candidature;
       candidat.has_exchange = true;
-      this.candidatService.update(candidat.id || 0 , candidat).subscribe({
+      candidat.compteID = candidat?.compte?.id || 0;
+      this.candidatService.update(candidat.id || 0, candidat).subscribe({
         next: (value) => {
           this.messageService.add({ severity: 'success', summary: 'Modification de compte candidat', detail: 'Modification effectuée avec success' });
         },
@@ -174,6 +205,7 @@ export class DefineNoteInterviewComponent implements OnInit {
   getEntretien(idNote: number) {
     this.noteService.getOne(idNote).subscribe({
       next: (result: NoteResponse) => {
+        this.note = result;
         this.hasBourse = result.candidature!.has_exchange || false;
         this.nombre_choix = result.candidature.nombre_choix;
         for (let index = 0; index < result.candidature.nombre_choix; index++) {

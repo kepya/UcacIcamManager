@@ -1,12 +1,23 @@
 <section class="calendrier-entretien-page calendrier-page page-content">
-    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des entretiens</h1>
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Calendrier des entretiens 
+        <button (click)="downloadPlanningEntretien()" pButton pRipple type="button" icon="pi pi-download" class="ml-2 p-button-sm p-button-raised p-button-rounded p-button-warning p-button-text" pTooltip="Télécharger le calendrier des entretiens"></button>
+
+      </h1>
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Calendrier final des entretiens</h3>
+            <div>
+                <h3 class="title">Calendrier final des entretiens</h3>
+                <span class="text-sm cursor-pointer hover:text-orange-500" (click)=" showAllInterviewer()" *ngIf="compte.role != 'JURY'">
+                    <i class="pi pi-eye-slash" *ngIf="showForAllInterviwer"></i>
+                    <i class="pi pi-eye" *ngIf="!showForAllInterviwer"></i>
+                    Visualisation pour l'ensemble des intervenants
+                </span>
+            </div>
             <div>
                 <p-dropdown [options]="interviewers" (onChange)="handleInterviewerSelect($event)" [showClear]="true"
-                    [(ngModel)]="interviewer" placeholder="Choisir un intervenant" *ngIf="compte.role != 'JURY'"></p-dropdown>
+                    [(ngModel)]="interviewer" placeholder="Choisir un intervenant"
+                    *ngIf="compte.role != 'JURY'"></p-dropdown>
                 <button class="btn btn-danger ml-1 mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
                     Precedent Date
                 </button>
@@ -39,7 +50,10 @@
                         <td>{{entretien.centre}}</td>
                         <td>{{entretien.candidat.compte.name}}</td>
                         <td>{{entretien.candidat.compte.prenom}}</td>
-                        <td class="rowspan" [attr.rowspan]="entretiensBeforeBreak.length + 1" *ngIf="i == 0">
+                        <td class="rowspan" [attr.rowspan]="entretiensBeforeBreak.length + 1" *ngIf="i == 0 && !showForAllInterviwer" >
+                            <div>{{entretien.interviewer}}</div>
+                        </td>
+                        <td  *ngIf="showForAllInterviwer" >
                             <div>{{entretien.interviewer}}</div>
                         </td>
                     </tr>
