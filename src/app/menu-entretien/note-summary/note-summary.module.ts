@@ -24,7 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     NoteSummaryRoutingModule,
-
+    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     ToastModule,

@@ -9,6 +9,7 @@ import { NoteParcoursService } from 'src/app/shared/services/note-parcours.servi
 import { NoteService } from 'src/app/shared/services/note.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-note-summary',
@@ -20,12 +21,17 @@ export class NoteSummaryComponent implements OnInit {
   second: number = 0;
   minute: number = 20;
   nombre_choix: number = 0;
-  entretien!: Entretien;
+  cycle: string = "";
+  candidat: string = "";
+
+  visible: boolean = false;
+  downloadFile: boolean = false;
 
   juries: string[] = [];
 
   noteJury: Map<string, number> = new Map();
   noteJuryB: Map<string, number> = new Map();
+  commentJury: Map<string, string> = new Map();
 
   hasBourse: boolean = false;
 
@@ -53,7 +59,11 @@ export class NoteSummaryComponent implements OnInit {
   zones!: Zone[];
   zone!: Zone;
 
-  formations: NoteParcours[] = [];
+  formations: {
+    cycle: string,
+    totalNote: number,
+    parcours: string,
+  }[] = [];
   notes: NoteParcoursJury[] = [];
 
   constructor(private messageService: MessageService, private zoneService: ZoneService, private noteService: NoteService,
@@ -61,8 +71,8 @@ export class NoteSummaryComponent implements OnInit {
     private confirmationService: ConfirmationService, private candidatService: CandidatureService) { }
 
   ngOnInit(): void {
-    if (this.route.snapshot.params['idEntretien']) {
-      this.getEntretien(parseInt(this.route.snapshot.params['idEntretien'], 10));
+    if (this.route.snapshot.params['idCandidature']) {
+      this.getEntretienByCandidat(parseInt(this.route.snapshot.params['idCandidature'], 10));
     }
     this.getZones();
   }
@@ -79,7 +89,7 @@ export class NoteSummaryComponent implements OnInit {
     }
     return '';
   }
-  
+
   getZones() {
     this.zoneService.liste().subscribe({
       next: (value: Zone[]) => {
@@ -91,67 +101,50 @@ export class NoteSummaryComponent implements OnInit {
     });
   }
 
-  getNotes(idCandidat: number) {
-    this.noteService.allNotesEntretien().subscribe({
-      next: (result: NoteInterviewerResponse[]) => {
-        let response = result.find(n => n.candidature.id == idCandidat);
-        this.notes = response?.noteParcoursJuryList || [];
-
-        if (response) {
-
-          for (let index = 0; index < response.noteParcoursJuryList.length; index++) {
-            const element = response.noteParcoursJuryList[index];
-            for (let indexNote = 0; indexNote < element.notes.length; indexNote++) {
-              const elementNote = element.notes[indexNote];
-              let key = elementNote.jury.name + " " + elementNote.jury.prenom;
-
-              if (!this.juries.includes(key)) {
-                this.juries.push(key)
-              }
-
-              this.noteJury.set(
-                key + element.parcours, elementNote.note
-              )
-            }
-          }
-        }
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    });
-  }
-
-  getEntretien(idNote: number) {
-    this.noteService.getOne(idNote).subscribe({
-      next: (result: NoteResponse) => {
+  getEntretienByCandidat(idCandidat: number) {
+    this.noteService.getByCandidatureId(idCandidat).subscribe({
+      next: (result: NoteInterviewerResponse) => {
         this.hasBourse = result.candidature!.has_exchange || false;
         this.nombre_choix = result.candidature.nombre_choix;
+        this.notes = result?.noteParcoursJuryList;
+        this.cycle = result.candidature!.cycle.toString();
+        this.candidat = result.candidature.compte?.name + ' ' + result.candidature.compte?.prenom;
+        console.log("result: ", result);
 
-        this.getNotes(result.candidature.id || 0);
+        //        this.entretien = {
+        //   id: result!.id ?? 0,
+        //   candidat: result.candidature.compte?.name + ' ' + result.candidature.compte?.prenom,
+        //   commentaires: "",
+        //   done: true,
+        //   cycle: ,
+        //   centre: result.candidature?.centre || '',
+        //   jury: "",
+        //   candidature: result.candidature as unknown as Candidature,
+        //   debut_entretien:new Date(),
+        //   fin_entretien: new Date(result.fin_entretien),
+        // };
 
-        for (let index = 0; index < result.candidature.nombre_choix; index++) {
-          this.formations.push({
-            cycle: result.candidature.cycle,
-            id: 0,
-            note: 0,
-            noteId: idNote,
-            parcours: this.getFormation(index, result.candidature),
-          })
+        for (let index = 0; index < result.noteParcoursJuryList.length; index++) {
+          const element = result.noteParcoursJuryList[index];
+          for (let indexNote = 0; indexNote < element.notes.length; indexNote++) {
+            const elementNote = element.notes[indexNote];
+            let key = elementNote.jury.name + " " + elementNote.jury.prenom;
+            this.commentJury.set(
+              key + "", elementNote.commentaires,
+            )
+
+            if (!this.juries.includes(key)) {
+              this.juries.push(key)
+            }
+
+            this.noteJury.set(
+              key + element.parcours, elementNote.note
+            )
+          }
         }
 
-        this.entretien = {
-          id: result!.id ?? 0,
-          candidat: result.candidature.compte?.name + ' ' + result.candidature.compte?.prenom,
-          commentaires: result.commentaires,
-          done: result.done,
-          cycle: result.candidature!.cycle.toString(),
-          centre: result.candidature?.centre || '',
-          jury: result.compte?.name + ' ' + result.compte?.prenom,
-          candidature: result.candidature as unknown as Candidature,
-          debut_entretien: new Date(result.debut_entretien),
-          fin_entretien: new Date(result.fin_entretien),
-        };
+        console.log("this.commentJury: ", this.commentJury);
+        
       },
       error: (err) => {
         console.log('error: ', err);
@@ -159,5 +152,22 @@ export class NoteSummaryComponent implements OnInit {
     });
   }
 
+  showDialog() {
+    this.visible = true;
+  }
 
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+    this.noteService.downloadNoteEntretienUrlFile(data.cycle, data.formation).subscribe({
+      next: (value) => {
+        saveAs(value, 'note_entretien_' + data.cycle + '_cycle_' + data.formation + '.xlsx');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 }

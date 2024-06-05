@@ -31,12 +31,25 @@ export class NoteService {
     return this.url + "download/planningEntretiens";
   }
 
+  public downloadNoteEntretienUrl(cycle: string, parcours: string): string {
+    return this.url + "download/noteEntretiens/" + cycle + "/" + parcours;
+  }
+
+  public downloadNoteEntretienUrlFile(cycle: string, parcours: string) {
+    return this.http.get(this.url + "download/noteEntretiens/" + cycle + "/" + parcours, { responseType: 'blob' });
+  }
+
+
   public liste(): Observable<NoteResponse[]> {
     return this.http.get<NoteResponse[]>(this.url + "all");
   }
 
   public getOne(id: number): Observable<NoteResponse> {
     return this.http.get<NoteResponse>(this.url + id);
+  }
+
+  public getByCandidatureId(idCandidat: number): Observable<NoteInterviewerResponse> {
+    return this.http.get<NoteInterviewerResponse>(this.url + 'notesEntretienByCandidature/' + idCandidat);
   }
 
   public create(note: NoteRequest): Observable<NoteResponse> {

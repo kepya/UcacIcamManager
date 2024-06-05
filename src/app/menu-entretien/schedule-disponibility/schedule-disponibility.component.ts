@@ -126,7 +126,7 @@ export class ScheduleDisponibilityComponent implements OnInit {
         },
         error: (err) => {
           console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de sélection de la plage`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de sélection de la plage`, detail: err.error.message });
         }
       });
     }
@@ -138,44 +138,46 @@ export class ScheduleDisponibilityComponent implements OnInit {
   getDisponibilities() {
     this.disponibilitySrv.liste().subscribe({
       next: (disponibilities: Disponibility[]) => {
-        for (let index = 0; index < disponibilities.length; index++) {
-          const disponibilite = disponibilities[index];
+        if (disponibilities.length > 0) {
+          this.beginDate = new Date(disponibilities[0].date_disponibilite);
 
-          this.beginDate = (new Date(disponibilite.date_disponibilite).getTime() - this.beginDate.getTime()) > 0 ? this.beginDate : new Date(disponibilite.date_disponibilite);
-          this.endDate = (new Date(disponibilite.date_disponibilite).getTime() - this.beginDate.getTime()) > 0 ? new Date(disponibilite.date_disponibilite) : this.beginDate;
-
-
-          let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
-          let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
-          let horaire = startTime + ' - ' + endTime;
-          let key = new Date(disponibilite.date_disponibilite).getDate() + '-' + new Date(disponibilite.date_disponibilite).getMonth() + '-' + new Date(disponibilite.date_disponibilite).getFullYear();
-
-          if (this.disponibilityMap.has(key)) {
-            let data = this.disponibilityMap.get(key);
-            this.disponibilityMap.set(key, {
-              key: key,
-              disponibilityIds: [...data!.disponibilityIds, disponibilite.id || 0],
-              horaires: [
-                ...data!.horaires,
-                horaire
-              ],
-              jour: disponibilite.date_disponibilite,
-            })
-          } else {
-            this.disponibilityMap.set(key, {
-              key: key,
-              disponibilityIds: [disponibilite.id || 0],
-              horaires: [
-                horaire,
-              ],
-              jour: disponibilite.date_disponibilite,
-            })
+          for (let index = 0; index < disponibilities.length; index++) {
+            const disponibilite = disponibilities[index];
+  
+            let startTime = this.commonService.formatDate(disponibilite!.debut_disponibilite);
+            let endTime = this.commonService.formatDate(disponibilite!.fin_disponibilite);
+  
+            this.beginDate = (new Date(disponibilite.date_disponibilite).getTime() - this.beginDate.getTime()) > 0 ? this.beginDate : new Date(disponibilite.date_disponibilite);
+            this.endDate = (new Date(disponibilite.date_disponibilite).getTime() - this.beginDate.getTime()) > 0 ? new Date(disponibilite.date_disponibilite) : this.beginDate;
+  
+            let horaire = startTime + ' - ' + endTime;
+            let key = new Date(disponibilite.date_disponibilite).getDate() + '-' + new Date(disponibilite.date_disponibilite).getMonth() + '-' + new Date(disponibilite.date_disponibilite).getFullYear();
+  
+            if (this.disponibilityMap.has(key)) {
+              let data = this.disponibilityMap.get(key);
+              this.disponibilityMap.set(key, {
+                key: key,
+                disponibilityIds: [...data!.disponibilityIds, disponibilite.id || 0],
+                horaires: [
+                  ...data!.horaires,
+                  horaire
+                ],
+                jour: disponibilite.date_disponibilite,
+              })
+            } else {
+              this.disponibilityMap.set(key, {
+                key: key,
+                disponibilityIds: [disponibilite.id || 0],
+                horaires: [
+                  horaire,
+                ],
+                jour: disponibilite.date_disponibilite,
+              })
+            }
           }
+  
+          this.disponibilities = [...this.disponibilityMap.values()];
         }
-
-        this.disponibilities = [...this.disponibilityMap.values()];
-        console.log(this.disponibilities);
-
       },
       error: (err: any) => {
 

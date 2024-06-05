@@ -86,6 +86,7 @@ export class NoteParcoursJury {
     cycle!: Cycle;
     parcours!: string;
     moyenne!: number;
+    totalNotes!: number;
     notes!: {
         note: number;
         commentaires: string;

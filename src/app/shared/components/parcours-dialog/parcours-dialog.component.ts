@@ -24,6 +24,7 @@ export class ParcoursDialogComponent implements OnInit {
   public formation!: any;
   public cycle!: any;
   loading: boolean = false;
+  @Input() showExportAllCandidature: boolean = true;
 
   @Output() criteria: EventEmitter<{
     cycle: string,
@@ -60,12 +61,4 @@ export class ParcoursDialogComponent implements OnInit {
       this.loading = false;
     });
   }
-
-  /*validateAll() {
-    this.criteria.emit({
-      cycle: this.cycle,
-      formation: this.formation
-    });
-  }*/
-
 }
