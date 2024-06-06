@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { NoteEntretienRoutingModule } from './note-entretien-routing.module';
 import { NoteEntretienComponent } from './note-entretien.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
@@ -13,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,7 @@ import { ToastModule } from 'primeng/toast';
     NoteEntretienRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-
+    SharedModule,
     ToastModule,
     ConfirmPopupModule,
     ButtonModule,

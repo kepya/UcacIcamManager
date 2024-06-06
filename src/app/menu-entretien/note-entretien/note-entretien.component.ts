@@ -15,6 +15,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/site-page/site.service';
 import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-note-entretien',
@@ -24,9 +25,11 @@ import { Zone } from 'src/app/shared/models/zone';
 })
 export class NoteEntretienComponent implements OnInit {
   loading: boolean = false;
+  visible: boolean = false;
 
   notes: {
     nom: string,
+    idCandidature: number,
     prenom: string,
     centre: string,
     nationalite: string,
@@ -58,8 +61,6 @@ export class NoteEntretienComponent implements OnInit {
     this.compte = this.storageService.getUserConnected();
     this.getNotes();
     this.getActiveSession();
-    this.getEntretiens();
-    this.getZones();
   }
 
   getActiveSession() {
@@ -84,14 +85,17 @@ export class NoteEntretienComponent implements OnInit {
   getNotes() {
     this.noteService.allNotesEntretien().subscribe({
       next: (result: NoteInterviewerResponse[]) => {
-        // this.notes = notes;
         this.notes = result.map(r => ({
           nom: r.candidature.compte.name,
+          idCandidature: r.candidature.id || 0,
           prenom: r.candidature.compte.prenom,
           centre: r.candidature.centre,
           nationalite: r.candidature.nationalite,
           has_exchange: r.candidature.has_exchange || false
         }));
+
+        console.log('notes: ', this.notes);
+        
       },
       error: (err) => {
         console.log('error: ', err);
@@ -164,5 +168,29 @@ export class NoteEntretienComponent implements OnInit {
 
   getEventValue(event: any) {
     return event.target != null ? event.target.value : '';
+  }
+
+  goToNoteSumaryPage(id: string) {
+    this.router.navigate(['/note_summary/' + id]);
+  }
+
+  
+  showDialog() {
+    this.visible = true;
+}
+
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+    this.noteService.downloadNoteEntretienUrlFile(data.cycle, data.formation).subscribe({
+      next: (value) => {
+        saveAs(value, 'note_entretien_' + data.cycle + '_cycle_' + data.formation  + '.xlsx');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 }

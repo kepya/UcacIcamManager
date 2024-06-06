@@ -7,11 +7,7 @@
             </h3>
 
             <div class="mb-1">
-                <p-dropdown [tooltipPosition]="'top'" [options]="zones" [filter]="true" [showClear]="true"
-                optionLabel="nom"  [(ngModel)]="zone" [showClear]="true"
-                placeholder="Choisir une zone" ></p-dropdown>
-
-                <button pButton pRipple type="button" label="Telecharger les notes"
+                <button pButton pRipple type="button" label="Telecharger les notes" (click)="showDialog()"
                 class="ml-2 p-button-sm p-button-raised bg-orange-500 border-orange-500"></button>
             </div>
         </div>
@@ -19,7 +15,7 @@
 
         <section class="mt-3">
             <p-table #dt1 selectionMode="single" [(selection)]="selectedEntretien" dataKey="candidat" 
-                 responsiveLayout="scroll" [value]="notes" dataKey="id" [rows]="5"
+                 responsiveLayout="scroll" [value]="notes" dataKey="idCandidature" [rows]="5"
                 [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10, 25, 50]" [loading]="loading"
                 [paginator]="true" currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
                 [globalFilterFields]="['nom','prenom','nationalite',  'centre','has_exchange']">
@@ -80,34 +76,39 @@
                         <th style="width:4rem"></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-entretien>
+                <ng-template pTemplate="body" let-note>
                     <tr>
                         <td>
-                            {{ entretien.nom }} 
+                            {{ note.nom }} 
                         </td>
                         <td>
-                            {{ entretien.prenom }} 
+                            {{ note.prenom }} 
                         </td>
                         <td>
-                            {{ entretien.centre }}
+                            {{ note.centre }}
                         </td>
                         <td>
-                            {{ entretien.nationalite }}
+                            {{ note.nationalite }}
                         </td>
                         <td>
-                            {{ entretien.has_exchange ? "Oui" : "Non" }}
+                            {{ note.has_exchange ? "Oui" : "Non" }}
                         </td>
                         <td>
-                            <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"></button>
+                            <button type="button"   class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(note.idCandidature)"></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="6">Aucun entretien programmé pour le moment.</td>
+                        <td colspan="6">Aucune note pour le moment.</td>
                     </tr>
                 </ng-template>
             </p-table>
         </section>
     </div>
 </section>
+
+
+<app-parcours-dialog [visible]="visible" [showExportAllCandidature]="false" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

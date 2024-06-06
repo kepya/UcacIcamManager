@@ -1,21 +1,26 @@
-<p-dialog header="Sélection du parcous et du cycle" [closable]="true" [(visible)]="visible" [modal]="true" [maximizable]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    
-    <button pButton (click)="exportToExcel()" pRipple label="Exporter toutes les candidatures" icon="pi pi-check" class="w-full mt-5"></button>
-     <div>&nbsp;</div>
-    <p class="m-0">
-        OU Exporter par parcours et par cycle de formation
-    </p>
+<p-dialog header="Sélection du parcous et du cycle" [closable]="true" [(visible)]="visible" [modal]="true"
+    [maximizable]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <div *ngIf="showExportAllCandidature">
+        <button pButton (click)="exportToExcel()" pRipple label="Exporter toutes les candidatures" icon="pi pi-check"
+            class="w-full mt-5"></button>
+        <div>&nbsp;</div>
+        <p class="m-0">
+            OU Exporter par parcours et par cycle de formation
+        </p>
+    </div>
 
-        <div class="w-full parcours-dialog-form">
-            <div class="mb-4 mt-5">
-                <label class="block text-900 font-medium mb-2">Parcours</label>
-                <p-dropdown [options]="formations" [(ngModel)]="formation" [showClear]="true" placeholder="Sélectionner le parcours de formation"></p-dropdown>
-            </div>
-            <div>
-                <label  class="block text-900 font-medium mb-2">Cycle de formation</label>
-            <p-dropdown [options]="cycles" [(ngModel)]="cycle" [showClear]="true" placeholder="Sélectionner le cycle de formation"></p-dropdown>
-            </div>
-            
-            <button pButton (click)="validate()" pRipple label="Valider" icon="pi pi-check" class="w-full mt-5"></button>
+    <div class="w-full parcours-dialog-form">
+        <div class="mb-4 mt-5">
+            <label class="block text-900 font-medium mb-2">Parcours</label>
+            <p-dropdown [options]="formations" [(ngModel)]="formation" [showClear]="true"
+                placeholder="Sélectionner le parcours de formation"></p-dropdown>
         </div>
+        <div>
+            <label class="block text-900 font-medium mb-2">Cycle de formation</label>
+            <p-dropdown [options]="cycles" [(ngModel)]="cycle" [showClear]="true"
+                placeholder="Sélectionner le cycle de formation"></p-dropdown>
+        </div>
+
+        <button pButton (click)="validate()" pRipple label="Valider" icon="pi pi-check" class="w-full mt-5"></button>
+    </div>
 </p-dialog>

@@ -100,6 +100,23 @@ export class CommonService {
     return (parseInt(times[0], 10) - 1) + 'h' + times[1];
   }
 
+  formatDate1(date: Date): Date {
+    const dateString = "2024-06-10T08:20:00.000+00:00";
+    const myDate = new Date(dateString);
+
+    // Obtenez les composants de la date et de l'heure dans votre fuseau horaire local
+    const year = myDate.getFullYear();
+    const month = myDate.getMonth() + 1; // Les mois sont indexés à partir de 0
+    const day = myDate.getDate();
+    const hours = myDate.getHours();
+    const minutes = myDate.getMinutes();
+
+    myDate.setHours(hours)
+    myDate.setMinutes(minutes)
+
+    return myDate;
+  }
+
   buildDateWithTime(time: string) {
     const current = new Date()
     const dateTimeTwo = new Date(`${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${time}`)

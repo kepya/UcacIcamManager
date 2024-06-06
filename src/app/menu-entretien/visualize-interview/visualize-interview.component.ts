@@ -70,8 +70,8 @@ export class VisualizeInterviewComponent implements OnInit {
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
             candidature: v.candidature as unknown as Candidature,
-            debut_entretien: new Date(v.debut_entretien),
-            fin_entretien: new Date(v.fin_entretien),
+            debut_entretien: this.commonService.formatDate1(new Date(v.debut_entretien)),
+            fin_entretien: this.commonService.formatDate1(new Date(v.fin_entretien))
           };
         });
 

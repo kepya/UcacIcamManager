@@ -323,7 +323,10 @@ export class ScheduleInterviewerComponent implements OnInit {
     this.selectCandidatMap = new Map();
     this.noteRequests = [];
 
-    if (plage.includes("08") || plage.includes("09")) {
+    console.log("plage: ", plage);
+    
+
+    if (plage.indexOf("8h") > -1) {
       this.firstPlages = [
         "08h00 - 08h20",
         "09h00 - 09h20",

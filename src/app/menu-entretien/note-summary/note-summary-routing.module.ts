@@ -8,7 +8,7 @@ const routes: Routes = [
     component: NoteSummaryComponent
   },
   {
-    path: ':idEntretien',
+    path: ':idCandidature',
     component: NoteSummaryComponent,
   },
 ];
