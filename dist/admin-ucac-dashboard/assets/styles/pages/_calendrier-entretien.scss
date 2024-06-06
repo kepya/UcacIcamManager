@@ -1,0 +1,25 @@
+@use "../abstracts/index" as *;
+
+.calendrier-entretien-page {
+    & > .card {
+        min-height: 92% !important;
+        height: auto !important;
+
+        & > .header {
+            div {
+                .mr-1 {
+                    margin-right: 1rem;
+                }
+                .ml-1 {
+                    margin-left: 1rem;
+                }
+            }
+        }
+
+        & > .sub-header {
+        }
+
+        & > .calendrier {
+        }
+    }
+}

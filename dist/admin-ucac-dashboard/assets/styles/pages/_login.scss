@@ -1,0 +1,131 @@
+//https://michel.dumont.io/fr/news/css-utilisation-des-symboles-de-base-6.html
+
+@use "../abstracts/index" as *;
+
+.login-container {
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    padding: 0;
+    background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+
+    & > .content {
+        height: 60%;
+        width: 100%;
+        margin: auto;
+        display: grid;
+        align-content: center;
+
+        .left_absolute_img {
+            position: absolute;
+            top: 0;
+        }
+
+        .rigth_absolute_img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .time {
+            color: #c10927;
+            z-index: 100;
+            font-size: 1.5em;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            position: absolute;
+            right: 4em;
+            top: 2em;
+            background: gainsboro;
+            padding-inline: 3em;
+            padding-block: 0.5em;
+            border-radius: 2em;
+        }
+
+        .rigth_absolute_img,
+        .left_absolute_img {
+            z-index: 0;
+            height: 16em;
+        }
+
+        & > .card {
+            margin: auto;
+            padding: 0;
+            border-radius: 0.625rem;
+            display: grid !important;
+            width: 45%;
+
+            @include xxl-only {
+                width: 55%;
+            }
+
+            @include xs-only {
+                width: 85%;
+            }
+
+            height: auto;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            box-shadow: 0 0 3px #9f8e3b;
+
+            & > .illustration {
+                & > img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                @include lg-only {
+                    display: none;
+                }
+            }
+            & > .card__content {
+                padding: 1rem;
+                @include flex-column;
+                justify-content: center;
+
+                & > .header {
+                    text-align: center;
+
+                    .title {
+                        font-size: xx-large;
+                    }
+                }
+                & > .form {
+                    & > .row {
+                        .is-invalid {
+                            border: 1px solid #c0262d !important;
+                        }
+
+                        .invalid-feedback {
+                            color: #c0262d;
+                        }
+
+                        & > .form-group {
+                            .form-input {
+                                width: 100%;
+                                padding: 0.75rem;
+
+                                height: 3.125rem;
+                                border-radius: 0.625rem;
+                                outline: none;
+                                background: ghostwhite;
+                                border: 1px solid gainsboro;
+                            }
+                        }
+
+                        & > {
+                            .form-button {
+                                .btn {
+                                    height: 3.125rem;
+                                    border-radius: 0.625rem;
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

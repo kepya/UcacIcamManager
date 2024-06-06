@@ -1,0 +1,83 @@
+.schedule-disponibility {
+    .page-header {
+        .header {
+            .title {
+                text-decoration: underline;
+                margin-bottom: .5rem;
+            }
+            .subtitle {
+            }
+            .text {
+            }
+        }
+    }
+
+    .plage-content {
+        .p-1 {
+            padding: 1rem;
+        }
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .plage-header {
+            margin-block: 2rem;
+            gap: 2rem;
+            div {
+                max-width: 230px;
+                background-color: #f1f1f1;
+                box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+                height: 45px;
+                color: black;
+                width: 100%;
+                border-radius: 0.4rem;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                font-weight: 600;
+                letter-spacing: 0.1rem;
+            }
+
+            .plage_title {
+                max-width: 230px;
+                background: #da3d14;
+                background: linear-gradient(90deg, #de640d 4%, #da3d14 48%, #d61a1a 84%);
+                box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+                height: 45px;
+                color: white;
+                width: 100%;
+                border-radius: 0.4rem;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                font-weight: 600;
+                letter-spacing: 0.1rem;
+            }
+
+            .limit {
+                width: fit-content;
+                height: fit-content;
+                padding: 0.5rem;
+                border-radius: 50%;
+            }
+        }
+
+        .main{
+            .disponibility-card {
+                border-radius: 0.6rem;
+                justify-content: space-evenly;
+                display: flex;
+                flex-direction: column;
+                background-color: #f1f1f1;
+                align-items: center;
+                box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+                height: 300px;
+
+                .disponibility_title {
+                    background: -webkit-linear-gradient(#DE640D, #D61A1A);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+        }
+    }
+}

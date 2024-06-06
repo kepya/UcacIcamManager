@@ -1,0 +1,18 @@
+@use "../abstracts/index" as *;
+
+.calendrier-page {
+    & > .card {
+        & > .sub-header {
+            text-align: center;
+            font-weight: bold;
+            font-family: var(--Poppins-bold);
+            margin-bottom: 1.5rem;
+        }
+
+        & > .calendrier {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+        }
+    }
+}

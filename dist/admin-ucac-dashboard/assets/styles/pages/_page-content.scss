@@ -1,0 +1,30 @@
+.page-content {
+    padding: 1rem;
+    padding-bottom: 0;
+    height: calc(100vh - 8.85rem - 2rem) !important;
+    // margin: 1rem;
+
+    .page-title {
+        color: var(--clr-primary-500);
+        font-family: var(--Poppins-medium);
+        font-size: var(--fs-medium);
+        margin-block: 0.625rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        .icon {
+            width: 1.5rem;
+            margin-right: 0.5rem;
+            transition: transform 200ms ease;
+
+            &:hover {
+                transform: scale(1.5);
+            }
+        }
+
+        .pi {
+            font-size: 1.5rem;
+        }
+    }
+}
