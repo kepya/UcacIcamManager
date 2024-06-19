@@ -3,7 +3,7 @@
     <div class="page-header">
         <div class="line"></div>
     </div>
-
+    
     <div class="card p-block-1">
         <div class="main">
             <div class="vh-center gap-1 mb-3">
@@ -18,6 +18,15 @@
                 </div>
             </div>
             <div class="jurys-plages">
+                <div class="vh-center jurys-filter flex justify-content-end">
+                    <p-dropdown     
+                        [options]="zonesList" 
+                        [(ngModel)]="selectedZone" 
+                        optionLabel="nom" 
+                        placeholder="Sélectionner une zone" 
+                        (onChange)="onZoneChange($event)">
+                    </p-dropdown>
+                </div>
                 <div class="vh-center jurys-plages-title-content">
                     <h3 class="title">Jury disponible</h3>
                 </div>
@@ -40,7 +49,7 @@
             </div>
         </div>
     </div>
-
+ 
     <div class="card mt-3">
 
         <p-table #dt1 [value]="(juriesByDispo.get(activeHoraire) || [])" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
@@ -138,6 +147,12 @@
             <button pButton pRipple type="button" [disabled]="!canSave" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
             </div>
     </div>
+
+
+    <!-- src/app/components/user-table/user-table.component.html -->
+
+
+    
 </section>
 
 

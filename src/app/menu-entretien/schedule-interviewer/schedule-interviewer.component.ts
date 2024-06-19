@@ -24,6 +24,7 @@ interface Jury {
   value: string
 }
 
+
 interface SelectItemFormation {
   label: string;
   items: { label: string; candidat: Candidature }[];
@@ -128,6 +129,18 @@ export class ScheduleInterviewerComponent implements OnInit {
   zones!: Map<number, Zone>;
   horaires: string[] = [];
   disponibilities: Disponibility[] = [];
+
+  zonesList: Zone[] = [];
+
+  selectedZone: Zone = {
+    id: 0,
+    nom: "",
+    description: "",
+    count_site: 0
+};
+
+filteredJuries: any;
+
 
   loading: boolean = false;
 
@@ -302,6 +315,9 @@ export class ScheduleInterviewerComponent implements OnInit {
     this.getActiveSession();
     this.getDisponibilities();
     this.getCandidatures();
+    this.getZones();
+    console.log(this.zones);
+    
   }
 
   showDialog(plages: string[], rand: number) {
@@ -388,6 +404,8 @@ export class ScheduleInterviewerComponent implements OnInit {
           const element = value[index];
           this.zones.set(element.id || 0, element);
         }
+        console.log(this.zones);
+        this.zonesList = [...this.zones.values()];
       },
       error: (err) => {
         console.log('error: ', err);
@@ -617,6 +635,35 @@ export class ScheduleInterviewerComponent implements OnInit {
       }
     })
   }
+  getCompteDisponibiliteByZone(idZone: number) {
+    this.juriesByDispo = new Map();
+    this.compteDisponibiliteService.allByZone(idZone).subscribe({
+      next: (disponibilities: CompteDisponibilite[]) => {
+        for (let index = 0; index < disponibilities.length; index++) {
+          const element = disponibilities[index];
+          let disponibility = this.disponibilities.find(d => d.id == element.disponibilite!.id)
+
+          let startTime = this.commonService.formatDate(disponibility!.debut_disponibilite);
+          let endTime = this.commonService.formatDate(disponibility!.fin_disponibilite);
+          let horaire = startTime + ' - ' + endTime;
+
+          let date = new Date(disponibility!.date_disponibilite);
+          date.setHours(0, 0, 0, 0);
+          if (this.currentDay.getTime() == date.getTime()) {
+            if (this.juriesByDispo.has(horaire)) {
+              let jurys = this.juriesByDispo.get(horaire);
+              let reult = jurys?.find(j => j.id == element.compte!.id);
+              if (!reult) {
+                jurys?.push(element.compte!);
+              }
+            } else {
+              this.juriesByDispo.set(horaire, [element.compte!]);
+            }
+          }
+        }
+      }
+    })
+  }
 
   previousDate(table: Table) {
     if (this.indexCurrentDate > 0) {
@@ -687,6 +734,10 @@ export class ScheduleInterviewerComponent implements OnInit {
     setTimeout(() => {
       this.juriesByDispo.set(this.activeHoraire, comptes);
     }, 1000);
+  }
+
+  onZoneChange(ev:any){
+    this.getCompteDisponibiliteByZone(this.selectedZone.id || 0);
   }
 
 }

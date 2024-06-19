@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { CompteDisponibilite } from '../models/entretient';
 import { BaseUrlService } from './base-url.service';
 
-@Injectable({
+@Injectable({ 
   providedIn: 'root'
 })
 export class CompteDisponibiliteService {
@@ -18,6 +18,10 @@ export class CompteDisponibiliteService {
 
   public liste(): Observable<CompteDisponibilite[]> {
     return this.http.get<CompteDisponibilite[]>(this.url + "all");
+  }
+
+  public allByZone(idZone:number): Observable<CompteDisponibilite[]> {
+    return this.http.get<CompteDisponibilite[]>(this.url + "allByZone/"+idZone);
   }
 
   public allBySession(sessionId: number): Observable<CompteDisponibilite[]> {
