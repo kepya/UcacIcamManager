@@ -28,7 +28,7 @@
                                 | date:'MMMM':'fr'}}</h4>
                         </div>
                         <div>
-                            <button pButton label="Reiniatialiser" class="p-button-outlined mr-2"
+                            <button pButton label="Réinitialiser" class="p-button-outlined mr-2"
                                 icon="pi pi-filter-slash" (click)="commonService.clear(dt1)"></button>
                             <span class="ml-2 p-input-icon-left ml-auto">
                                 <i class="pi pi-search"></i>
@@ -73,7 +73,7 @@
                                 <p-columnFilter type="text" field="has_exchange" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th style="width:4rem"></th>
+                        <th style="width:6rem"></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-note>
@@ -93,8 +93,9 @@
                         <td>
                             {{ note.has_exchange ? "Oui" : "Non" }}
                         </td>
-                        <td>
-                            <button type="button"   class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(note.idCandidature)"></button>
+                        <td class="flex gap-1">
+                            <button type="button" class="p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(note.idCandidature)"></button>
+                            <button *ngIf="isSuperAdmin" type="button" class="p-button-sm p-button-raised p-button-danger" text raised pButton pRipple icon="pi pi-pencil" (click)="showUpdateNoteModal(note)" severity="danger"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -108,6 +109,7 @@
     </div>
 </section>
 
+<app-update-candidat-note-dialog [visible]="showNote" *ngIf="showNote" [notesParcours]="" juries=""></app-update-candidat-note-dialog>
 
 <app-parcours-dialog [visible]="visible" [showExportAllCandidature]="false" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
 <p-toast></p-toast>

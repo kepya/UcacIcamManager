@@ -37,10 +37,10 @@
             <h3 class="title">Entretiens concours, session du {{session?.date_examen | date}}</h3>
             <div>
                 <button class="btn btn-danger mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
-                    Precedent Date
+                    Date précédente
                 </button>
                 <button class="btn btn-primary" (click)="prochaineDate()" *ngIf="datesOfEntretiens.length > 1">
-                    Prochaine Date
+                    Date suivante
                 </button>
             </div>
         </div>

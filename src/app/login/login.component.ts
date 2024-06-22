@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
               this.authService.isLogin.next(true);
               this.storageService.storeUserConnected(compte);
               this.router.navigate(['/home']);
-              this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec success' });
+              this.messageService.add({ severity: 'success', summary: 'Authentification', detail: 'Authentification effectuée avec succès' });
             },
             error: (err) => {
               console.log("User Find Error: ", err);

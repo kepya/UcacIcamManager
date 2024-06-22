@@ -6,7 +6,7 @@ import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.se
 import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Candidature, Compte } from 'src/app/shared/models/compte';
-import { Entretien, Note, NoteInterviewerResponse, NoteResponse } from 'src/app/shared/models/note';
+import { Entretien, Note, NoteInterviewerResponse, NoteParcours, NoteParcoursJury, NoteResponse } from 'src/app/shared/models/note';
 import { Session } from 'src/app/shared/models/session';
 import { Site } from 'src/app/shared/models/site';
 import { CommonService } from 'src/app/shared/services/common.service';
@@ -33,7 +33,9 @@ export class NoteEntretienComponent implements OnInit {
     prenom: string,
     centre: string,
     nationalite: string,
-    has_exchange: boolean
+    has_exchange: boolean,
+    noteParcours: Map<number, NoteParcours[]>,
+    juries: Compte[]
   }[] = [];
 
   entretiens: Entretien[] = [];
@@ -47,6 +49,10 @@ export class NoteEntretienComponent implements OnInit {
 
   selectedEntretien: any;
   isJury: boolean = false;
+  showNote: boolean = false;
+  isSuperAdmin: boolean = false;
+  isComptable: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService,
     private messageService: MessageService, public commonService: CommonService, private confirmationService: ConfirmationService,
@@ -56,6 +62,9 @@ export class NoteEntretienComponent implements OnInit {
   ngOnInit(): void {
     this.compte = this.storageService.getUserConnected();
     this.isJury = this.compte.role == Role.JURY ? true : false;
+    this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
+    this.isComptable = this.compte.role == Role.COMPTABLE ? true : false;
+    this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
 
     this.statuses = this.commonService.getStatuses();
     this.compte = this.storageService.getUserConnected();
@@ -85,17 +94,21 @@ export class NoteEntretienComponent implements OnInit {
   getNotes() {
     this.noteService.allNotesEntretien().subscribe({
       next: (result: NoteInterviewerResponse[]) => {
-        this.notes = result.map(r => ({
-          nom: r.candidature.compte.name,
-          idCandidature: r.candidature.id || 0,
-          prenom: r.candidature.compte.prenom,
-          centre: r.candidature.centre,
-          nationalite: r.candidature.nationalite,
-          has_exchange: r.candidature.has_exchange || false
-        }));
 
-        console.log('notes: ', this.notes);
         
+        this.notes = result.map(r => {
+          // r.noteParcoursJuryList.map(n => n.notes.map(no => no.jury)).flatMap(r => r.)
+
+          return {
+            nom: r.candidature.compte.name,
+            idCandidature: r.candidature.id || 0,
+            prenom: r.candidature.compte.prenom,
+            centre: r.candidature.centre,
+            nationalite: r.candidature.nationalite,
+            has_exchange: r.candidature.has_exchange || false,
+            noteParcours: r.noteParcoursJuryList
+          };
+        });
       },
       error: (err) => {
         console.log('error: ', err);
@@ -116,9 +129,19 @@ export class NoteEntretienComponent implements OnInit {
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
             candidature: v.candidature as unknown as Candidature,
-            debut_entretien: new Date(v.debut_entretien),
-            fin_entretien: new Date(v.fin_entretien),
+            debut_entretien: this.commonService.formatDate1(new Date(v.debut_entretien)),
+            fin_entretien: this.commonService.formatDate1(new Date(v.fin_entretien)),
           };
+        });
+
+        entretiens.sort((a, b) => {
+          if (a.debut_entretien > b.debut_entretien) {
+            return 1;
+          }
+          if (b.debut_entretien > a.debut_entretien) {
+            return -1;
+          }
+          return 0;
         });
 
         if (this.compte.role == Role.JURY) {
@@ -133,8 +156,16 @@ export class NoteEntretienComponent implements OnInit {
     });
   }
 
-  goToPlanificationPage(entretien: Entretien) {
-    this.router.navigate(['/define_note_planning/' + entretien.id]);
+  showUpdateNoteModal(note: {
+    nom: string,
+    idCandidature: number,
+    prenom: string,
+    centre: string,
+    nationalite: string,
+    has_exchange: boolean,
+    noteParcours: NoteParcoursJury[]
+  }) {
+
   }
 
   confirm(event: Event, id: number) {
@@ -174,10 +205,10 @@ export class NoteEntretienComponent implements OnInit {
     this.router.navigate(['/note_summary/' + id]);
   }
 
-  
+
   showDialog() {
     this.visible = true;
-}
+  }
 
   getCriteria(data: {
     cycle: string,
@@ -186,7 +217,7 @@ export class NoteEntretienComponent implements OnInit {
     this.visible = false;
     this.noteService.downloadNoteEntretienUrlFile(data.cycle, data.formation).subscribe({
       next: (value) => {
-        saveAs(value, 'note_entretien_' + data.cycle + '_cycle_' + data.formation  + '.xlsx');
+        saveAs(value, 'note_entretien_' + data.cycle + '_cycle_' + data.formation + '.xlsx');
       },
       error: (err) => {
         console.log('error: ', err);

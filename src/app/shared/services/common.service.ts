@@ -101,8 +101,7 @@ export class CommonService {
   }
 
   formatDate1(date: Date): Date {
-    const dateString = "2024-06-10T08:20:00.000+00:00";
-    const myDate = new Date(dateString);
+    const myDate = new Date(date);
 
     // Obtenez les composants de la date et de l'heure dans votre fuseau horaire local
     const year = myDate.getFullYear();
@@ -111,7 +110,7 @@ export class CommonService {
     const hours = myDate.getHours();
     const minutes = myDate.getMinutes();
 
-    myDate.setHours(hours)
+    myDate.setHours(hours - 1)
     myDate.setMinutes(minutes)
 
     return myDate;

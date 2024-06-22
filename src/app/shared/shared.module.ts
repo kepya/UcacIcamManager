@@ -13,16 +13,19 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { PhoneInputComponent } from './components/phone-input/phone-input.component';
+import { UpdateCandidatNoteDialogComponent } from './components/update-candidat-note-dialog/update-candidat-note-dialog.component';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
-  declarations: [SidebarComponent, HeaderComponent, FooterComponent, MainTemplateContentComponent, BarChartComponent, PieChartComponent, ParcoursDialogComponent, PhoneInputComponent],
+  declarations: [SidebarComponent, HeaderComponent, FooterComponent, MainTemplateContentComponent, BarChartComponent, PieChartComponent, ParcoursDialogComponent, PhoneInputComponent, UpdateCandidatNoteDialogComponent],
   imports: [
     CommonModule,
     MenuModule,
     DialogModule,
     DropdownModule,
     FormsModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule,
   ],
   exports: [SidebarComponent, HeaderComponent, FooterComponent, MainTemplateContentComponent, BarChartComponent, PieChartComponent, ParcoursDialogComponent],
 })
