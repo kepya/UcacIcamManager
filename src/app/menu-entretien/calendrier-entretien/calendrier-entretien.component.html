@@ -19,10 +19,10 @@
                     [(ngModel)]="interviewer" placeholder="Choisir un intervenant"
                     *ngIf="compte.role != 'JURY'"></p-dropdown>
                 <button class="btn btn-danger ml-1 mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
-                    Precedent Date
+                    Date précédente
                 </button>
                 <button class="btn btn-primary" (click)="prochaineDate()" *ngIf="datesOfEntretiens.length > 1">
-                    Prochaine Date
+                    Date suivante
                 </button>
             </div>
         </div>
