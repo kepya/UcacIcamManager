@@ -94,21 +94,30 @@ export class NoteEntretienComponent implements OnInit {
   getNotes() {
     this.noteService.allNotesEntretien().subscribe({
       next: (result: NoteInterviewerResponse[]) => {
+        // this.notes = result.map(r => {
+        //   r.noteParcoursJuryList.map(n => n.notes.map(no => no.jury)).flatMap(r => r.)
 
+        //   return {
+        //     nom: r.candidature.compte.name,
+        //     idCandidature: r.candidature.id || 0,
+        //     prenom: r.candidature.compte.prenom,
+        //     centre: r.candidature.centre,
+        //     nationalite: r.candidature.nationalite,
+        //     has_exchange: r.candidature.has_exchange || false,
+        //     noteParcours: r.noteParcoursJuryList
+        //   };
+        // });
         
-        this.notes = result.map(r => {
-          // r.noteParcoursJuryList.map(n => n.notes.map(no => no.jury)).flatMap(r => r.)
-
-          return {
-            nom: r.candidature.compte.name,
-            idCandidature: r.candidature.id || 0,
-            prenom: r.candidature.compte.prenom,
-            centre: r.candidature.centre,
-            nationalite: r.candidature.nationalite,
-            has_exchange: r.candidature.has_exchange || false,
-            noteParcours: r.noteParcoursJuryList
-          };
-        });
+        this.notes = result.map(r => ({
+          nom: r.candidature.compte.name,
+          idCandidature: r.candidature.id || 0,
+          prenom: r.candidature.compte.prenom,
+          centre: r.candidature.centre,
+          nationalite: r.candidature.nationalite,
+          has_exchange: r.candidature.has_exchange || false,
+          noteParcours: new Map(),
+          juries: []
+        }));
       },
       error: (err) => {
         console.log('error: ', err);
