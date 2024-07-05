@@ -80,9 +80,19 @@ this.getEntretiens();
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
             candidature: v.candidature as unknown as Candidature,
-            debut_entretien: new Date(v.debut_entretien),
-            fin_entretien: new Date(v.fin_entretien),
+            debut_entretien: this.commonService.formatDate1(new Date(v.debut_entretien)) ,
+            fin_entretien: this.commonService.formatDate1(new Date(v.fin_entretien)),
           };
+        });
+
+        entretiens.sort((a, b) => {
+          if (a.debut_entretien > b.debut_entretien) {
+            return 1;
+          }
+          if (b.debut_entretien > a.debut_entretien) {
+            return -1;
+          }
+          return 0;
         });
 
         this.entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))

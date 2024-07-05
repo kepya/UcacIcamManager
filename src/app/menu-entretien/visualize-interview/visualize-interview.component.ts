@@ -75,6 +75,16 @@ export class VisualizeInterviewComponent implements OnInit {
           };
         });
 
+        entretiens.sort((a, b) => {
+          if (a.debut_entretien > b.debut_entretien) {
+            return 1;
+          }
+          if (b.debut_entretien > a.debut_entretien) {
+            return -1;
+          }
+          return 0;
+        });
+        
         if (this.compte.role == Role.JURY) {
           this.entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
         } else {

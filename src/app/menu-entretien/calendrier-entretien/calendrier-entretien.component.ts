@@ -28,7 +28,9 @@ export class CalendrierEntretienComponent implements OnInit {
 
   showForAllInterviwer = false;
 
-  constructor(private noteService: NoteService, private storageService: StorageService, private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, private sessionSrv: SessionExamenService) { }
+  constructor(private noteService: NoteService, private storageService: StorageService,
+     private compteDisponibiliteService: CompteDisponibiliteService, private commonService: CommonService, 
+     private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
     this.currentDate = new Date();
@@ -105,7 +107,6 @@ export class CalendrierEntretienComponent implements OnInit {
             : result.filter((v) => (new Date(v.debut_entretien).getDate() === this.currentDate.getDate()));
         }
 
-
         value.sort((a, b) => new Date(a.fin_entretien).getTime() - new Date(b.fin_entretien).getTime());
 
         let entretiens = value.map((v) => {
@@ -115,17 +116,24 @@ export class CalendrierEntretienComponent implements OnInit {
             candidat: v.candidature,
             disponibility: {
               date_disponibilite: v.debut_entretien,
-              debut_disponibilite: new Date(v.debut_entretien),
-              fin_disponibilite: new Date(v.fin_entretien),
+              debut_disponibilite: this.commonService.formatDate1(new Date(v.debut_entretien)) ,
+              fin_disponibilite: this.commonService.formatDate1(new Date(v.fin_entretien)),
             }
           };
         });
 
-
+        entretiens.sort((a, b) => {
+          if (a.disponibility?.debut_disponibilite > b.disponibility?.debut_disponibilite) {
+            return 1;
+          }
+          if (b.disponibility?.debut_disponibilite > a.disponibility?.debut_disponibilite) {
+            return -1;
+          }
+          return 0;
+        });
 
         this.entretiensBeforeBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() <= 12);
         this.entretiensAfterBreak = entretiens.filter((e) => e.disponibility.fin_disponibilite.getHours() > 12);
-
       },
       error: (err) => {
         console.log('error: ', err);
