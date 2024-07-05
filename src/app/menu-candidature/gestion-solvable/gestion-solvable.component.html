@@ -1,224 +1,386 @@
 <section class="Candidature-page page-content">
-    <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Gestion de la solvabilité</h1>
+  <h1 class="page-title">
+    Candidatures <i class="pi pi-angle-right"></i> Gestion de la solvabilité
+  </h1>
 
-    <div class="card">
-        <div class="header">
-            <h3 class="title">Liste des candidatures n'ayant pas encore payé
-            <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
-            </h3>
-            <div>
-                <button class="btn btn-primary" (click)="confirm($event)">
-                    valider
-                </button>
-            </div>
-        </div>
-        <div class="line"></div>
-
-        <div class="table-content">
-            <div class="search-content">
-                <div class="select-page-size">
-                    <span>Voir</span>
-                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>entrées</span>
-                </div>
-                <div class="search">
-                    <div class="select-item">
-                        <span class="label">Categories</span>
-                        <select [(ngModel)]="searchOption" (change)="handleCategorieSelect($event)"
-                            class="form form-control">
-                            <option value="centre">Centre</option>
-                            <option value="site">Site</option>
-                            <option value="zone">Zone</option>
-                            <option value="formation">Formation</option>
-                            <option value="cycle">Cycle</option>
-                            <option value="nationalite">Nationalité</option>
-                            <option value="date_naissance">Date de naissance</option>
-                            <option value="genre">Genre</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'zone'"
-                            (change)="handleZoneSelect($event)">
-                            <option [value]="">Select zones</option>
-                            <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'site'"
-                            (change)="handleSiteSelect($event)">
-                            <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'centre'"
-                            (change)="handleCentreSelect($event)">
-                            <option [value]="centre.id" *ngFor="let centre of centres">{{centre.nom}}</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'genre'"
-                            (change)="handleSexeSelect($event)">
-                            <option value="M">M</option>
-                            <option value="F">F</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'nationalite'"
-                            (change)="handleNationalitySelect($event)">
-                            <option [value]="nationalite" *ngFor="let nationalite of nationalites">{{nationalite}}</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'formation'"
-                            (change)="handleFormationSelect($event)">
-                            <option [value]="formation" *ngFor="let formation of formations">{{formation}}</option>
-                        </select>
-
-                        <select class="form form-control" *ngIf="searchOption && searchOption == 'cycle'"
-                            (change)="handleCycleSelect($event)">
-                            <option value="premier">Premier</option>
-                            <option value="second">Second</option>
-                        </select>
-
-                        <p-calendar  class="ms-2"  (onSelect)="handleDateNaissanceSelect($event)" [(ngModel)]="date_naissance"  *ngIf="searchOption && searchOption == 'date_naissance'"></p-calendar>
-                    </div>
-
-                    <div class="search_value">
-                        <span>Rechercher</span>
-                        <div>
-                            <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                                (keyup)="handleSearchValue($event)">
-                            <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="table">
-                    <tr>
-                        <th>
-                            <div>
-                                Décision de la solvabilité
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Code d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'code_examen' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'code_examen'}"
-                                    (click)="sort('code_examen')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Cycle <i class="icon-sort {{this.sortProperty == 'cycle' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'cycle'}" (click)="sort('cycle')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Code MP <i
-                                    class="icon-sort {{this.sortProperty == 'reference_paiement' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'reference_paiement'}"
-                                    (click)="sort('reference_paiement')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                               Numero transaction <i
-                                    class="icon-sort {{this.sortProperty == 'telephone_paiement' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'telephone_paiement'}"
-                                    (click)="sort('telephone_paiement')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                               Montant à payer <i
-                                    class="icon-sort {{this.sortProperty == 'paiement' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'paiement'}"
-                                    (click)="sort('paiement')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Centre d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'centre' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'centre'}" (click)="sort('centre')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Formations <i
-                                    class="icon-sort {{this.sortProperty == 'formation' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'formation'}"
-                                    (click)="sort('formation')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Etat <i class="icon-sort {{this.sortProperty == 'statut' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr *ngFor="let candidature of candidatures">
-                        <td><input class="checkbox" type="checkbox" name="validate"
-                                (change)="validateSolvabilityOfCandidats($event, candidature)" /></td>
-                        <td>{{candidature?.code_examen}}</td>
-                        <td>{{candidature.compte.name}}</td>
-                        <td>{{candidature.compte.prenom}}</td>
-                        <td>{{candidature?.cycle}}</td>
-                        <td>{{candidature.reference_paiement}}</td>
-                        <td>{{candidature.telephone_paiement}}</td>
-                        <td>{{candidature.paiement}}</td>
-                        <td>{{candidature?.centre}}</td>
-                        <td>{{candidature?.formation1}}, {{candidature.formation2}}, {{candidature.formation3}}</td>
-                        <td>{{candidature?.statut}}</td>
-                    </tr>
-                    <tr *ngIf="searchValue && candidatures.length === 0">
-                        <td colspan="11"><span class="vh-center">
-                                Aucune candidatures trouvés avec ces lettres dans son nom
-                            </span></td>
-                    </tr>
-                    <tr *ngIf="!searchValue && candidatures.length === 0">
-                        <td colspan="11"><span class="vh-center">
-                                Aucune candidatures presents dans la base
-                            </span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées, {{totalElement}} éléments au total</span>
-                <ul class="pagination">
-                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
-                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
-                            (click)="previous()">Précedent</a>
-                    </li>
-                    <li class="paginate_button active">
-                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
-                    </li>
-                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
-                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
-                            (click)="next()">Suivant</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="card">
+    <div class="header">
+      <h3 class="title">
+        Liste des candidatures n'ayant pas encore payé
+        <button
+          pButton
+          (click)="showDialog()"
+          style="width: 32px; height: 32px"
+          pRipple
+          icon="pi pi-filter"
+          class="p-button-warning p-button-rounded p-button-raised p-button-text"
+        ></button>
+      </h3>
+      <div>
+        <button class="btn btn-primary" (click)="confirm($event)">
+          valider
+        </button>
+      </div>
     </div>
+    <div class="line"></div>
 
-    <p-toast></p-toast>
-    <p-confirmPopup></p-confirmPopup>
+    <div class="table-content">
+      <div class="search-content">
+        <div class="select-page-size">
+          <span>Voir</span>
+          <select
+            name="page-size"
+            (change)="handlePageSize($event)"
+            [(ngModel)]="pageSize"
+            id="page-size"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entrées</span>
+        </div>
+        <div class="search">
+          <div class="select-item">
+            <span class="label">Catégories</span>
+            <select
+              [(ngModel)]="searchOption"
+              (change)="handleCategorieSelect($event)"
+              class="form form-control"
+            >
+              <option value="centre">Centre</option>
+              <option value="site">Site</option>
+              <option value="zone">Zone</option>
+              <option value="formation">Formation</option>
+              <option value="cycle">Cycle</option>
+              <option value="nationalite">Nationalité</option>
+              <option value="date_naissance">Date de naissance</option>
+              <option value="genre">Genre</option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'zone'"
+              (change)="handleZoneSelect($event)"
+            >
+              <option [value]="">Select zones</option>
+              <option [value]="zone.id" *ngFor="let zone of zones">
+                {{ zone.nom }}
+              </option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'site'"
+              (change)="handleSiteSelect($event)"
+            >
+              <option [value]="site.id" *ngFor="let site of sites">
+                {{ site.nom }}
+              </option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'centre'"
+              (change)="handleCentreSelect($event)"
+            >
+              <option [value]="centre.id" *ngFor="let centre of centres">
+                {{ centre.nom }}
+              </option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'genre'"
+              (change)="handleSexeSelect($event)"
+            >
+              <option value="M">M</option>
+              <option value="F">F</option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'nationalite'"
+              (change)="handleNationalitySelect($event)"
+            >
+              <option
+                [value]="nationalite"
+                *ngFor="let nationalite of nationalites"
+              >
+                {{ nationalite }}
+              </option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'formation'"
+              (change)="handleFormationSelect($event)"
+            >
+              <option [value]="formation" *ngFor="let formation of formations">
+                {{ formation }}
+              </option>
+            </select>
+
+            <select
+              class="form form-control"
+              *ngIf="searchOption && searchOption == 'cycle'"
+              (change)="handleCycleSelect($event)"
+            >
+              <option value="premier">Premier</option>
+              <option value="second">Second</option>
+            </select>
+
+            <p-calendar
+              class="ms-2"
+              (onSelect)="handleDateNaissanceSelect($event)"
+              [(ngModel)]="date_naissance"
+              *ngIf="searchOption && searchOption == 'date_naissance'"
+            ></p-calendar>
+          </div>
+
+          <div class="search_value">
+            <span>Rechercher</span>
+            <div>
+              <input
+                type="text"
+                name="value"
+                id="value"
+                [(ngModel)]="searchValue"
+                (keyup)="handleSearchValue($event)"
+              />
+              <i
+                class="fa fa-close pull-right"
+                *ngIf="searchValue"
+                (click)="searchValue = ''"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table id="table">
+          <tr>
+            <th>
+              <div>Décision de la solvabilité</div>
+            </th>
+            <th>
+              <div>
+                Code d'examen
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'code_examen' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'code_examen' }"
+                  (click)="sort('code_examen')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Nom
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'nom' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'nom' }"
+                  (click)="sort('nom')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Prénom
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'prenom' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'prenom' }"
+                  (click)="sort('prenom')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Cycle
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'cycle' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'cycle' }"
+                  (click)="sort('cycle')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Code MP
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'reference_paiement'
+                      ? sortIcon
+                      : downUpIcon
+                  }}"
+                  [ngClass]="{
+                    bold: this.sortProperty == 'reference_paiement'
+                  }"
+                  (click)="sort('reference_paiement')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Numéro de transaction
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'telephone_paiement'
+                      ? sortIcon
+                      : downUpIcon
+                  }}"
+                  [ngClass]="{
+                    bold: this.sortProperty == 'telephone_paiement'
+                  }"
+                  (click)="sort('telephone_paiement')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Montant à payer
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'paiement' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'paiement' }"
+                  (click)="sort('paiement')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Centre d'examen
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'centre' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'centre' }"
+                  (click)="sort('centre')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Formations
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'formation' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'formation' }"
+                  (click)="sort('formation')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Etat
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'statut' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'statut' }"
+                  (click)="sort('statut')"
+                ></i>
+              </div>
+            </th>
+          </tr>
+          <tr *ngFor="let candidature of candidatures">
+            <td>
+              <input
+                class="checkbox"
+                type="checkbox"
+                name="validate"
+                (change)="validateSolvabilityOfCandidats($event, candidature)"
+              />
+            </td>
+            <td>{{ candidature?.code_examen }}</td>
+            <td>{{ candidature.compte.name }}</td>
+            <td>{{ candidature.compte.prenom }}</td>
+            <td>{{ candidature?.cycle }}</td>
+            <td>{{ candidature.reference_paiement }}</td>
+            <td>{{ candidature.telephone_paiement }}</td>
+            <td>{{ candidature.paiement }}</td>
+            <td>{{ candidature?.centre }}</td>
+            <td>
+              {{ candidature?.formation1 }}, {{ candidature.formation2 }},
+              {{ candidature.formation3 }}
+            </td>
+            <td>{{ candidature?.statut }}</td>
+          </tr>
+          <tr *ngIf="searchValue && candidatures.length === 0">
+            <td colspan="11">
+              <span class="vh-center">
+                Aucune candidature trouvée avec ces lettres dans son nom
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!searchValue && candidatures.length === 0">
+            <td colspan="11">
+              <span class="vh-center">
+                Aucune candidature présente dans la base
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="pagination_content">
+        <span
+          >Page {{ page }} sur {{ nbrOfPage }}, avec
+          {{ candidatures.length }} entrées affichées,
+          {{ totalElement }} éléments au total</span
+        >
+        <ul class="pagination">
+          <li
+            class="paginate_button previous disabled"
+            id="datatable-responsive_previous"
+            *ngIf="page > 1"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="0"
+              tabindex="0"
+              (click)="previous()"
+              >Précedent</a
+            >
+          </li>
+          <li class="paginate_button active">
+            <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0"
+              >1</a
+            >
+          </li>
+          <li
+            class="paginate_button next disabled"
+            id="datatable-responsive_next"
+            *ngIf="page < nbrOfPage"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="2"
+              tabindex="0"
+              (click)="next()"
+              >Suivant</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
 </section>
 
-<app-parcours-dialog [visible]="visible" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
+<app-parcours-dialog
+  [visible]="visible"
+  (criteria)="getCriteria($event)"
+  *ngIf="visible"
+></app-parcours-dialog>

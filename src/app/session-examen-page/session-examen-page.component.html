@@ -1,278 +1,410 @@
-<section class="session-page page-content" *ngIf="!isFormSession else addSession">
-    <h1 class="page-title">Sessions d'examen</h1>
+<section
+  class="session-page page-content"
+  *ngIf="!isFormSession; else addSession"
+>
+  <h1 class="page-title">Sessions d'examen</h1>
 
-    <div class="card">
-        <div class="header">
-            <h3 class="title">Liste des sessions d'examen Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewSession('form')">
-                Ajouter un session
-            </button>
-        </div>
-        <div class="line"></div>
-
-        <div class="table-content">
-            <div class="search-content">
-                <div class="select-page-size">
-                    <span>Voir</span>
-                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>entrées</span>
-                </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="table">
-                    <tr>
-                        <th>
-                            <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Date de debut d'enregistrement <i
-                                    class="icon-sort {{this.sortProperty == 'date_debut' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'date_debut'}"
-                                    (click)="sort('date_debut')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Date fin d'enregistrement <i
-                                    class="icon-sort {{this.sortProperty == 'date_limite' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'date_limite'}"
-                                    (click)="sort('date_limite')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Date d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'date_examen' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'date_examen'}"
-                                    (click)="sort('date_examen')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Statut <i class="icon-sort {{this.sortProperty == 'statut' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                #
-                            </div>
-                        </th>
-                    </tr>
-                    <tr *ngFor="let session of sessions">
-                        <td>{{session.nom}}</td>
-                        <td>{{session.date_debut | date}}</td>
-                        <td>{{session.date_limite | date}}</td>
-                        <td>{{session.date_examen | date}}</td>
-                        <td>{{session.statut === "true" ? 'Active':'Inactive'}}</td>
-                        <td>
-                            <button class="btn" (click)="updateSession(session)">
-                                <div>
-                                    <i class="fa-solid fa-pencil"></i>
-                                </div>
-                                <span>
-                                    Modifier
-                                </span>
-                            </button>
-                            <button class="btn mt-2" (click)="deleteSession(session.id || 0)">
-                                <div>
-                                    <i class="fa-solid fa-trash"></i>
-                                </div>
-                                <span>
-                                    Supprimer
-                                </span>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr *ngIf="searchValue && sessions.length === 0">
-                        <td colspan="6"><span class="vh-center">
-                                Aucune sessions trouvées avec ces lettres dans son nom
-                            </span></td>
-                    </tr>
-                    <tr *ngIf="!searchValue && sessions.length === 0">
-                        <td colspan="6"><span class="vh-center">
-                                Aucune sessions presentent dans la base
-                            </span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{sessions.length}} entrées affichées</span>
-                <ul class="pagination">
-                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
-                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
-                            (click)="previous()">Précedent</a>
-                    </li>
-                    <li class="paginate_button active">
-                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
-                    </li>
-                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
-                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
-                            (click)="next()">Suivant</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="card">
+    <div class="header">
+      <h3 class="title">Liste des sessions d'examen Ucac-Icam</h3>
+      <button class="btn btn-danger" (click)="viewSession('form')">
+        Ajouter une session
+      </button>
     </div>
+    <div class="line"></div>
 
+    <div class="table-content">
+      <div class="search-content">
+        <div class="select-page-size">
+          <span>Voir</span>
+          <select
+            name="page-size"
+            (change)="handlePageSize($event)"
+            [(ngModel)]="pageSize"
+            id="page-size"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entrées</span>
+        </div>
+        <div class="search_value">
+          <span>Rechercher</span>
+          <div>
+            <input
+              type="text"
+              name="value"
+              id="value"
+              [(ngModel)]="searchValue"
+              (keyup)="handleSearchValue($event)"
+            />
+            <i
+              class="fa fa-close pull-right"
+              *ngIf="searchValue"
+              (click)="searchValue = ''"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table id="table">
+          <tr>
+            <th>
+              <div>
+                Nom
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'nom' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'nom' }"
+                  (click)="sort('nom')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Date de debut d'enregistrement
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'date_debut' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'date_debut' }"
+                  (click)="sort('date_debut')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Date fin d'enregistrement
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'date_limite' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'date_limite' }"
+                  (click)="sort('date_limite')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Date d'examen
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'date_examen' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'date_examen' }"
+                  (click)="sort('date_examen')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Statut
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'statut' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'statut' }"
+                  (click)="sort('statut')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>#</div>
+            </th>
+          </tr>
+          <tr *ngFor="let session of sessions">
+            <td>{{ session.nom }}</td>
+            <td>{{ session.date_debut | date }}</td>
+            <td>{{ session.date_limite | date }}</td>
+            <td>{{ session.date_examen | date }}</td>
+            <td>{{ session.statut === "true" ? "Active" : "Inactive" }}</td>
+            <td>
+              <button class="btn" (click)="updateSession(session)">
+                <div>
+                  <i class="fa-solid fa-pencil"></i>
+                </div>
+                <span> Modifier </span>
+              </button>
+              <button class="btn mt-2" (click)="deleteSession(session.id || 0)">
+                <div>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+                <span> Supprimer </span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="searchValue && sessions.length === 0">
+            <td colspan="6">
+              <span class="vh-center">
+                Aucune session trouvée avec ces lettres dans son nom
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!searchValue && sessions.length === 0">
+            <td colspan="6">
+              <span class="vh-center">
+                Aucune session presente dans la base
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="pagination_content">
+        <span
+          >Page {{ page }} sur {{ nbrOfPage }}, avec
+          {{ sessions.length }} entrées affichées</span
+        >
+        <ul class="pagination">
+          <li
+            class="paginate_button previous disabled"
+            id="datatable-responsive_previous"
+            *ngIf="page > 1"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="0"
+              tabindex="0"
+              (click)="previous()"
+              >Précédent</a
+            >
+          </li>
+          <li class="paginate_button active">
+            <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0"
+              >1</a
+            >
+          </li>
+          <li
+            class="paginate_button next disabled"
+            id="datatable-responsive_next"
+            *ngIf="page < nbrOfPage"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="2"
+              tabindex="0"
+              (click)="next()"
+              >Suivant</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
 <ng-template #addSession>
-    <section class="session-page page-content">
-        <h1 class="page-title"><img (click)="viewSession()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> sessions d'examen <i class="pi pi-angle-right"></i> Ajouter une session d'examen</h1>
-        <div class="card">
-            <div class="header">
-                <h3 class="title">Ajouter une session d'examen
-                </h3>
-            </div>
-            <div class="line"></div>
-            <form class="form" [formGroup]="formSession" (ngSubmit)="createOrUpdateSession()">
-                <div class="header">
-                    Veullez remplir les champs suivants
-                    <div class="line"></div>
-                </div>
-                <div class="main">
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Nom *</label>
-                            <input type="text" formControlName="nom"
-                                [ngClass]="{required: formSession.get('nom')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['nom'].errors">
-                            <div *ngIf="formSessionControl['nom'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSessionControl['nom'].errors['minlength']">
-                                Nom doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Date de début *</label>
-                            <input type="date" formControlName="date_debut" id="" rows="4"
-                                [ngClass]="{required: formSession.get('date_debut')!.invalid}" />
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['date_debut'].errors">
-                            <div *ngIf="formSessionControl['date_debut'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Date limite de dépôt des candidatures *</label>
-                            <input type="date" [value]="formSession.get('date_limite')?.value"
-                                formControlName="date_limite" id="" rows="4"
-                                [ngClass]="{required: formSession.get('date_limite')!.invalid}" />
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['date_limite'].errors">
-                            <div *ngIf="formSessionControl['date_limite'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Date d'examen *</label>
-                            <input type="date" formControlName="date_examen" id="" rows="4"
-                                [ngClass]="{required: formSession.get('date_examen')!.invalid}" />
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['date_examen'].errors">
-                            <div *ngIf="formSessionControl['date_examen'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Date début entretien</label>
-                            <input type="date" formControlName="date_debut_entretien" id="" rows="4"
-                                [ngClass]="{required: formSession.get('date_debut_entretien')!.invalid}" />
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['date_debut_entretien'].errors">
-                            <div *ngIf="formSessionControl['date_debut_entretien'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Date fin entretien</label>
-                            <input type="date" formControlName="date_fin_entretien" id="" rows="4"
-                                [ngClass]="{required: formSession.get('date_fin_entretien')!.invalid}" />
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['date_fin_entretien'].errors">
-                            <div *ngIf="formSessionControl['date_fin_entretien'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group justify-start">
-                            <label for="">Status *</label>
-                            <div class="statut">
-                                <div class="row">
-                                    <input type="radio" value="true" name="statut" formControlName="statut">Active
-                                </div>
-                                <div class="row">
-                                    <input type="radio" value="false" name="statut" formControlName="statut">Inactive
-                                </div>
-                            </div>
-                        </div>
-                        <div class="alert" *ngIf="formSessionControl['statut'].errors">
-                            <div *ngIf="formSessionControl['statut'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSessionControl['statut'].errors['minlength']">
-                                Pays doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="footer">
-                    <div class="line"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formSession.invalid" type="submit">
-                            Soumettre
-                        </button>
-
-                        <button class="btn btn-danger" type="reset" (click)="formSession.reset()">
-                            Renitialiser
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-
+  <section class="session-page page-content">
+    <h1 class="page-title">
+      <img
+        (click)="viewSession()"
+        class="icon"
+        src="/assets/icons/undo-outline.svg"
+        alt=""
+        srcset=""
+      />
+      sessions d'examen <i class="pi pi-angle-right"></i> Ajouter une session
+      d'examen
+    </h1>
+    <div class="card">
+      <div class="header">
+        <h3 class="title">Ajouter une session d'examen</h3>
+      </div>
+      <div class="line"></div>
+      <form
+        class="form"
+        [formGroup]="formSession"
+        (ngSubmit)="createOrUpdateSession()"
+      >
+        <div class="header">
+          Veullez remplir les champs suivants
+          <div class="line"></div>
         </div>
-    </section>
+        <div class="main">
+          <div class="row">
+            <div class="form-group">
+              <label for="">Nom *</label>
+              <input
+                type="text"
+                formControlName="nom"
+                [ngClass]="{ required: formSession.get('nom')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSessionControl['nom'].errors">
+              <div *ngIf="formSessionControl['nom'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSessionControl['nom'].errors['minlength']">
+                Nom doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Date de début *</label>
+              <input
+                type="date"
+                formControlName="date_debut"
+                id=""
+                rows="4"
+                [ngClass]="{ required: formSession.get('date_debut')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSessionControl['date_debut'].errors">
+              <div *ngIf="formSessionControl['date_debut'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Date limite de dépôt des candidatures *</label>
+              <input
+                type="date"
+                [value]="formSession.get('date_limite')?.value"
+                formControlName="date_limite"
+                id=""
+                rows="4"
+                [ngClass]="{
+                  required: formSession.get('date_limite')!.invalid
+                }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSessionControl['date_limite'].errors">
+              <div *ngIf="formSessionControl['date_limite'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Date d'examen *</label>
+              <input
+                type="date"
+                formControlName="date_examen"
+                id=""
+                rows="4"
+                [ngClass]="{
+                  required: formSession.get('date_examen')!.invalid
+                }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSessionControl['date_examen'].errors">
+              <div *ngIf="formSessionControl['date_examen'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Date début entretien</label>
+              <input
+                type="date"
+                formControlName="date_debut_entretien"
+                id=""
+                rows="4"
+                [ngClass]="{
+                  required: formSession.get('date_debut_entretien')!.invalid
+                }"
+              />
+            </div>
+            <div
+              class="alert"
+              *ngIf="formSessionControl['date_debut_entretien'].errors"
+            >
+              <div
+                *ngIf="
+                  formSessionControl['date_debut_entretien'].errors['required']
+                "
+              >
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Date fin entretien</label>
+              <input
+                type="date"
+                formControlName="date_fin_entretien"
+                id=""
+                rows="4"
+                [ngClass]="{
+                  required: formSession.get('date_fin_entretien')!.invalid
+                }"
+              />
+            </div>
+            <div
+              class="alert"
+              *ngIf="formSessionControl['date_fin_entretien'].errors"
+            >
+              <div
+                *ngIf="
+                  formSessionControl['date_fin_entretien'].errors['required']
+                "
+              >
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group justify-start">
+              <label for="">Status *</label>
+              <div class="statut">
+                <div class="row">
+                  <input
+                    type="radio"
+                    value="true"
+                    name="statut"
+                    formControlName="statut"
+                  />Active
+                </div>
+                <div class="row">
+                  <input
+                    type="radio"
+                    value="false"
+                    name="statut"
+                    formControlName="statut"
+                  />Inactive
+                </div>
+              </div>
+            </div>
+            <div class="alert" *ngIf="formSessionControl['statut'].errors">
+              <div *ngIf="formSessionControl['statut'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSessionControl['statut'].errors['minlength']">
+                Pays doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="line"></div>
+          <div class="btn-group">
+            <button
+              class="btn btn-info"
+              [disabled]="formSession.invalid"
+              type="submit"
+            >
+              Soumettre
+            </button>
+
+            <button
+              class="btn btn-danger"
+              type="reset"
+              (click)="formSession.reset()"
+            >
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
 </ng-template>
 <p-toast></p-toast>
 <p-confirmPopup></p-confirmPopup>

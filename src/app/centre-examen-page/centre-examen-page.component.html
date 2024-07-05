@@ -1,222 +1,309 @@
-<section class="Centre-page page-content" *ngIf="!isFormCentre else addCentre">
-    <h1 class="page-title">Centres d'examen</h1>
+<section class="Centre-page page-content" *ngIf="!isFormCentre; else addCentre">
+  <h1 class="page-title">Centres d'examen</h1>
 
-    <div class="card">
-        <div class="header">
-            <h3 class="title">Liste des centres d'examen Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewCentre('form')">
-                Ajouter un centre
-            </button>
-        </div>
-        <div class="line"></div>
-
-        <div class="table-content">
-            <div class="search-content">
-                <div class="select-page-size">
-                    <span>Voir</span>
-                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>entrées</span>
-                </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="table">
-                    <tr>
-                        <th>
-                            <div>
-                                Site d'appartenance <i
-                                    class="icon-sort {{this.sortProperty == 'site' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'site'}" (click)="sort('site')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Contacts <i
-                                    class="icon-sort {{this.sortProperty == 'contacts' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'contacts'}" (click)="sort('contacts')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Villes <i class="icon-sort {{this.sortProperty == 'ville' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'ville'}" (click)="sort('ville')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                #
-                            </div>
-                        </th>
-                    </tr>
-                    <tr *ngFor="let centre of centres">
-                        <td>{{centre?.site?.nom}}</td>
-                        <td>{{centre?.nom}}</td>
-                        <td>{{centre?.contacts}}</td>
-                        <td>{{centre?.ville}}</td>
-                        <td>
-                            <button class="btn" (click)="updateCentre(centre)">
-                                <div>
-                                    <i class="fa-solid fa-pencil"></i>
-                                </div>
-                                <span>
-                                    Modifier
-                                </span>
-                            </button>
-                            <button class="btn mt-2" (click)="deleteCentre(centre.id || 0)">
-                                <div>
-                                    <i class="fa-solid fa-trash"></i>
-                                </div>
-                                <span>
-                                    Supprimer
-                                </span>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr *ngIf="searchValue && centres.length === 0">
-                        <td colspan="5"><span class="vh-center">
-                                Aucune centres trouvés avec ces lettres dans son nom
-                            </span></td>
-                    </tr>
-                    <tr *ngIf="!searchValue && centres.length === 0">
-                        <td colspan="5"><span class="vh-center">
-                                Aucune centres presents dans la base
-                            </span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{centres.length}} entrées affichées</span>
-                <ul class="pagination">
-                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
-                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
-                            (click)="previous()">Précedent</a>
-                    </li>
-                    <li class="paginate_button active">
-                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
-                    </li>
-                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
-                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
-                            (click)="next()">Suivant</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="card">
+    <div class="header">
+      <h3 class="title">Liste des centres d'examen Ucac-Icam</h3>
+      <button class="btn btn-danger" (click)="viewCentre('form')">
+        Ajouter un centre
+      </button>
     </div>
+    <div class="line"></div>
 
+    <div class="table-content">
+      <div class="search-content">
+        <div class="select-page-size">
+          <span>Voir</span>
+          <select
+            name="page-size"
+            (change)="handlePageSize($event)"
+            [(ngModel)]="pageSize"
+            id="page-size"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entrées</span>
+        </div>
+        <div class="search_value">
+          <span>Rechercher</span>
+          <div>
+            <input
+              type="text"
+              name="value"
+              id="value"
+              [(ngModel)]="searchValue"
+              (keyup)="handleSearchValue($event)"
+            />
+            <i
+              class="fa fa-close pull-right"
+              *ngIf="searchValue"
+              (click)="searchValue = ''"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table id="table">
+          <tr>
+            <th>
+              <div>
+                Site d'appartenance
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'site' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'site' }"
+                  (click)="sort('site')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Nom
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'nom' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'nom' }"
+                  (click)="sort('nom')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Contacts
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'contacts' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'contacts' }"
+                  (click)="sort('contacts')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Villes
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'ville' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'ville' }"
+                  (click)="sort('ville')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>#</div>
+            </th>
+          </tr>
+          <tr *ngFor="let centre of centres">
+            <td>{{ centre?.site?.nom }}</td>
+            <td>{{ centre?.nom }}</td>
+            <td>{{ centre?.contacts }}</td>
+            <td>{{ centre?.ville }}</td>
+            <td>
+              <button class="btn" (click)="updateCentre(centre)">
+                <div>
+                  <i class="fa-solid fa-pencil"></i>
+                </div>
+                <span> Modifier </span>
+              </button>
+              <button class="btn mt-2" (click)="deleteCentre(centre.id || 0)">
+                <div>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+                <span> Supprimer </span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="searchValue && centres.length === 0">
+            <td colspan="5">
+              <span class="vh-center">
+                Aucun centre trouvé avec ces lettres dans son nom
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!searchValue && centres.length === 0">
+            <td colspan="5">
+              <span class="vh-center"> Aucun centre présent dans la base </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="pagination_content">
+        <span
+          >Page {{ page }} sur {{ nbrOfPage }}, avec
+          {{ centres.length }} entrées affichées</span
+        >
+        <ul class="pagination">
+          <li
+            class="paginate_button previous disabled"
+            id="datatable-responsive_previous"
+            *ngIf="page > 1"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="0"
+              tabindex="0"
+              (click)="previous()"
+              >Précedent</a
+            >
+          </li>
+          <li class="paginate_button active">
+            <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0"
+              >1</a
+            >
+          </li>
+          <li
+            class="paginate_button next disabled"
+            id="datatable-responsive_next"
+            *ngIf="page < nbrOfPage"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="2"
+              tabindex="0"
+              (click)="next()"
+              >Suivant</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
 <ng-template #addCentre>
-    <section class="Centre-page page-content">
-        <h1 class="page-title"><img (click)="viewCentre()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> centres d'examen <i class="pi pi-angle-right"></i>{{ isFormCentre ? "Modification des
-            informations d'un centre d'examen": "Ajouter un centre d'examen"}} </h1>
-        <div class="card">
-            <form class="form" [formGroup]="formCentre" (ngSubmit)="createOrUpdateCentre()">
-                <div class="header">
-                    Veullez remplir les champs suivants
-                    <div class="line"></div>
-                </div>
-                <div class="main" style="height: 25em;">
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Site d'appartenance *</label>
-                            <select formControlName="siteid" [ngClass]="{required: formCentre.get('siteid')!.invalid}">
-                                <option value="">Site d'appartenance</option>
-                                <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
-                            </select>
-                        </div>
-                        <div class="alert" *ngIf="formCentreControl['siteid'].errors">
-                            <div *ngIf="formCentreControl['siteid'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Nom *</label>
-                            <input type="text" formControlName="nom"
-                                [ngClass]="{required: formCentre.get('nom')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formCentreControl['nom'].errors">
-                            <div *ngIf="formCentreControl['nom'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formCentreControl['nom'].errors['minlength']">
-                                Nom doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Contacts *</label>
-                            <input type="text" formControlName="contacts"
-                                [ngClass]="{required: formCentre.get('contacts')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formCentreControl['contacts'].errors">
-                            <div *ngIf="formCentreControl['contacts'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formCentreControl['contacts'].errors['minlength']">
-                                Votre contact doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Email *</label>
-                            <input type="text" formControlName="email"
-                                [ngClass]="{required: formCentre.get('email')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formCentreControl['email'].errors">
-                            <div *ngIf="formCentreControl['email'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formCentreControl['email'].errors['email']">
-                                Votre Email doit respecter le format des emails
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="footer">
-                    <div class="line"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formCentre.invalid" type="submit">
-                            Soumettre
-                        </button>
-
-                        <button class="btn btn-danger" type="reset" (click)="formCentre.reset()">
-                            Renitialiser
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-
+  <section class="Centre-page page-content">
+    <h1 class="page-title">
+      <img
+        (click)="viewCentre()"
+        class="icon"
+        src="/assets/icons/undo-outline.svg"
+        alt=""
+        srcset=""
+      />
+      centres d'examen <i class="pi pi-angle-right"></i
+      >{{
+        isFormCentre
+          ? "Modification des
+            informations d'un centre d'examen"
+          : "Ajouter un centre d'examen"
+      }}
+    </h1>
+    <div class="card">
+      <form
+        class="form"
+        [formGroup]="formCentre"
+        (ngSubmit)="createOrUpdateCentre()"
+      >
+        <div class="header">
+          Veullez remplir les champs suivants
+          <div class="line"></div>
         </div>
-    </section>
+        <div class="main" style="height: 25em">
+          <div class="row">
+            <div class="form-group">
+              <label for="">Site d'appartenance *</label>
+              <select
+                formControlName="siteid"
+                [ngClass]="{ required: formCentre.get('siteid')!.invalid }"
+              >
+                <option value="">Site d'appartenance</option>
+                <option [value]="site.id" *ngFor="let site of sites">
+                  {{ site.nom }}
+                </option>
+              </select>
+            </div>
+            <div class="alert" *ngIf="formCentreControl['siteid'].errors">
+              <div *ngIf="formCentreControl['siteid'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Nom *</label>
+              <input
+                type="text"
+                formControlName="nom"
+                [ngClass]="{ required: formCentre.get('nom')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formCentreControl['nom'].errors">
+              <div *ngIf="formCentreControl['nom'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formCentreControl['nom'].errors['minlength']">
+                Nom doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Contacts *</label>
+              <input
+                type="text"
+                formControlName="contacts"
+                [ngClass]="{ required: formCentre.get('contacts')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formCentreControl['contacts'].errors">
+              <div *ngIf="formCentreControl['contacts'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formCentreControl['contacts'].errors['minlength']">
+                Votre contact doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Email *</label>
+              <input
+                type="text"
+                formControlName="email"
+                [ngClass]="{ required: formCentre.get('email')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formCentreControl['email'].errors">
+              <div *ngIf="formCentreControl['email'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formCentreControl['email'].errors['email']">
+                Votre Email doit respecter le format des emails
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="line"></div>
+          <div class="btn-group">
+            <button
+              class="btn btn-info"
+              [disabled]="formCentre.invalid"
+              type="submit"
+            >
+              Soumettre
+            </button>
+
+            <button
+              class="btn btn-danger"
+              type="reset"
+              (click)="formCentre.reset()"
+            >
+              Renitialiser
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
 </ng-template>
 <p-toast></p-toast>
 <p-confirmPopup></p-confirmPopup>
