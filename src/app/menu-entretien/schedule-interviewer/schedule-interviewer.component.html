@@ -5,6 +5,10 @@
   <div class="page-header">
     <div class="line"></div>
   </div>
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Planification des entretiens</h1>
+    <div class="page-header">
+        <div class="line"></div>
+    </div>
 
   <div class="card p-block-1">
     <div class="main">
@@ -124,6 +128,41 @@
       <ng-template pTemplate="header">
         <tr>
           <th></th>
+    <div class="card mt-3">
+
+        <p-table #dt1 [value]="(juriesByDispo.get(activeHoraire) || [])" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [loading]="loading" [paginator]="true"
+            currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+            [globalFilterFields]="['horaire']" groupRowsBy="horaire" sortField="horaire" sortMode="single"
+            rowGroupMode="rowspan">
+            <ng-template pTemplate="caption">
+                <div class="vh-space-between flex justify-content-between ">
+                    <div>
+                        <h2>Nouvel entretien</h2>
+                        <h4 class="text-orange-500 ">Session de {{session?.date_examen
+                            | date:'MMMM':'fr'}}</h4>
+                    </div>
+                    <div>
+                        <button pButton label="Réinitialiser" class="p-button-outlined mr-2" icon="pi pi-filter-slash"
+                        (click)="filterGroupedFormations = groupedFormations"></button>
+                        <span class=" p-input-icon-left ml-auto">
+                            <i class="pi pi-filter-slash"></i>
+                            <p-dropdown [tooltipPosition]="'top'" (onChange)="handleFormationSelect($event)"
+                                [options]="formations" [filter]="true" [showClear]="true" optionLabel="name"
+                                [showClear]="true" placeholder="Filtrer par formation prioritaire"></p-dropdown>
+                        </span>
+                    </div>
+                </div>
+                <div class="vh-end flex-wrap">
+                    <p-tag severity="danger" value="Plage horaire :" styleClass="tag-style"></p-tag>
+                    <p-tag (click)="showMainDialog()" severity="danger"  value="{{activeHoraire}}" styleClass="tag-style basic-bg cursor-pointer"></p-tag>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+
+                    </th>
 
           <th style="min-width: 10rem"></th>
 
@@ -248,7 +287,7 @@
   </div>
 
   <!-- src/app/components/user-table/user-table.component.html -->
-</section>
+<!-- </section> -->
 
 <p-dialog
   header="Sélection de la plage"
