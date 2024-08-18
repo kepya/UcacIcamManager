@@ -742,6 +742,51 @@ export class GestionAdmissibiliteComponent implements OnInit {
     });
   }
 
+  confirmFail(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.passAdmisCandidatsToEchec();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé le passage en echec des candidatures' });
+      }
+    });
+  }
+
+  passAdmisCandidatsToEchec() {
+    for (let index = 0; index < this.admissiblesCandidats.length; index++) {
+      let candidat = this.admissiblesCandidats[index];
+      candidat.statut = Statut.Echec;
+      candidat.compteID = candidat.compte!.id || 0;
+      this.candidatureSrv.update(candidat.id || 0, candidat).subscribe({
+        next: (value: Candidature) => {
+          this.messageService.add({ severity: 'success', summary: 'Passé en echec', detail: 'Le candidat ' + candidat.compte.name + ' est passé en echec' });
+
+          if (this.actifOption == 'centre') {
+            this.getCandidaturesByCentre(this.centre.id ?? 0);
+          }
+
+          if (this.actifOption == 'site') {
+            this.getCandidaturesBySite(this.site.id ?? 0);
+          }
+
+
+          if (this.actifOption == 'zone') {
+            this.getCandidaturesByZone(this.zone.id ?? 0);
+          }
+        },
+        error: (err) => {
+          console.log('error: ', err);
+        }
+      });
+    }
+
+  }
   
   getCriteria(data: {
     cycle: string,
