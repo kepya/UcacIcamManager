@@ -60,7 +60,7 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
   compte!: Compte;
 
   constructor(private candidatureSrv: CandidatureService, private storageService: StorageService,
-    private siteSrv: SiteService, private commonSrv : CommonService,private exportExcelService: ExportExcelService,
+    private siteSrv: SiteService, public commonSrv : CommonService,private exportExcelService: ExportExcelService,
     private centreSrv: CentreExamenService, private zoneService: ZoneService,
     private messageService: MessageService, private confirmationService: ConfirmationService,
   ) { }
@@ -81,6 +81,10 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
     this.page = 1;
     this.compte = this.storageService.getUserConnected();
     this.getZonesOfUser();
+  }
+
+  getEventValue(event: any) {
+    return event.target != null ? event.target.value : '';
   }
 
   sort(property: string, candidatures: Candidature[] = this.candidatures) {
@@ -802,5 +806,30 @@ export class GestionSolvableComponent implements OnInit, AfterViewInit {
     } else {
       this.getCandidaturesByCycleAndParcours(data.cycle, data.formation);
     }
+  }
+  
+  statuses!: any[];
+  cycles: string[] = [
+    "premier",
+    "second"
+  ];
+
+  getSeverity(status: Statut) {
+    switch (status) {
+      case Statut.Admis:
+        return 'success';
+      case Statut.Admissible:
+        return 'info';
+      case Statut.Echec:
+        return 'danger';
+      case Statut.En_Attente:
+        return 'warning';
+      default:
+        return 'warning';
+    }
+  }
+
+  getStatusLabel(status: Statut) {
+    return status.toString();
   }
 }

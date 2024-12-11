@@ -8,6 +8,10 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
 import { GestionSolvableComponent } from './gestion-solvable.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @NgModule({
@@ -19,6 +23,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ToastModule,
     ConfirmPopupModule,
     ButtonModule,
+    TableModule,
+    DropdownModule,
+    FormsModule,
+    TagModule,
+    InputTextModule,
     SharedModule
   ]
 })

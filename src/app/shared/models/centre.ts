@@ -5,6 +5,7 @@ export class Centre {
     siteid!: number;
     nom!: string;
     email?: string;
+    codeCentre?: string;
     contacts!: string;
     ville: string = '';
     zone!: Zone;

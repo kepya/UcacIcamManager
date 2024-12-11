@@ -330,7 +330,7 @@ export class CentreExamenPageComponent implements OnInit {
       delete d.siteid;
       d = { ...d, siteid: parseInt(this.formCentre.value.siteid, 10) };
 
-      this.centreSrv.update({ ...d, site, id: this.centre.id }).subscribe({
+      this.centreSrv.update({ ...d, site, id: this.centre.id , codeCentre: this.centre.codeCentre}).subscribe({
         next: (value) => {
           this.getCentres();
           this.centre = new Centre();
