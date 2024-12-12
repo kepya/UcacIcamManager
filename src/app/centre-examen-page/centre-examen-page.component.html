@@ -184,17 +184,14 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Email *</label>
-                            <input type="text" formControlName="email"
-                                [ngClass]="{required: formCentre.get('email')!.invalid}">
+                            <label for="">Ville *</label>
+                            <input type="text" formControlName="ville"
+                                [ngClass]="{required: formCentre.get('ville')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="formCentreControl['email'].errors">
-                            <div *ngIf="formCentreControl['email'].errors['required']">
+                        <div class="alert" *ngIf="formCentreControl['ville'].errors">
+                            <div *ngIf="formCentreControl['ville'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
-                            </div>
-                            <div *ngIf="formCentreControl['email'].errors['email']">
-                                Votre Email doit respecter le format des emails
                             </div>
                         </div>
                     </div>
