@@ -33,6 +33,7 @@ export class SessionExamenPageComponent implements OnInit {
   formSession: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     date_debut: new FormControl(null, [Validators.required]),
+    date_fin: new FormControl(null, [Validators.required]),
     date_limite: new FormControl(null, [Validators.required]),
     date_examen: new FormControl(null, [Validators.required]),
     date_debut_entretien: new FormControl(null),
@@ -274,6 +275,7 @@ export class SessionExamenPageComponent implements OnInit {
     this.formSession.setValue({
       nom: session.nom,
       date_debut: formatDate(session.date_debut, 'yyyy-MM-dd', "en"),
+      date_fin: formatDate(session.date_fin, 'yyyy-MM-dd', "en"),
       date_limite: formatDate(session.date_limite, 'yyyy-MM-dd', "en"),
       date_examen: formatDate(session.date_examen, 'yyyy-MM-dd', "en"),
       date_debut_entretien: session.date_debut_entretien ? formatDate(session.date_debut_entretien, 'yyyy-MM-dd', "en") : null,
