@@ -1,0 +1,547 @@
+<section class="complementary-information-form-container">
+  <div class="grid">
+    <div class="col-12 md:col-8 lg:col-8">
+      <div class="block-part d-flex flex bg-white my-4 pt-4 pr-4">
+        <div class="vertical-bar">
+          <div class="losange"></div>
+        </div>
+        <div>
+          <h5 class="text-2xl title mb-2 underline">Concours</h5>
+          <p class="line-height-2">
+            Dans la section 'Concours', indiquez les détails de votre ancien
+            établissement, choisissez le cycle du concours et sélectionnez vos
+            formations préférées.
+          </p>
+        </div>
+      </div>
+      <form [formGroup]="form" class="formgrid grid" (ngSubmit)="submit()">
+        <div class="field col-12 md:col-6">
+          <p>Langue parlée(*)</p>
+          <div class="formgroup-inline mt-3">
+            <div class="field-radiobutton">
+              <input type="radio" value="Francais" formControlName="langue" />
+              <label for="inlineRadio3">Francais</label>
+            </div>
+            <div class="field-radiobutton">
+              <input type="radio" value="Anglais" formControlName="langue" />
+              <label for="inlineRadio4">Anglais</label>
+            </div>
+          </div>
+          <div *ngIf="formControls['langue'].errors" class="mt-2">
+            <small class="text-red-500">Langue parlée requise</small>
+          </div>
+          <div *ngIf="formControls['langue'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <label for="dernier_etablissement">Dernier établissement (*)</label>
+          <input
+            id="dernier_etablissement"
+            placeholder="Ex: Lycee de Makepe"
+            type="text"
+            pInputText
+            formControlName="dernier_etablissement"
+            class="w-full"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['dernier_etablissement'].errors &&
+                formControls['dernier_etablissement'].touched,
+              'border-green-700': formControls['dernier_etablissement'].valid
+            }"
+          />
+          <div
+            *ngIf="formControls['dernier_etablissement'].errors"
+            class="mt-2"
+          >
+            <small
+              class="text-red-500"
+              *ngIf="formControls['dernier_etablissement'].errors['required']"
+              >Dernier établissement requis</small
+            >
+          </div>
+          <div *ngIf="formControls['dernier_etablissement'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <p>Quel type de baccalauréat auriez-vous ou avez-vous ?(*)</p>
+          <div class="formgroup-inline mt-3">
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="GCE"
+                formControlName="serie_bac"
+              />
+              <label for="radio3">GCE </label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="C"
+                formControlName="serie_bac"
+              />
+              <label for="radio5">C</label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="D"
+                formControlName="serie_bac"
+              />
+              <label for="radio6">D</label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="TI"
+                formControlName="serie_bac"
+              />
+              <label for="radio7">TI</label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="F"
+                formControlName="serie_bac"
+              />
+              <label for="radio7">F</label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                (change)="checkSerieBacc($event)"
+                value="Autre"
+                formControlName="serie_bac"
+              />
+              <label for="radio8">Autre</label>
+            </div>
+          </div>
+          <div *ngIf="formControls['serie_bac'].errors" class="mt-2">
+            <small class="text-red-500">Type de baccalauréat requis</small>
+          </div>
+          <div *ngIf="formControls['serie_bac'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div
+          class="field col-12 md:col-6"
+          *ngIf="form.get('serie_bac')?.value == 'Autre'"
+        >
+          <label for="serie_bac_input">Type de baccalaureat(*) </label>
+          <input
+            id="serie_bac_input"
+            placeholder="Baccalaureat"
+            type="text"
+            pInputText
+            formControlName="serie_bac_input"
+            class="w-full"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['serie_bac_input'].errors &&
+                formControls['serie_bac_input'].touched,
+              'border-green-700': formControls['serie_bac_input'].valid
+            }"
+          />
+          <div *ngIf="formControls['serie_bac_input'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['serie_bac_input'].errors['required']"
+              >Type de baccalaureat requis</small
+            >
+          </div>
+          <div *ngIf="formControls['serie_bac_input'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field bg-bluegray-50 p-2 col-12 md:col-12">
+          <label class="font-bold">Choix des formations</label>
+          <p>
+            Le concours permet d'accéder à 3 formations .Veillez cocher la (ou
+            les) formation(s) auxquelles vous souhaitez postuler
+          </p>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <p class="font-bold">Concourir pour(*)</p>
+          <div class="formgroup-inline mt-3">
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                value="premier"
+                (change)="checkCycle($event)"
+                formControlName="cycle"
+              />
+              <label for="cycle3">1er Cycle</label>
+            </div>
+            <div class="field-radiobutton">
+              <input
+                type="radio"
+                value="second"
+                (change)="checkCycle($event)"
+                formControlName="cycle"
+              />
+              <label for="cycle4">2ème Cycle</label>
+            </div>
+          </div>
+          <div *ngIf="formControls['cycle'].errors" class="mt-2">
+            <small class="text-red-500">Cycle requis</small>
+          </div>
+          <div *ngIf="formControls['cycle'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div
+          class="field col-12 md:col-6"
+          *ngIf="
+            form.get('cycle')?.value == 'second' ||
+            form.get('cycle')?.value == 'premier'
+          "
+        >
+          <label for="state" class="font-bold">Priorité des formations</label>
+          <div>
+            <small
+              >Indiquez le nombre de formations auquel vous candidater</small
+            >
+          </div>
+          <div class="mt-1">
+            <p-dropdown
+              class="w-full"
+              (onChange)="dropdownNbreFormationValueChange($event)"
+              formControlName="nombre_formation"
+              [options]="nbrFormations"
+              placeholder="Selectionnez le nombre de formations"
+            ></p-dropdown>
+          </div>
+          <div *ngIf="formControls['nombre_formation'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['nombre_formation'].errors['required']"
+              >Nombre de formation requis</small
+            >
+          </div>
+          <div *ngIf="formControls['nombre_formation'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div
+          class="field col-12 md:col-6"
+          *ngIf="
+            form.get('cycle')?.value == 'second' ||
+            form.get('cycle')?.value == 'premier'
+          "
+        >
+          <p class="mb-2 font-bold">Frais de concours correspondant (*)</p>
+
+          <div class="field-radiobutton">
+            <input
+              type="radio"
+              [checked]="form.get('nombre_formation')?.value == '01'"
+              aria-disabled="true"
+              [disabled]="true"
+              [readOnly]="true"
+              value="20 000FCFA"
+              formControlName="paiement"
+            />
+            <label for="paiementRadio3"
+              >Concourir pour une formation (20 000FCFA)
+            </label>
+          </div>
+          <div class="field-radiobutton">
+            <input
+              type="radio"
+              [checked]="form.get('nombre_formation')?.value == '02'"
+              aria-disabled="true"
+              [disabled]="true"
+              [readOnly]="true"
+              value="25 000 FCFA"
+              formControlName="paiement"
+            />
+            <label for="paiementRadio4"
+              >Concourir pour deux formations (25 000 FCFA)
+            </label>
+          </div>
+          <div class="field-radiobutton">
+            <input
+              type="radio"
+              [checked]="form.get('nombre_formation')?.value == '03'"
+              aria-disabled="true"
+              [disabled]="true"
+              [readOnly]="true"
+              value="30 000 FCFA"
+              formControlName="paiement"
+            />
+            <label for="paiementRadio5"
+              >Concourir pour trois formations (30 000 FCFA)
+            </label>
+          </div>
+          <div *ngIf="formControls['paiement'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['paiement'].errors['required']"
+              >Montant à payer requis</small
+            >
+          </div>
+          <div *ngIf="formControls['paiement'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12"></div>
+
+        <div
+          class="field col-12 md:col-4"
+          *ngIf="
+            form.get('nombre_formation')?.value == '01' ||
+            form.get('nombre_formation')?.value == '02' ||
+            form.get('nombre_formation')?.value == '03'
+          "
+        >
+          <label for="state">Premier choix</label>
+          <div>
+            <p-dropdown
+              optionValue="code"
+              (onChange)="dropdownFormationValueChange($event, 1)"
+              [filter]="true"
+              [required]="true"
+              class="w-full"
+              formControlName="formation1"
+              [options]="
+                form.get('cycle')?.value == 'premier'
+                  ? formationsForFirstCycle
+                  : formationsForSecondCycle
+              "
+              optionLabel="name"
+              placeholder="Selectionnez votre premier choix"
+            ></p-dropdown>
+          </div>
+          <div *ngIf="formControls['formation1'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['formation1'].errors['required']"
+              >Premier choix requis</small
+            >
+          </div>
+          <div *ngIf="formationOneHasError" class="mt-2">
+            <small class="text-red-500">Formation déjà sélectionnée</small>
+          </div>
+          <div
+            *ngIf="formControls['formation1'].valid && !formationOneHasError"
+            class="mt-2"
+          >
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div
+          class="field col-12 md:col-4"
+          *ngIf="
+            form.get('nombre_formation')?.value == '02' ||
+            form.get('nombre_formation')?.value == '03'
+          "
+        >
+          <label for="state">Deuxième choix</label>
+          <div>
+            <p-dropdown
+              optionValue="code"
+              (onChange)="dropdownFormationValueChange($event, 2)"
+              [filter]="true"
+              [required]="true"
+              class="w-full"
+              formControlName="formation2"
+              [options]="
+                form.get('cycle')?.value == 'premier'
+                  ? formationsForFirstCycle
+                  : formationsForSecondCycle
+              "
+              optionLabel="name"
+              placeholder="Selectionnez votre deuxième choix"
+            ></p-dropdown>
+          </div>
+          <div *ngIf="formControls['formation2'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['formation2'].errors['required']"
+              >Deuxième choix requis</small
+            >
+          </div>
+          <div *ngIf="formationTwoHasError" class="mt-2">
+            <small class="text-red-500">Formation déjà sélectionnée</small>
+          </div>
+          <div
+            *ngIf="formControls['formation2'].valid && !formationTwoHasError"
+            class="mt-2"
+          >
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div
+          class="field col-12 md:col-4"
+          *ngIf="form.get('nombre_formation')?.value == '03'"
+        >
+          <label for="state">Troisième choix</label>
+          <div>
+            <p-dropdown
+              optionValue="code"
+              (onChange)="dropdownFormationValueChange($event, 3)"
+              [filter]="true"
+              [required]="true"
+              class="w-full"
+              formControlName="formation3"
+              [options]="
+                form.get('cycle')?.value == 'premier'
+                  ? formationsForFirstCycle
+                  : formationsForSecondCycle
+              "
+              optionLabel="name"
+              placeholder="Selectionnez votre troisième choix"
+            ></p-dropdown>
+          </div>
+          <div *ngIf="formControls['formation3'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['formation3'].errors['required']"
+              >Troisième choix requis</small
+            >
+          </div>
+          <div *ngIf="formationThreeHasError" class="mt-2">
+            <small class="text-red-500">Formation déjà sélectionnée</small>
+          </div>
+          <div
+            *ngIf="formControls['formation3'].valid && !formationThreeHasError"
+            class="mt-2"
+          >
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+        <div class="field col-12"></div>
+
+        <div
+          class="field col-12 md:col-6"
+          *ngIf="form.get('cycle')?.value == 'second'"
+        >
+          <label for="diplome_universitaire"
+            >Diplôme universitaire Obtenu (*)</label
+          >
+          <input
+            id="diplome_universitaire"
+            placeholder="Entrer votre diplome universitaire"
+            type="text"
+            pInputText
+            formControlName="diplome_universitaire"
+            class="w-full"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['diplome_universitaire'].errors &&
+                formControls['diplome_universitaire'].touched,
+              'border-green-700': formControls['diplome_universitaire'].valid
+            }"
+          />
+          <div
+            *ngIf="formControls['diplome_universitaire'].errors"
+            class="mt-2"
+          >
+            <small
+              class="text-red-500"
+              *ngIf="formControls['diplome_universitaire'].errors['required']"
+              >Diplôme universitaire requis
+            </small>
+          </div>
+          <div *ngIf="formControls['diplome_universitaire'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <p>Voulez-vous une bourse ?</p>
+          <div class="formgroup-inline mt-3">
+            <div class="field-radiobutton">
+              <input type="radio" value="Oui" formControlName="has_exchange" />
+              <label for="has_exchange3">Oui</label>
+            </div>
+            <div class="field-radiobutton">
+              <input type="radio" value="Non" formControlName="has_exchange" />
+              <label for="has_exchange4">Non</label>
+            </div>
+          </div>
+          <div *ngIf="formControls['has_exchange'].errors" class="mt-2">
+            <small class="text-red-500">Réponse requise</small>
+          </div>
+          <div *ngIf="formControls['has_exchange'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <label for="image">Photo </label>
+          <input
+            id="image"
+            (change)="onFileChanged($event)"
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            formControlName="image"
+            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['image'].errors && formControls['image'].touched,
+              'border-green-700': formControls['image'].valid
+            }"
+          />
+          <div *ngIf="formControls['image'].errors" class="mt-2">
+            <small
+              class="text-red-500"
+              *ngIf="formControls['image'].errors['required']"
+              >Image requis</small
+            >
+          </div>
+          <div *ngIf="formControls['image'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-12 text-right">
+          <button
+            (click)="previous()"
+            type="button"
+            pButton
+            pRipple
+            label="Precedent"
+            raised="true"
+            severity="warning"
+            class="bg-primary mr-3 shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"
+          ></button>
+
+          <button
+            [disabled]="
+              form.invalid ||
+              formationOneHasError ||
+              formationTwoHasError ||
+              formationThreeHasError
+            "
+            type="submit"
+            pButton
+            pRipple
+            label="Continuer"
+            raised="true"
+            severity="warning"
+            class="bg-primary shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"
+          ></button>
+        </div>
+      </form>
+    </div>
+    <div class="vh-center col-12 md:col-4 lg:col-4">
+      <uci-filling-progression [step]="3"></uci-filling-progression>
+    </div>
+  </div>
+</section>

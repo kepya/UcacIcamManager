@@ -1,220 +1,116 @@
-<section class="Note-page page-content" *ngIf="!isFormNote else addNote">
+<section class="note-page page-content">
     <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Notes entretiens</h1>
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Liste de passage de vos entretiens</h3>
+            <h3 class="title">Liste des notes
+            </h3>
+
+            <div class="mb-1">
+                <button pButton pRipple type="button" label="Telecharger les notes" (click)="showDialog()"
+                class="ml-2 p-button-sm p-button-raised bg-orange-500 border-orange-500"></button>
+            </div>
         </div>
         <div class="line"></div>
 
-        <div class="table-content">
-            <div class="search-content">
-                <div class="select-page-size">
-                    <span>Voir</span>
-                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>entrées</span>
-                </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+        <section class="mt-3">
+            <p-table #dt1 selectionMode="single" [(selection)]="selectedEntretien" dataKey="candidat" 
+                 responsiveLayout="scroll" [value]="notes" dataKey="idCandidature" [rows]="5"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10, 25, 50]" [loading]="loading"
+                [paginator]="true" currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+                [globalFilterFields]="['nom','prenom','nationalite',  'centre','has_exchange']">
+                <ng-template pTemplate="caption">
+                    <div class="vh-space-between flex justify-content-between ">
+                        <div>
+
+                            <h2 class="text-lg font-bold">Note Entretiens</h2>
+                            <h4 class="text-orange-500 ">Session de {{session?.date_examen
+                                | date:'MMMM':'fr'}}</h4>
+                        </div>
+                        <div>
+                            <button pButton label="Réinitialiser" class="p-button-outlined mr-2"
+                                icon="pi pi-filter-slash" (click)="commonService.clear(dt1)"></button>
+                            <span class="ml-2 p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text"
+                                    (input)="dt1.filterGlobal(getEventValue($event), 'contains')"
+                                    placeholder="Rechercher" />
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="table">
+                </ng-template>
+                <ng-template pTemplate="header">
                     <tr>
-                        <th>
-                            <div>
-                                Horaires <i class="icon-sort {{this.sortProperty == 'horaire' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'horaire'}" (click)="sort('horaire')"></i>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Nom
+                                <p-columnFilter type="text" field="nom"
+                                    display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Note d'examen <i
-                                    class="icon-sort {{this.sortProperty == 'note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'note'}" (click)="sort('note')"></i>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Prenom
+                                <p-columnFilter type="text" field="prenom"
+                                    display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Centre
+                                <p-columnFilter type="text" field="centre" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Prénom <i class="icon-sort {{this.sortProperty == 'prenom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'prenom'}" (click)="sort('prenom')"></i>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Nationalité
+                                <p-columnFilter type="text" field="nationalite" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                Note <i class="icon-sort {{this.sortProperty == 'note' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'note'}" (click)="sort('note')"></i>
+                        <th style="min-width:10rem">
+                            <div class="flex align-items-center">
+                                Veut la bourse
+                                <p-columnFilter type="text" field="has_exchange" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th>
-                            <div>
-                                #
-                            </div>
-                        </th>
+                        <th style="width:6rem"></th>
                     </tr>
-                    <tr *ngFor="let note of notes">
-                        <td>{{note.horaire}}</td>
-                        <td>{{note.centre}}</td>
-                        <td>{{note.compte.name}}</td>
-                        <td>{{note.compte.prenom}}</td>
-                        <td>{{note.note}}</td>
+                </ng-template>
+                <ng-template pTemplate="body" let-note>
+                    <tr>
                         <td>
-                            <button class="btn" (click)="updateNote(note)">
-                                <div>
-                                    <i class="fa-solid fa-pencil"></i>
-                                </div>
-                                <span>
-                                    Note
-                                </span>
-                            </button>
+                            {{ note.nom }} 
+                        </td>
+                        <td>
+                            {{ note.prenom }} 
+                        </td>
+                        <td>
+                            {{ note.centre }}
+                        </td>
+                        <td>
+                            {{ note.nationalite }}
+                        </td>
+                        <td>
+                            {{ note.has_exchange ? "Oui" : "Non" }}
+                        </td>
+                        <td class="flex gap-1">
+                            <button type="button" class="p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(note.idCandidature)"></button>
+                            <button *ngIf="isSuperAdmin" type="button" class="p-button-sm p-button-raised p-button-danger" text raised pButton pRipple icon="pi pi-pencil" (click)="showUpdateNoteModal(note)" severity="danger"></button>
                         </td>
                     </tr>
-                    <tr *ngIf="searchValue && notes.length === 0">
-                        <td colspan="6"><span class="vh-center">
-                                Aucune notes trouvées avec ces lettres dans son nom
-                            </span></td>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6">Aucune note pour le moment.</td>
                     </tr>
-                    <tr *ngIf="!searchValue && notes.length === 0">
-                        <td colspan="6"><span class="vh-center">
-                                Aucune notes presentent dans la base
-                            </span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{notes.length}} entrées affichées</span>
-                <ul class="pagination">
-                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
-                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
-                            (click)="previous()">Précedent</a>
-                    </li>
-                    <li class="paginate_button active">
-                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
-                    </li>
-                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
-                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
-                            (click)="next()">Suivant</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+                </ng-template>
+            </p-table>
+        </section>
     </div>
-
 </section>
 
-<ng-template #addNote>
-    <!-- <section class="Note-page page-content">
-        <h1 class="page-title"><img (click)="viewNote()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> notes d'examen <i class="pi pi-angle-right"></i> Ajouter un note d'examen</h1>
-        <div class="card">
-            <div class="header">
-                <h3 class="title">Ajouter un note d'examen
-                </h3>
-            </div>
-            <div class="line"></div>
-            <form class="form" [formGroup]="formNote" (ngSubmit)="createOrUpdateNote()">
-                <div class="header">
-                    Veullez remplir les champs suivants
-                    <div class="line"></div>
-                </div>
-                <div class="main">
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Site d'appartenance *</label>
-                            <select formControlName="site_id"
-                                [ngClass]="{required: formNote.get('site_id')!.invalid}">
-                                <option value="">Site d'appartenance</option>
-                                <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
-                            </select>
-                        </div>
-                        <div class="alert" *ngIf="formNoteControl['site_id'].errors">
-                            <div *ngIf="formNoteControl['site_id'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Nom *</label>
-                            <input type="text" formControlName="nom"
-                                [ngClass]="{required: formNote.get('nom')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formNoteControl['nom'].errors">
-                            <div *ngIf="formNoteControl['nom'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>c:\Users\GLC\Documents\Projets\frontAdminInscription\production\superadmin\session_examen.html
-                            <div *ngIf="formNoteControl['nom'].errors['minlength']">
-                                Nom doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Contacts *</label>
-                            <input type="text" formControlName="contacts"
-                                [ngClass]="{required: formNote.get('contacts')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formNoteControl['contacts'].errors">
-                            <div *ngIf="formNoteControl['contacts'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formNoteControl['contacts'].errors['minlength']">
-                                Votre contact doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Email *</label>
-                            <input type="text" formControlName="email"
-                                [ngClass]="{required: formNote.get('email')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formNoteControl['email'].errors">
-                            <div *ngIf="formNoteControl['email'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formNoteControl['email'].errors['email']">
-                                Votre Email doit respecter le format des emails
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- <app-update-candidat-note-dialog [visible]="showNote" *ngIf="showNote" [notesParcours]="" juries=""></app-update-candidat-note-dialog> -->
 
-                <div class="footer">
-                    <div class="line"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formNote.invalid" type="submit">
-                            Soumettre
-                        </button>
-
-                        <button class="btn btn-danger" (click)="formNote.reset()">
-                            Renitialiser
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-
-        </div>
-    </section> -->
-</ng-template>
+<app-parcours-dialog [visible]="visible" [showExportAllCandidature]="false" (criteria)="getCriteria($event)" *ngIf="visible"></app-parcours-dialog>
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

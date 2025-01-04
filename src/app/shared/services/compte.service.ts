@@ -5,15 +5,18 @@ import { environment } from 'src/environments/environment';
 import { Compte } from '../models/compte';
 import { BaseUrlService } from './base-url.service';
 import { StorageService } from './storage.service';
+import { Role } from "../enums/role.enum";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompteService {
   url = '';
+  url1 = '';
 
   constructor(private http: HttpClient, private baseUrlSvr: BaseUrlService, private storageService: StorageService) {
     this.url = `${this.baseUrlSvr.getOrigin()}${environment.accountPath}`;
+    this.url1 = this.url;
     this.url += 'api/';
     // this.url += 'compte/';
   }
@@ -21,6 +24,11 @@ export class CompteService {
   public liste(): Observable<Compte[]> {
     // return this.http.get<Compte[]>(this.url + "all");
     return this.http.get<Compte[]>(this.url + "comptes");
+  }
+
+  public findByRole(role: Role): Observable<Compte[]> {
+    // return this.http.get<Compte[]>(this.url + "all");
+    return this.http.get<Compte[]>(this.url + "compte-role/" + role.valueOf());
   }
 
   public listeCandidat(): Observable<Compte[]> {
@@ -38,7 +46,7 @@ export class CompteService {
   }
 
   public create(compte: Compte): Observable<Compte> {
-    return this.http.post<Compte>(this.url + "compte", compte);
+    return this.http.post<Compte>(this.url1 + "register", compte);
     // return this.http.post<Compte>(this.url + "create", compte);
   }
 
@@ -48,6 +56,6 @@ export class CompteService {
   }
 
   public delete(idCompte: number): Observable<void> {
-    return this.http.delete<void>(this.url + idCompte);
+    return this.http.delete<void>(this.url + 'delete/' + idCompte);
   }
 }

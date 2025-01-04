@@ -1,16 +1,27 @@
 <section class="home-page page-content">
-
-    <section class="accordions-group">
-        <p-accordion class="accordions" [multiple]="true">
-            <p-accordionTab header="Header 1">
-                Content 1
-            </p-accordionTab>
-            <p-accordionTab header="Header 2">
-                Content 2
-            </p-accordionTab>
-            <p-accordionTab header="Header 3">
-                Content 3
-            </p-accordionTab>
-        </p-accordion>
+    <section *ngIf="isAdmin">
+        <app-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [datasetsConcour]="datasetsConcour"
+            [compteARebour]="compteARebour" [nextSession]="nextSession" [labelsConcour]="labelsConcour"
+            [statCandidatures]="statCandidatures" [session]="session"></app-admin-home>
+    </section>
+    <section *ngIf="isComptable">
+        <app-comptable-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [datasetsConcour]="datasetsConcour"
+            [compteARebour]="compteARebour" [nextSession]="nextSession" [labelsConcour]="labelsConcour"
+            [statCandidatures]="statCandidatures" [session]="session"></app-comptable-home>
+    </section>
+    <section *ngIf="isJury">
+        <app-jury-home [datasetsCandidatEntretenuParSite]="datasetsCandidatEntretenuParSite"
+            [compteARebour]="compteARebour" [labelsCandidatEntretenuParSite]="labelsCandidatEntretenuParSite"
+            [datasetsCandidatEntretenuParConcour]="datasetsCandidatEntretenuParConcour" [nextSession]="nextSession"
+            [labelsCandidatEntretenuParConcour]="labelsCandidatEntretenuParConcour"
+            [datasetsCandidatEntretenuParZone]="datasetsCandidatEntretenuParZone"
+            [labelsCandidatEntretenuParZone]="labelsCandidatEntretenuParZone" [statCandidatures]="statCandidatures"
+            [session]="session"></app-jury-home>
+    </section>
+    <section *ngIf="isSuperAdmin">
+        <app-super-admin-home [datasetsSite]="datasetsSite" [labelsSite]="labelsSite" [nextSession]="nextSession"
+            [compteARebour]="compteARebour" [datasetsConcour]="datasetsConcour" [labelsConcour]="labelsConcour"
+            [datasetsZone]="datasetsZone" [labelsZone]="labelsZone" [statCandidatures]="statCandidatures"
+            [session]="session"></app-super-admin-home>
     </section>
 </section>

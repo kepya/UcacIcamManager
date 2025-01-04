@@ -1,0 +1,113 @@
+.add-candidature-page {
+    .input-container {
+        font-size: 1rem;
+        color: #495057;
+        height: 48px !important;
+        background: #ffffff;
+        padding: 0.75rem 0.75rem;
+        border: 1px solid #ced4da;
+        transition:
+            background-color 0.2s,
+            color 0.2s,
+            border-color 0.2s,
+            box-shadow 0.2s;
+        appearance: none;
+        border-radius: 6px;
+    }
+
+    .p-autocomplete {
+        width: 100%;
+    }
+
+    .p-component {
+        width: 100%;
+    }
+
+    .p-dropdown-item {
+        text-wrap: wrap !important;
+    }
+
+    .form-header {
+        margin-top: 48%;
+        gap: 5px;
+        text-align: center;
+        font-size: 0.9em;
+        .stepIndicator {
+            padding-left: 2rem;
+            position: relative;
+            flex: 1;
+            padding-bottom: 30px;
+
+            &:first-child {
+                &::after {
+                    border-top-left-radius: 0.5rem;
+                    border-top-right-radius: 0.5rem;
+                }
+            }
+
+            &:last-child {
+                &::after {
+                    border-bottom-left-radius: 0.5rem;
+                    border-bottom-right-radius: 0.5rem;
+                }
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 58%;
+                transform: translate(-50%);
+                z-index: 9;
+                width: 20px;
+                height: 20px;
+                background-color: var(--clr-tertiary-400);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                left: -1.7em;
+                bottom: 1em;
+                width: 3.2em;
+                height: 100%;
+                background-color: #d9d9d9;
+            }
+        }
+
+        .active {
+            font-weight: 600;
+            &::before {
+                background-color: #df650d;
+                // border: 3px solid #d5f9f6;✅
+            }
+        }
+
+        .finish {
+            font-weight: 600;
+            color: black;
+            &::before {
+                content: "✔";
+                color: beige;
+                background-color: #11df32;
+                // border: 3px solid #b7e1dd;
+            }
+        }
+    }
+
+    .inscription-summary-container {
+        .block-part {
+            .informations {
+                margin-top: -10px;
+            }
+        }
+
+        .download_link:hover {
+            text-decoration: underline;
+        }
+    }
+}

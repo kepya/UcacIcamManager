@@ -1,12 +1,11 @@
-#stage 1
-FROM node:latest as node
-# FROM node:alpine as node
+FROM node:latest as build
 WORKDIR /app
-COPY . .
+COPY ./package.json /app/
 RUN npm install --legacy-peer-deps
-RUN npm run build --prod
+COPY . /app/
+RUN npm run build
 
-#stage 2
-FROM nginx:alpine
-# FROM nginx:stable-alpine
-COPY --from=node /app/dist/admin-ucac-dashboard /usr/share/nginx/html
+FROM nginx:latest AS client-browser
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist/admin-ucac-dashboard/ /usr/share/nginx/html
+EXPOSE 80

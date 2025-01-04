@@ -5,6 +5,8 @@ import { CentreExamenPageRoutingModule } from './centre-examen-page-routing.modu
 import { CentreExamenPageComponent } from './centre-examen-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CentreExamenPageRoutingModule,
     FormsModule,
     HttpClientModule,
+    ConfirmPopupModule,
+    ToastModule,
     ReactiveFormsModule
   ]
 })

@@ -4,5 +4,9 @@ export class Session {
     date_debut!: Date;
     date_limite!: Date;
     date_examen!: Date;
-    statut!: boolean;
+
+    date_debut_entretien?: Date;
+    date_fin_entretien?: Date;
+
+    statut!: string;
 }

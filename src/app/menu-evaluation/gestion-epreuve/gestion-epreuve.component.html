@@ -1,0 +1,197 @@
+<section class="note-page page-content" *ngIf="!isFormEpreuve else addEpreuve">
+    <h1 class="page-title"> Concours <i class="pi pi-angle-right"></i> Epreuves concours</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Liste des epreuves</h3>
+            <button class="btn btn-danger ml-1 mr-1" (click)="viewEpreuve('add')">
+                Ajouter une épreuve
+            </button>
+        </div>
+        <div class="line"></div>
+
+        <div class="table-content">
+            <div class="search-content">
+                <div class="select-page-size">
+                    <span>Voir</span>
+                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>entrées</span>
+                </div>
+            </div>
+            <div class="row">
+                <table id="table">
+                    <tr>
+                        <th>
+                            <div>
+                                Session <i class="icon-sort {{this.sortProperty == 'session' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'session'}" (click)="sort('session')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Matiere <i class="icon-sort {{this.sortProperty == 'matiere' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'matiere'}" (click)="sort('matiere')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                Path <i class="icon-sort {{this.sortProperty == 'path' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'path'}" (click)="sort('path')"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                #
+                            </div>
+                        </th>
+                    </tr>
+                    <tr *ngFor="let epreuve of epreuves">
+                        <td>{{epreuve?.session?.nom}}</td>
+                        <td>{{epreuve?.matiere?.intitule}}</td>
+                        <td>{{epreuve?.path}}</td>
+                        <td>
+                            <button class="btn" (click)="showUpdateEpreuveView(epreuve)">
+                                <div>
+                                    <i class="fa-solid fa-pencil"></i>
+                                </div>
+                                <span>
+                                    Modifier
+                                </span>
+                            </button>
+                            <button class="btn mt-2" (click)="deleteEpreuve(epreuve.id || 0)">
+                                <div>
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <span>
+                                    Supprimer
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="searchValue && epreuves.length === 0">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune epreuve trouvées avec ces elements de recherche
+                            </span></td>
+                    </tr>
+                    <tr *ngIf="!searchValue && epreuves.length === 0">
+                        <td colspan="7"><span class="vh-center">
+                                Aucune epreuve presentent dans la base
+                            </span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pagination_content">
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{epreuves.length}} entrées affichées</span>
+                <ul class="pagination">
+                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
+                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
+                            (click)="previous()">Précedent</a>
+                    </li>
+                    <li class="paginate_button active">
+                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
+                    </li>
+                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
+                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
+                            (click)="next()">Suivant</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<ng-template #addEpreuve>
+    <section class="Note-page page-content">
+        <h1 class="page-title"><img (click)="viewEpreuve()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
+                srcset=""> Epreuve d'examen <i class="pi pi-angle-right"></i>{{epreuve?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une epreuve</h1>
+        <div class="card">
+            <div class="header">
+                <h3 class="title">{{epreuve?.id || 0 > 0 ? 'Modifier': 'Ajouter'}} une epreuve
+                </h3>
+            </div>
+            <div class="line"></div>
+            <form class="form" [formGroup]="formEpreuve" (ngSubmit)="createOrUpdateEpreuve()">
+                <div class="header">
+                    Veullez remplir les champs suivants
+                    <div class="line"></div>
+                </div>
+                <div class="main">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Session *</label>
+                            <select formControlName="sessionId" [ngClass]="{required: formEpreuve.get('sessionId')!.invalid}">
+                                <option value="">Session</option>
+                                <option [value]="session.id" *ngFor="let session of sessions">{{session.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="alert" *ngIf="formEpreuveControl['sessionId'].errors">
+                            <div *ngIf="formEpreuveControl['sessionId'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Matière *</label>
+                            <select formControlName="matiereId" [ngClass]="{required: formEpreuve.get('matiereId')!.invalid}">
+                                <option value="">Matière</option>
+                                <option [value]="matter.id" *ngFor="let matter of matters">{{matter.intitule}}</option>
+                            </select>
+                        </div>
+                        <div class="alert" *ngIf="formEpreuveControl['matiereId'].errors">
+                            <div *ngIf="formEpreuveControl['matiereId'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Fichier *</label>
+                            <input
+                    formControlName="file"
+                    type="file"
+                    id="file"
+                    required
+                    class="form-control form-control-lg"
+                    (change)="onFileChanged($event)"
+                    accept=".pdf, .doc, .xlsx, .docx"
+                    name="file" 
+                  
+                  />
+                        </div>
+                        <div class="alert" *ngIf="formEpreuveControl['file'].errors">
+                            <div *ngIf="formEpreuveControl['file'].errors['required']">
+                                Veuillez s'il vous plait entrer le
+                                fichier
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="line"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-info" [disabled]="formEpreuve.invalid" (click)="createOrUpdateEpreuve()" type="button">
+                            Soumettre
+                        </button>
+
+                        <button class="btn btn-danger" (click)="formEpreuve.reset()">
+                            Renitialiser
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </section>
+</ng-template>

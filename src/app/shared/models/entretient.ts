@@ -2,15 +2,16 @@ import { Compte } from "./compte";
 
 export class Disponibility {
     id?: number;
+    sessionid!: number;
     date_disponibilite!: Date;
     debut_disponibilite!: Date;
     fin_disponibilite!: Date;
-    compte!: Compte;
 }
 
-export class Entretien {
+export class CompteDisponibilite {
+    compteId!: number;
+    disponibilite_id!: number;
     id?: number;
-    interviewer!: string;
-    disponibility!: Disponibility;
-    centre!: string;
+    compte?: Compte;
+    disponibilite?: Disponibility
 }

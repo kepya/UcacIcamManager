@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { JuryMemberRoutingModule } from './jury-member-routing.module';
 import { JuryMemberComponent } from './jury-member.component';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -14,6 +16,8 @@ import { JuryMemberComponent } from './jury-member.component';
     CommonModule,
     JuryMemberRoutingModule,
     FormsModule,
+    ConfirmPopupModule,
+    ToastModule,
     ReactiveFormsModule
   ]
 })

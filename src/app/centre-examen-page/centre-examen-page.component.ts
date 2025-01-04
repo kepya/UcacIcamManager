@@ -5,7 +5,10 @@ import { Centre } from '../shared/models/centre';
 import { Site } from '../shared/models/site';
 import { CentreExamenService } from './centre-examen.service';
 import { SiteService } from 'src/app/shared/services/site.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Compte } from '../shared/models/compte';
+import { StorageService } from '../shared/services/storage.service';
+import { Role } from '../shared/enums/role.enum';
 
 @Component({
   selector: 'app-centre-examen-page',
@@ -30,16 +33,16 @@ export class CentreExamenPageComponent implements OnInit {
   collectionSize!: number;
   nbrOfPage!: number;
   isFormCentre!: boolean;
+  compte!: Compte;
 
   formCentre: FormGroup = new FormGroup({
     nom: new FormControl('', [Validators.required]),
     contacts: new FormControl('', [Validators.required]),
-    site_id: new FormControl('', [Validators.required]),
-    ville: new FormControl('', []),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    siteid: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.email]),
   });
 
-  constructor(private centreSrv: CentreExamenService, private siteSrv: SiteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService, private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -47,8 +50,32 @@ export class CentreExamenPageComponent implements OnInit {
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
-    this.getCentres();
-    this.getSites();
+
+    this.compte = this.storageService.getUserConnected();
+    if (this.compte.role == Role.SUPER_ADMIN) {
+      this.getCentres();
+      this.getSites();
+    } else {
+      this.getCentreByZone(this.compte.idZone);
+      this.getSitesByZone(this.compte.idZone);
+    }
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteCentre(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, centres: Centre[] = this.centres) {
@@ -161,11 +188,12 @@ export class CentreExamenPageComponent implements OnInit {
 
   checkSite(event: any) {
     if (event.target.value == "") {
-      alert(this.formCentre.get('site_id')?.value);;
+      alert(this.formCentre.get('siteid')?.value);;
     }
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     this.getCentres();
   }
 
@@ -223,14 +251,53 @@ export class CentreExamenPageComponent implements OnInit {
     });
   }
 
+  getCentreByZone(idZone: number) {
+    this.centreSrv.allByZone(idZone).subscribe({
+      next: (value: Centre[]) => {
+        value = this.sort('nom', value);
+        this.searchCentres = [];
+        this.searchCentres = value;
+        this.centres = value
+          .map((mis, i) => ({ id: i + 1, ...mis }))
+          .slice(
+            (this.page - 1) * this.pageSize,
+            (this.page - 1) * this.pageSize + this.pageSize
+          );
+        this.collectionSize = value.length;
+        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
   viewCentre(view: string = 'data') {
     if (view === 'data') {
       this.isFormCentre = false;
+      this.centre = new Centre();
     } else {
       this.isFormCentre = true;
-      this.getSites();
+      this.compte = this.storageService.getUserConnected();
+      if (this.compte.role == Role.SUPER_ADMIN) {
+        this.getSites();
+      } else {
+        this.getSitesByZone(this.compte.idZone);
+      }
     }
   }
+
+  getSitesByZone(idZone: number) {
+    this.siteSrv.allByZone(idZone).subscribe({
+      next: (value: Site[]) => {
+        this.sites = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
 
   getSites() {
     this.siteSrv.liste().subscribe({
@@ -246,11 +313,12 @@ export class CentreExamenPageComponent implements OnInit {
   updateCentre(centre: Centre) {
     this.isFormCentre = true;
     this.centre = centre;
-    this.formCentre.setValue({
+    this.formCentre.patchValue({
       nom: centre.nom,
+      email: centre.email,
       contacts: centre.contacts,
       ville: centre.ville,
-      siteid: centre.site_id
+      siteid: centre.siteid
     });
   }
 
@@ -259,8 +327,8 @@ export class CentreExamenPageComponent implements OnInit {
     let site: Site = new Site();
     if (this.centre?.id || 0 > 0) {
       let d = { ...this.formCentre.value };
-      delete d.site_id;
-      d = { ...d, site_id: parseInt(this.formCentre.value.site_id, 10) };
+      delete d.siteid;
+      d = { ...d, siteid: parseInt(this.formCentre.value.siteid, 10) };
 
       this.centreSrv.update({ ...d, site, id: this.centre.id }).subscribe({
         next: (value) => {
@@ -279,8 +347,8 @@ export class CentreExamenPageComponent implements OnInit {
       })
     } else {
       let d = { ...this.formCentre.value };
-      delete d.site_id;
-      d = { ...d, site_id: parseInt(this.formCentre.value.site_id, 10) };
+      delete d.siteid;
+      d = { ...d, siteid: parseInt(this.formCentre.value.siteid, 10) };
 
       this.centreSrv.create(d).subscribe({
         next: (value) => {

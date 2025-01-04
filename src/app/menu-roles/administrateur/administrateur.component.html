@@ -145,15 +145,15 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="">Nom *</label>
-                            <input type="text" formControlName="nom"
-                                [ngClass]="{required: formCompte.get('nom')!.invalid}">
+                            <input type="text" formControlName="name"
+                                [ngClass]="{required: formCompte.get('name')!.invalid}">
                         </div>
-                        <div class="alert" *ngIf="formCompteControl['nom'].errors">
-                            <div *ngIf="formCompteControl['nom'].errors['required']">
+                        <div class="alert" *ngIf="formCompteControl['name'].errors">
+                            <div *ngIf="formCompteControl['name'].errors['required']">
                                 Veuillez s'il vous plait entrer une
                                 valeur
                             </div>
-                            <div *ngIf="formCompteControl['nom'].errors['minlength']">
+                            <div *ngIf="formCompteControl['name'].errors['minlength']">
                                 Nom doit avoir au minimun 4 charactères
                             </div>
                         </div>
@@ -222,8 +222,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
+                    <div class="row" >
                         <div class="form-group">
                             <label for="">Confirmer le mot de passe *</label>
                             <input type="text" formControlName="confirm_password"
@@ -236,7 +235,21 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Zone d'appartenance *</label>
+                            <select formControlName="idZone" [ngClass]="{required: formCompte.get('idZone')!.invalid}">
+                                <option value="">Zone d'appartenance</option>
+                                <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="alert" *ngIf="formCompteControl['idZone'].errors">
+                            <div *ngIf="formCompteControl['idZone'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="footer">
@@ -246,7 +259,7 @@
                             Soumettre
                         </button>
 
-                        <button class="btn btn-danger" (click)="formCompte.reset()">
+                        <button class="btn btn-danger" type="reset" (click)="formCompte.reset()">
                             Renitialiser
                         </button>
                     </div>
@@ -257,3 +270,5 @@
         </div>
     </section>
 </ng-template>
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

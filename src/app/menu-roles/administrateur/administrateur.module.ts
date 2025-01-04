@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { AdministrateurRoutingModule } from './administrateur-routing.module';
 import { AdministrateurComponent } from './administrateur.component';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -14,6 +16,8 @@ import { AdministrateurComponent } from './administrateur.component';
     CommonModule,
     AdministrateurRoutingModule,
     FormsModule,
+    ConfirmPopupModule,
+    ToastModule,
     ReactiveFormsModule
   ]
 })

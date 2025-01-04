@@ -1,0 +1,29 @@
+<section class="border-round-md shadow-3 m-3 p-5 md:h-30rem bg-gray-100">
+  <p class="text-xl">Progression de remplissage</p>
+
+  <div class="form-header">
+    <ul class="list-none text-left ml-4">
+      <li class="stepIndicator active" [ngClass]="{ finish: step > 1 }">
+        Informations personnelles
+      </li>
+      <li
+        class="stepIndicator"
+        [ngClass]="{ active: step == 2, finish: step > 2 }"
+      >
+        Informations complémentaires
+      </li>
+      <li
+        class="stepIndicator"
+        [ngClass]="{ active: step == 3, finish: step > 3 }"
+      >
+        Concours
+      </li>
+      <li
+        class="stepIndicator"
+        [ngClass]="{ active: step == 4, finish: step > 4 }"
+      >
+        Paiement
+      </li>
+    </ul>
+  </div>
+</section>

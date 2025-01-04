@@ -12,9 +12,10 @@ export class BaseUrlService {
 
     this.origin =
       // 'http://' + window.location.hostname + ':' + environment.port + '/';
-      'http://' + window.location.hostname;
-    //'http://51.178.136.105';
-  }
+      // 'http://' + window.location.hostname;
+      'http://51.178.136.105';
+      //'https://inscription.ucac-icam.com';
+ }
 
   getOrigin() {
     return this.origin;

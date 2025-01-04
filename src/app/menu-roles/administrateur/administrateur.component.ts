@@ -3,7 +3,9 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { Zone } from "src/app/shared/models/zone";
 
 @Component({
   selector: 'app-administrateur',
@@ -13,6 +15,7 @@ import { MessageService } from 'primeng/api';
 })
 export class AdministrateurComponent implements OnInit {
 
+  zones: Zone[] = [];
   comptes: Compte[] = [];
   compte!: Compte;
   searchComptes: Compte[] = [];
@@ -30,6 +33,7 @@ export class AdministrateurComponent implements OnInit {
 
   formCompte: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
+    idZone: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -37,7 +41,7 @@ export class AdministrateurComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private compteSrv: CompteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService,private zoneSrv: ZoneService, private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.sortProperty = "nom";
@@ -46,6 +50,24 @@ export class AdministrateurComponent implements OnInit {
     this.pageSize = 10;
     this.page = 1;
     this.getComptes();
+    this.getZones();
+  }
+
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteCompte(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, comptes: Compte[] = this.comptes) {
@@ -158,6 +180,7 @@ export class AdministrateurComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
+    this.page = 1;
     this.getComptes();
   }
 
@@ -194,18 +217,25 @@ export class AdministrateurComponent implements OnInit {
     this.getComptes();
   }
 
+  getZones() {
+    this.zoneSrv.liste().subscribe({
+      next: (value: Zone[]) => {
+        this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+
   getComptes() {
-    this.compteSrv.liste().subscribe({
-      next: (value: Compte[]) => {
-        value = this.sort('nom', value);
+    this.compteSrv.findByRole(Role.ADMIN).subscribe({
+      next: (response: Compte[]) => {
+        let value = this.sort('nom', response);
         this.searchComptes = [];
         this.searchComptes = value;
-        this.comptes = value
-          .map((mis, i) => ({ id: i + 1, ...mis }))
-          .slice(
-            (this.page - 1) * this.pageSize,
-            (this.page - 1) * this.pageSize + this.pageSize
-          );
+        this.comptes = value;
         this.collectionSize = value.length;
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
@@ -217,6 +247,7 @@ export class AdministrateurComponent implements OnInit {
 
   viewCompte(view: string = 'data') {
     if (view === 'data') {
+      this.compte = new Compte();
       this.isFormCompte = false;
     } else {
       this.isFormCompte = true;
@@ -226,8 +257,20 @@ export class AdministrateurComponent implements OnInit {
   updateCompte(compte: Compte) {
     this.isFormCompte = true;
     this.compte = compte;
-    this.formCompte.setValue({
+
+    this.formCompte.get("password")?.removeValidators([Validators.required]);
+    this.formCompte.get("password")?.updateValueAndValidity();
+    this.formCompte.get("confirm_password")?.removeValidators([Validators.required]);
+    this.formCompte.get("confirm_password")?.updateValueAndValidity();
+    this.formCompte.updateValueAndValidity();
+
+
+    console.log('compte: ', compte);
+    
+    this.formCompte.patchValue({
       nom: compte.name,
+      name: compte.name,
+      idZone: compte.idZone,
       prenom: compte.prenom,
       telephone: compte.telephone,
       email: compte.email
@@ -236,7 +279,7 @@ export class AdministrateurComponent implements OnInit {
 
   createOrUpdateCompte() {
     if (this.compte?.id || 0 > 0) {
-      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id }).subscribe({
+      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id, role: Role.ADMIN }).subscribe({
         next: (value) => {
           this.getComptes();
           this.compte = new Compte();
@@ -246,7 +289,7 @@ export class AdministrateurComponent implements OnInit {
         },
         error: (err) => {
           console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail:  err.error });
         }
       })
     } else {
@@ -255,13 +298,13 @@ export class AdministrateurComponent implements OnInit {
           this.getComptes();
           this.compte = new Compte();
           this.formCompte.reset();
-          this.messageService.add({ severity: 'success', summary: 'Création de compte jury', detail: 'Création effectuée avec success' });
+          this.messageService.add({ severity: 'success', summary: 'Création de compte administrateur', detail: 'Création effectuée avec success' });
 
           this.isFormCompte = false;
         },
         error: (err) => {
           console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail:  err.error });
         }
       })
     }

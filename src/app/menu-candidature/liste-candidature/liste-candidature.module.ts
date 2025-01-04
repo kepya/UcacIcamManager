@@ -5,7 +5,9 @@ import { ListeCandidatureRoutingModule } from './liste-candidature-routing.modul
 import { ListeCandidatureComponent } from './liste-candidature.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { CalendarModule } from 'primeng/calendar';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ListeCandidatureRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CalendarModule,
+    SharedModule,
+    ButtonModule,
   ]
 })
 export class ListeCandidatureModule { }

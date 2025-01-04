@@ -1,9 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Note } from 'src/app/shared/models/note';
+import { Router } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CentreExamenService } from 'src/app/centre-examen-page/centre-examen.service';
+import { SessionExamenService } from 'src/app/session-examen-page/session-examen.service';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { Candidature, Compte } from 'src/app/shared/models/compte';
+import { Entretien, Note, NoteInterviewerResponse, NoteParcours, NoteParcoursJury, NoteResponse } from 'src/app/shared/models/note';
+import { Session } from 'src/app/shared/models/session';
 import { Site } from 'src/app/shared/models/site';
+import { CommonService } from 'src/app/shared/services/common.service';
 import { NoteService } from 'src/app/shared/services/note.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { ZoneService } from 'src/app/shared/services/zone.service';
 import { SiteService } from 'src/app/site-page/site.service';
+import { Zone } from 'src/app/shared/models/zone';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-note-entretien',
@@ -12,225 +24,66 @@ import { SiteService } from 'src/app/site-page/site.service';
   ]
 })
 export class NoteEntretienComponent implements OnInit {
+  loading: boolean = false;
+  visible: boolean = false;
 
-  notes: Note[] = [];
-  note!: Note;
-  sites: Site[] = [];
-  searchNotes: Note[] = [];
-  loading: boolean = true;
-  sortIcon!: string;
-  sortProperty!: string;
-  isAsc!: boolean;
-  downUpIcon!: string;
-  searchValue!: string;
-  page!: number;
-  pageSize!: number;
-  collectionSize!: number;
-  nbrOfPage!: number;
-  isFormNote!: boolean;
+  notes: {
+    nom: string,
+    idCandidature: number,
+    prenom: string,
+    centre: string,
+    nationalite: string,
+    has_exchange: boolean,
+    noteParcours: Map<number, NoteParcours[]>,
+    juries: Compte[]
+  }[] = [];
 
-  formNote: FormGroup = new FormGroup({
-    nom: new FormControl('', [Validators.required]),
-    prenom: new FormControl('', [Validators.required]),
-    horaire: new FormControl('', [Validators.required]),
-    centre: new FormControl('', [Validators.required]),
-    note: new FormControl(0, [Validators.required]),
-  });
+  entretiens: Entretien[] = [];
 
-  constructor(private noteSrv: NoteService, private siteSrv: SiteService) { }
+  compte!: Compte;
+  session!: Session;
+  statuses!: any[];
+
+  zones!: Zone[];
+  zone!: Zone;
+
+  selectedEntretien: any;
+  isJury: boolean = false;
+  showNote: boolean = false;
+  isSuperAdmin: boolean = false;
+  isComptable: boolean = false;
+  isAdmin: boolean = false;
+
+  constructor(private centreSrv: CentreExamenService, private storageService: StorageService, private zoneService: ZoneService,
+    private messageService: MessageService, public commonService: CommonService, private confirmationService: ConfirmationService,
+    private noteService: NoteService, private router: Router,
+    private sessionSrv: SessionExamenService) { }
 
   ngOnInit(): void {
-    this.sortProperty = "horaire";
-    this.sortIcon = "fa-solid fa-arrow-down-short-wide";
-    this.downUpIcon = "pi pi-sort-alt";
-    this.pageSize = 10;
-    this.page = 1;
+    this.compte = this.storageService.getUserConnected();
+    this.isJury = this.compte.role == Role.JURY ? true : false;
+    this.isAdmin = this.compte.role == Role.ADMIN ? true : false;
+    this.isComptable = this.compte.role == Role.COMPTABLE ? true : false;
+    this.isSuperAdmin = this.compte.role == Role.SUPER_ADMIN ? true : false;
+
+    this.statuses = this.commonService.getStatuses();
+    this.compte = this.storageService.getUserConnected();
     this.getNotes();
+    this.getActiveSession();
   }
 
-  sort(property: string, notes: Note[] = this.notes) {
-    this.sortProperty = property;
-    this.isAsc = !this.isAsc;
-    this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
-
-    if (property === 'horaire') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.horaire > b.horaire) {
-            return 1;
-          }
-          if (b.horaire > a.horaire) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.horaire > b.horaire) {
-            return -1;
-          }
-          if (b.horaire > a.horaire) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
-    if (property === 'nom') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.compte.name > b.compte.name) {
-            return 1;
-          }
-          if (b.compte.name > a.compte.name) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.compte.name > b.compte.name) {
-            return -1;
-          }
-          if (b.compte.name > a.compte.name) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-    if (property === 'prenom') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.compte.prenom > b.compte.prenom) {
-            return 1;
-          }
-          if (b.compte.prenom > a.compte.prenom) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.compte.prenom > b.compte.prenom) {
-            return -1;
-          }
-          if (b.compte.prenom > a.compte.prenom) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
-    if (property === 'centre') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.centre > b.centre) {
-            return 1;
-          }
-          if (b.centre > a.centre) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.centre > b.centre) {
-            return -1;
-          }
-          if (b.centre > a.centre) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
-    if (property === 'note') {
-      if (this.isAsc) {
-        notes.sort((a, b) => {
-          if (a.note > b.note) {
-            return 1;
-          }
-          if (b.note > a.note) {
-            return -1;
-          }
-          return 0;
-        });
-      } else {
-        notes.sort((a, b) => {
-          if (a.note > b.note) {
-            return -1;
-          }
-          if (b.note > a.note) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-    }
-
-    return notes;
+  getActiveSession() {
+    this.sessionSrv.getActive().subscribe({
+      next: (value) => {
+        this.session = value;
+      },
+    })
   }
 
-  get formNoteControl(): { [key: string]: AbstractControl } {
-    return this.formNote.controls;
-  }
-
-  handlePageSize(event: any) {
-    ;
-    this.getNotes();
-  }
-
-  handleSearchValue(event: any) {
-    this.searchValue = event.target.value;
-
-    if (this.searchValue !== '') {
-      let names = this.searchNotes.map(note => note.compte.name);
-      let name = names.filter(name => name.toLowerCase().indexOf(this.searchValue.toLowerCase() + '') > -1);
-
-      if (name.length === 0) {
-        this.notes = [];
-      } else {
-        let notes: Note[] = [];
-        for (let index = 0; index < name.length; index++) {
-          const element = name[index];
-          let z = this.searchNotes.filter(note => note.compte.name.indexOf('' + element) > -1);
-          notes.push(...z);
-        }
-        this.notes = notes;
-      }
-    } else {
-      this.notes = this.searchNotes;
-    }
-  }
-
-  next() {
-    this.page++;
-    this.getNotes();
-  }
-
-  previous() {
-    this.page--;
-    this.getNotes();
-  }
-
-  getNotes() {
-    this.noteSrv.liste().subscribe({
-      next: (value: Note[]) => {
-        value = this.sort('nom', value);
-        this.searchNotes = [];
-        this.searchNotes = value;
-        this.notes = value
-          .map((mis, i) => ({ id: i + 1, ...mis }))
-          .slice(
-            (this.page - 1) * this.pageSize,
-            (this.page - 1) * this.pageSize + this.pageSize
-          );
-        this.collectionSize = value.length;
-        this.nbrOfPage = Math.ceil(value.length / this.pageSize);
+  getZones() {
+    this.zoneService.liste().subscribe({
+      next: (value: Zone[]) => {
+        this.zones = value;
       },
       error: (err) => {
         console.log('error: ', err);
@@ -238,61 +91,146 @@ export class NoteEntretienComponent implements OnInit {
     });
   }
 
-  viewNote(view: string = 'data') {
-    if (view === 'data') {
-      this.isFormNote = false;
-    } else {
-      this.isFormNote = true;
-    }
-  }
+  getNotes() {
+    this.noteService.allNotesEntretien().subscribe({
+      next: (result: NoteInterviewerResponse[]) => {
+        // this.notes = result.map(r => {
+        //   r.noteParcoursJuryList.map(n => n.notes.map(no => no.jury)).flatMap(r => r.)
 
-  updateNote(note: Note) {
-    this.isFormNote = true;
-    this.note = note;
-    this.formNote.setValue({
-      nom: note.compte.name,
-      prenom: note.compte.prenom,
-      note: note.note,
-      horaire: note.horaire,
-      centre: note.centre,
+        //   return {
+        //     nom: r.candidature.compte.name,
+        //     idCandidature: r.candidature.id || 0,
+        //     prenom: r.candidature.compte.prenom,
+        //     centre: r.candidature.centre,
+        //     nationalite: r.candidature.nationalite,
+        //     has_exchange: r.candidature.has_exchange || false,
+        //     noteParcours: r.noteParcoursJuryList
+        //   };
+        // });
+        
+        this.notes = result.map(r => ({
+          nom: r.candidature.compte.name,
+          idCandidature: r.candidature.id || 0,
+          prenom: r.candidature.compte.prenom,
+          centre: r.candidature.centre,
+          nationalite: r.candidature.nationalite,
+          has_exchange: r.candidature.has_exchange || false,
+          noteParcours: new Map(),
+          juries: []
+        }));
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
     });
   }
 
-  createOrUpdateNote() {
+  getEntretiens() {
+    this.noteService.liste().subscribe({
+      next: (result: NoteResponse[]) => {
+        let entretiens: Entretien[] = result.map((v) => {
+          return {
+            id: v!.id ?? 0,
+            candidat: v.candidature.compte?.name + ' ' + v.candidature.compte?.prenom,
+            commentaires: v.commentaires,
+            done: v.done,
+            cycle: v.candidature!.cycle.toString(),
+            centre: v.candidature?.centre || '',
+            jury: v.compte?.name + ' ' + v.compte?.prenom,
+            candidature: v.candidature as unknown as Candidature,
+            debut_entretien: this.commonService.formatDate1(new Date(v.debut_entretien)),
+            fin_entretien: this.commonService.formatDate1(new Date(v.fin_entretien)),
+          };
+        });
 
-    let site: Site = new Site();
-    if (this.note?.id || 0 > 0) {
-      let d = { ...this.formNote.value };
-      delete d.note;
-      d = { ...d, note: parseInt(this.formNote.value.note, 10) };
+        entretiens.sort((a, b) => {
+          if (a.debut_entretien > b.debut_entretien) {
+            return 1;
+          }
+          if (b.debut_entretien > a.debut_entretien) {
+            return -1;
+          }
+          return 0;
+        });
 
-      this.noteSrv.update({ ...d, site, id: this.note.id }).subscribe({
-        next: (value) => {
-          this.getNotes();
-          this.note = new Note();
-          this.formNote.reset();
-          this.isFormNote = false;
-        },
-        error: (err) => {
-          console.log("Error: ", err);
+        if (this.compte.role == Role.JURY) {
+          this.entretiens = entretiens.filter(e => e.jury == (this.compte.name + ' ' + this.compte.prenom))
+        } else {
+          this.entretiens = entretiens;
         }
-      })
-    } else {
-      let d = { ...this.formNote.value };
-      delete d.note;
-      d = { ...d, note: parseInt(this.formNote.value.note, 10) };
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
 
-      this.noteSrv.create(d).subscribe({
-        next: (value) => {
-          this.getNotes();
-          this.note = new Note();
-          this.formNote.reset();
-          this.isFormNote = false;
-        },
-        error: (err) => {
-          console.log("Error: ", err);
-        }
-      })
-    }
+  showUpdateNoteModal(note: {
+    nom: string,
+    idCandidature: number,
+    prenom: string,
+    centre: string,
+    nationalite: string,
+    has_exchange: boolean,
+    noteParcours: NoteParcoursJury[]
+  }) {
+
+  }
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteEntretien(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
+  }
+
+  deleteEntretien(id: number) {
+    this.noteService.delete(id || 0).subscribe({
+      next: (value) => {
+        this.getEntretiens();
+        this.messageService.add({ severity: 'success', summary: "Suppression de l'entretien", detail: 'Suppression effectuée avec success' });
+      },
+      error: (err) => {
+        console.log("Error: ", err);
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+      }
+    })
+  }
+
+  getEventValue(event: any) {
+    return event.target != null ? event.target.value : '';
+  }
+
+  goToNoteSumaryPage(id: string) {
+    this.router.navigate(['/note_summary/' + id]);
+  }
+
+
+  showDialog() {
+    this.visible = true;
+  }
+
+  getCriteria(data: {
+    cycle: string,
+    formation: string
+  }) {
+    this.visible = false;
+    this.noteService.downloadNoteEntretienUrlFile(data.cycle, data.formation).subscribe({
+      next: (value) => {
+        saveAs(value, 'note_entretien_' + data.cycle + '_cycle_' + data.formation + '.xlsx');
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
   }
 }

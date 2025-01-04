@@ -3,7 +3,9 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Role } from 'src/app/shared/enums/role.enum';
 import { Compte } from 'src/app/shared/models/compte';
 import { CompteService } from 'src/app/shared/services/compte.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ZoneService } from 'src/app/shared/services/zone.service';
+import { Zone } from "src/app/shared/models/zone";
 
 @Component({
   selector: 'app-jury-member',
@@ -12,7 +14,7 @@ import { MessageService } from 'primeng/api';
   ]
 })
 export class JuryMemberComponent implements OnInit {
-
+  zones: Zone[] = [];
   comptes: Compte[] = [];
   compte!: Compte;
   searchComptes: Compte[] = [];
@@ -29,23 +31,52 @@ export class JuryMemberComponent implements OnInit {
   isFormCompte!: boolean;
 
   formCompte: FormGroup = new FormGroup({
+    idZone: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
-    nom: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     telephone: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     confirm_password: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email])
   });
 
-  constructor(private compteSrv: CompteService, private messageService: MessageService) { }
+  constructor(private confirmationService: ConfirmationService,private zoneSrv: ZoneService, private compteSrv: CompteService, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.sortProperty = "nom";
+    this.sortProperty = "name";
     this.sortIcon = "fa-solid fa-arrow-down-short-wide";
     this.downUpIcon = "pi pi-sort-alt";
     this.pageSize = 10;
     this.page = 1;
     this.getComptes();
+    this.getZones();
+  }
+
+  getZones() {
+    this.zoneSrv.liste().subscribe({
+      next: (value: Zone[]) => {
+        this.zones = value;
+      },
+      error: (err) => {
+        console.log('error: ', err);
+      }
+    });
+  }
+
+  confirm(event: Event, id: number) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Êtes vous sures de vouloir continuer ?',
+      icon: 'pi pi-question',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => {
+        this.deleteCompte(id)
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Non', detail: 'vous avez annulé la suppresion' });
+      }
+    });
   }
 
   sort(property: string, comptes: Compte[] = this.comptes) {
@@ -54,7 +85,7 @@ export class JuryMemberComponent implements OnInit {
     this.isAsc = !this.isAsc;
     this.sortIcon = this.isAsc ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short';
 
-    if (property === 'nom') {
+    if (property === 'name') {
       if (this.isAsc) {
         comptes.sort((a, b) => {
           if (a.name > b.name) {
@@ -158,7 +189,7 @@ export class JuryMemberComponent implements OnInit {
   }
 
   handlePageSize(event: any) {
-    ;
+    this.page = 1;
     this.getComptes();
   }
 
@@ -196,17 +227,12 @@ export class JuryMemberComponent implements OnInit {
   }
 
   getComptes() {
-    this.compteSrv.liste().subscribe({
-      next: (value: Compte[]) => {
-        value = this.sort('nom', value);
+    this.compteSrv.findByRole(Role.JURY).subscribe({
+      next: (response: Compte[]) => {
+        let value = this.sort('name', response);
         this.searchComptes = [];
         this.searchComptes = value;
-        this.comptes = value
-          .map((mis, i) => ({ id: i + 1, ...mis }))
-          .slice(
-            (this.page - 1) * this.pageSize,
-            (this.page - 1) * this.pageSize + this.pageSize
-          );
+        this.comptes = value;
         this.collectionSize = value.length;
         this.nbrOfPage = Math.ceil(value.length / this.pageSize);
       },
@@ -218,6 +244,7 @@ export class JuryMemberComponent implements OnInit {
 
   viewCompte(view: string = 'data') {
     if (view === 'data') {
+      this.compte = new Compte();
       this.isFormCompte = false;
     } else {
       this.isFormCompte = true;
@@ -227,9 +254,10 @@ export class JuryMemberComponent implements OnInit {
   updateCompte(compte: Compte) {
     this.isFormCompte = true;
     this.compte = compte;
-    this.formCompte.setValue({
-      nom: compte.name,
+    this.formCompte.patchValue({
+      name: compte.name,
       prenom: compte.prenom,
+      idZone: compte.idZone,
       telephone: compte.telephone,
       email: compte.email
     })
@@ -237,7 +265,7 @@ export class JuryMemberComponent implements OnInit {
 
   createOrUpdateCompte() {
     if (this.compte?.id || 0 > 0) {
-      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id }).subscribe({
+      this.compteSrv.update({ ...this.formCompte.value, id: this.compte?.id, role: Role.JURY }).subscribe({
         next: (value) => {
           this.getComptes();
           this.compte = new Compte();
@@ -246,8 +274,7 @@ export class JuryMemberComponent implements OnInit {
           this.isFormCompte = false;
         },
         error: (err) => {
-          console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.error });
         }
       })
     } else {
@@ -261,8 +288,7 @@ export class JuryMemberComponent implements OnInit {
           this.isFormCompte = false;
         },
         error: (err) => {
-          console.log("Error: ", err);
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.error });
         }
       })
     }

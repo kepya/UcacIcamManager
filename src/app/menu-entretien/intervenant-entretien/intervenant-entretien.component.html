@@ -1,0 +1,55 @@
+<section class="calendrier-disponibilite-page calendrier-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Horaire de disponibilités</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Veuillez selectionner vos horaires </h3>
+            <p>Au niveau de cette page vous avez la liste des jours d'entretiens et les quart times de disponibilité.
+                Veuillez selectionner le quart time auquel vous serez disponible ces différents jours.</p>
+        </div>
+        <div class="line"></div>
+
+        <div class="calendrier">
+            <table id="table" *ngIf="datesOfDisponibilities.length > 0">
+                <thead>
+                    <th>Horaire</th>
+                    <th *ngFor="let date of datesOfDisponibilities">{{date | date}}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let horaire of horaires; let i = index">
+                        <td>{{horaire}} </td>
+                        <td *ngFor="let date of datesOfDisponibilities">
+                            <div class="v-center" *ngIf="userConnected.role == 'ADMIN'">
+                                <p-multiSelect [options]="juries" [disabled]="disabledMap.get(i) || false"
+                                    (onChange)="selectJury($event, horaire, date)"
+                                    defaultLabel="Selectionner des membres" optionLabel="name"
+                                    display="chip"></p-multiSelect>
+
+                                <button class="ml-2 btn btn-info" (click)="validerJury($event, horaire, date, i)"
+                                    type="button">
+                                    Valider
+                                </button>
+                            </div>
+                            <input *ngIf="userConnected.role != 'ADMIN'" type="checkbox" id="checkbox{{i}}"
+                                (change)="validerJury($event, horaire, date, i)">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <section>
+                Veuillez definir des périodes de disponibilités afin de selectionner les horaires qui vous interessent
+            </section>
+        </div>
+
+        <div class="footer">
+            <div class="line"></div>
+            <div class="btn-group">
+                <button class="btn btn-info" (click)="enregistrerLesHoraires()" type="button">
+                    Soumettre
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</section>

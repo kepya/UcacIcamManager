@@ -1,0 +1,31 @@
+@use "font-face" as *;
+@use "colors" as *;
+@use "icons" as *;
+
+:root {
+  // Colors
+  @each $color, $shades in $colors {
+    @each $shade, $value in $shades {
+      --clr-#{$color}-#{$shade}: #{$value};
+    }
+  }
+
+  // Font Famillies
+  @each $font, $shades in $fonts {
+    @each $shade, $value in $shades {
+      --#{$font}-#{$shade}: "#{$value}";
+    }
+  }
+
+  // Font Sizes
+  --header-height: 4.425rem;
+  --fs-large: 2.5rem;
+  --fs-medium: 1.5rem;
+  --fs-small: 1rem;
+  --fs-nl: 1.7rem;
+  --fz-default: clamp(1rem, 5vw + 1rem, 10rem);
+  --border-raduis: 0.8rem;
+  --border-raduis-medium: 0.5rem;
+  --border-color: #f5f5f7;
+  --bg-color: #222222;
+}

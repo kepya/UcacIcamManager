@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Note } from '../models/note';
+import { Note, NoteInterviewerResponse, NoteRequest, NoteResponse } from '../models/note';
 import { BaseUrlService } from './base-url.service';
 
 @Injectable({
@@ -16,20 +16,48 @@ export class NoteService {
     this.url += 'note/';
   }
 
-  public liste(): Observable<Note[]> {
-    return this.http.get<Note[]>(this.url + "all");
+  public allNotesEntretien(): Observable<NoteInterviewerResponse[]> {
+    return this.http.get<NoteInterviewerResponse[]>(this.url + "allNotesEntretien");
   }
 
-  public getOne(id: number): Observable<Note> {
-    return this.http.get<Note>(this.url + id);
+
+  public downloadPlanningEntretien(): Observable<any> {
+    return this.http.get(this.url + "download/planningEntretiens", {
+      responseType: 'arraybuffer'
+    });
   }
 
-  public create(note: Note): Observable<Note> {
-    return this.http.post<Note>(this.url + "create", note);
+  public downloadPlanningEntretienUrl(): string {
+    return this.url + "download/planningEntretiens";
   }
 
-  public update(note: Note): Observable<Note> {
-    return this.http.patch<Note>(this.url + note?.id, note);
+  public downloadNoteEntretienUrl(cycle: string, parcours: string): string {
+    return this.url + "download/noteEntretiens/" + cycle + "/" + parcours;
+  }
+
+  public downloadNoteEntretienUrlFile(cycle: string, parcours: string) {
+    return this.http.get(this.url + "download/noteEntretiens/" + cycle + "/" + parcours, { responseType: 'blob' });
+  }
+
+
+  public liste(): Observable<NoteResponse[]> {
+    return this.http.get<NoteResponse[]>(this.url + "all");
+  }
+
+  public getOne(id: number): Observable<NoteResponse> {
+    return this.http.get<NoteResponse>(this.url + id);
+  }
+
+  public getByCandidatureId(idCandidat: number): Observable<NoteInterviewerResponse> {
+    return this.http.get<NoteInterviewerResponse>(this.url + 'notesEntretienByCandidature/' + idCandidat);
+  }
+
+  public create(note: NoteRequest): Observable<NoteResponse> {
+    return this.http.post<NoteResponse>(this.url + "create", note);
+  }
+
+  public update(note: Note): Observable<NoteResponse> {
+    return this.http.patch<NoteResponse>(this.url + note?.id, note);
   }
 
   public delete(idNote: number): Observable<void> {

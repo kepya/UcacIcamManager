@@ -1,0 +1,129 @@
+<section class="compte-page page-content">
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Gestion des entretiens</h1>
+
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Liste des entretiens
+            </h3>
+            <!-- <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button> -->
+        </div>
+        <div class="line"></div>
+
+        <section class="mt-3">
+            <p-table #dt1 selectionMode="single" [(selection)]="selectedEntretien" dataKey="candidat" 
+                 responsiveLayout="scroll" [value]="entretiens" dataKey="id" [rows]="5"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10, 25, 50]" [loading]="loading"
+                [paginator]="true" currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+                [globalFilterFields]="['candidat','jury','done',  'centre','debut_entretien']">
+                <ng-template pTemplate="caption">
+                    <div class="vh-space-between flex justify-content-between ">
+                        <div>
+
+                            <h2 class="text-lg font-bold">Entretiens programmés</h2>
+                            <h4 class="text-orange-500 ">Session de {{session?.date_examen
+                                | date:'MMMM':'fr'}}</h4>
+                        </div>
+                        <div>
+                            <button pButton label="Réinitialiser" class="p-button-outlined mr-2"
+                                icon="pi pi-filter-slash" (click)="commonService.clear(dt1)"></button>
+                            <span class="ml-2 p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text"
+                                    (input)="dt1.filterGlobal(getEventValue($event), 'contains')"
+                                    placeholder="Rechercher" />
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Candidat
+                                <p-columnFilter type="text" field="candidat"
+                                    display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:15rem">
+                            <div class="flex align-items-center">
+                                Centre
+                                <p-columnFilter type="text" field="centre" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:15rem" *ngIf="!isJury">
+                            <div class="flex align-items-center">
+                                Jury
+                                <p-columnFilter type="text" field="jury" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:10rem">
+                            <div class="flex align-items-center">
+                                Date
+                                <p-columnFilter type="date" field="debut_entretien" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:10rem">
+                            <div class="flex align-items-center">
+                                Heure
+                            </div>
+                        </th>
+                        <th style="min-width:10rem">
+                            <div class="flex align-items-center">
+                                Status
+                                <p-columnFilter field="status" matchMode="equals" display="menu">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="statuses"
+                                            (onChange)="filter($event.value)" placeholder="Any">
+                                            <ng-template let-option pTemplate="item">
+                                                <p-tag [value]="option.value"
+                                                    [severity]="commonService.getSeverity(option.label)"></p-tag>
+                                            </ng-template>
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="width:4rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-entretien>
+                    <tr>
+                        <td>
+                            {{ entretien.candidat }} 
+                        </td>
+                        <td>
+                            {{ entretien.centre }}
+                        </td>
+                        <td *ngIf="!isJury">
+                            {{ entretien.jury }}
+                        </td>
+                        <td>
+                            {{ entretien.debut_entretien | date: 'MM/dd/yyyy' }}
+                        </td>
+                        <td>
+                            {{ entretien.debut_entretien | date: 'H:mm:ss' }}
+                        </td>
+                        <td>
+                            <p-tag [value]="commonService.getStatusLabel(entretien.done)"
+                                [severity]="commonService.getSeverity(entretien.done)"></p-tag>
+                        </td>
+                        <td class="flex d-flex">
+                            <button type="button" *ngIf="!isJury" severity="danger" class="p-button-sm p-button-raised p-button-danger" pButton pRipple icon="pi pi-trash" (click)="confirm($event,entretien.id || 0)"></button>
+                            <button type="button" *ngIf="!entretien.done  && isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToPlanificationPage(entretien)"></button>
+                            <button type="button" *ngIf="entretien.done  && !isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(entretien)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7" *ngIf="!isJury">Aucun entretien programmé pour le moment.</td>
+                        <td colspan="6" *ngIf="isJury">Aucun entretien programmé pour le moment.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </section>
+    </div>
+</section>
+
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

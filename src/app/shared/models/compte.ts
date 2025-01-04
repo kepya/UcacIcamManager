@@ -13,32 +13,37 @@ export class Compte {
     telephone!: string;
     role!: Role;
     id_disponibilite?: number;
+    idZone!: number;
+    zone?: Zone;
 }
 
 export class Candidature {
     id?: number;
-    Lieu_de_naissance!: string;
-    Date_naissance!: string;
-    Nationalite!: string;
-    Dernier_Etablissement!: string;
+    centreExamenId!: number;
+    lieu_de_naissance!: string;
+    date_naissance!: string;
+    nationalite!: string;
+    dernier_Etablissement!: string;
     email_parents!: string;
     tel_parents!: string;
-    Formation1!: string;
-    Formation2!: string;
-    Formation3!: string;
+    formation1!: string;
+    formation2!: string;
+    formation3!: string;
     centre!: string;
-    Paiement!: string;
-    Reference_paiement!: string;
-    Image!: string;
+    paiement!: string;
+    reference_paiement!: string;
+    image!: string;
     telephone_paiement!: string;
     ville!: string;
     code_examen!: number;
     nombre_choix!: number;
-    CompteID!: number;
+    compteID!: number;
     cycle!: Cycle;
     statut!: Statut;
-    Genre!: Genre;
+    genre!: Genre;
     langue!: Langue;
     compte!: Compte;
     candidatureActif?: boolean;
+    solvable?: boolean;
+    has_exchange?: boolean;
 }

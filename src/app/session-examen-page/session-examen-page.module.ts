@@ -5,6 +5,8 @@ import { SessionExamenPageRoutingModule } from './session-examen-page-routing.mo
 import { SessionExamenPageComponent } from './session-examen-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SessionExamenPageRoutingModule,
     FormsModule,
     HttpClientModule,
+    ConfirmPopupModule,
+    ToastModule,
     ReactiveFormsModule
   ]
 })

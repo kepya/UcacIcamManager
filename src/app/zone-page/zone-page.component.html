@@ -4,7 +4,7 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des zones Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewZone('form')">
+            <button class="btn btn-danger" (click)="viewZone('form')" *ngIf="compte.role == 'SUPER_ADMIN'">
                 Ajouter une zone
             </button>
         </div>
@@ -74,7 +74,7 @@
                                     Modifier
                                 </span>
                             </button>
-                            <button class="btn mt-2" (click)="deleteZone(zone.id || 0)">
+                            <button class="btn mt-2" (click)="confirm($event,zone.id || 0)">
                                 <div>
                                     <i class="fa-solid fa-trash"></i>
                                 </div>
@@ -120,21 +120,16 @@
 <ng-template #addZone>
     <section class="zone-page page-content">
         <h1 class="page-title"><img (click)="viewZone()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> Zones <i class="pi pi-angle-right"></i> Ajouter une zone</h1>
+                srcset=""> Zones <i class="pi pi-angle-right"></i> {{ zone?.id || 0 > 0 ? "Modification des informations
+            d'une
+            zone": "Ajouter une zone"}}</h1>
         <div class="card">
-            <div class="header">
-                <h3 class="title">Liste des zones Ucac-Icam</h3>
-                <button class="btn btn-danger" (click)="viewZone('form')">
-                    Ajouter une zone
-                </button>
-            </div>
-            <div class="line"></div>
             <form class="form" [formGroup]="formZone" (ngSubmit)="createOrUpdateZone()">
                 <div class="header">
                     Veullez remplir les champs suivants
                     <div class="line"></div>
                 </div>
-                <div class="main">
+                <div class="main" style="height: 25em;">
                     <div class="row">
                         <div class="form-group">
                             <label for="">Nom *</label>
@@ -176,7 +171,7 @@
                             Soumettre
                         </button>
 
-                        <button class="btn btn-danger" (click)="formZone.reset()">
+                        <button class="btn btn-danger" type="reset" (click)="formZone.reset()">
                             Renitialiser
                         </button>
                     </div>
@@ -187,3 +182,5 @@
         </div>
     </section>
 </ng-template>
+<p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>

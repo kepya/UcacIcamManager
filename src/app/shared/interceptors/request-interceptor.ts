@@ -20,7 +20,7 @@ export class RequestInterceptor implements HttpInterceptor {
     this.loaderService.isLoading.next(true);
     if (token != null) {
       let cloneRequest = request.clone({
-        headers: request.headers.set('Authorization', ' bearer ' + token)
+        headers: request.headers.set('Authorization', 'Bearer ' + token)
       })
       return next.handle(cloneRequest).pipe(
         catchError(
@@ -30,7 +30,7 @@ export class RequestInterceptor implements HttpInterceptor {
             if (err.stats === 401) {
               this.storageService.clear();
             }
-            return throwError(() => new Error('Session Expired'));
+            return throwError(() => err);
           }
         ),
         finalize(() => {

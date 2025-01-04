@@ -11,17 +11,22 @@
         <table id="table">
             <thead>
                 <th>Horaire</th>
-                <th *ngFor="let date of dates">{{date | date}}</th>
+                <th *ngFor="let date of datesOfDisponibilities">{{date | date}}</th>
             </thead>
-            <tbody>
-                <tr *ngFor="let time of times">
-                    <td>{{time}} </td>
-                    <td *ngFor="let date of dates"
-                        [ngClass]="{interviewer: (interverwerMap.get(date.toString() + '|' + time)?.length || 0 > 1)}">
-                        <div *ngFor="let interviewer of interverwerMap.get(date.toString() + '|' + time)">
+            <tbody *ngIf="datesOfDisponibilities.length > 0">
+                <tr *ngFor="let horaire of horaires">
+                    <td>{{horaire}} </td>
+                    <td *ngFor="let date of datesOfDisponibilities"
+                        [ngClass]="{interviewer: (interverwerMap.get(horaire + ' - ' + date.toString())?.length || 0 > 1)}">
+                        <div *ngFor="let interviewer of interverwerMap.get(horaire + ' - ' + date.toString())">
                             {{interviewer}}
                         </div>
                     </td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="datesOfDisponibilities.length == 0">
+                <tr>
+                    <td>Aucun membre du jury n'a encore de periode disponible pour les entretiens</td>
                 </tr>
             </tbody>
         </table>
@@ -29,57 +34,81 @@
 
     <div class="card">
         <div class="header">
-            <h3 class="title">Entretiens concours</h3>
+            <h3 class="title">Entretiens concours, session du {{session?.date_examen | date}}</h3>
+            <div>
+                <button class="btn btn-danger mr-1" (click)="previousDate()" *ngIf="datesOfEntretiens.length > 1">
+                    Date précédente
+                </button>
+                <button class="btn btn-primary" (click)="prochaineDate()" *ngIf="datesOfEntretiens.length > 1">
+                    Date suivante
+                </button>
+            </div>
         </div>
         <div class="line"></div>
 
         <div class="sub-header">
             <h3 class="title">Entretiens concours Ucac-Icam</h3>
-            <h3 class="title">{{date | date}}</h3>
+            <h3 class="title" *ngIf="currentDate">{{currentDate | date}}</h3>
         </div>
 
-        <div class="calendrier">
+        <div class="calendrier v-start-between" *ngIf="currentDate != undefined && currentDate != null">
             <table id="table">
                 <thead>
                     <th>Horaire</th>
-                    <th>Centre d'examen</th>
-                    <th>Noms</th>
-                    <th>Prénoms</th>
-                    <th>Interviewer</th>
+                    <th>Intervenant</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let time of entretienTimes; let i = index">
                         <td>
                             <p>{{time}}</p>
-                            <select name="candidat" id="candidat" (change)="handleCandidatSelect($event, time)">
-                                <option value="" disabled>Choisir un candidat</option>
-
-                                <option [value]="candidat.compte.email" *ngFor="let candidat of candidats">
-                                    {{candidat.compte.name
-                                    + ' ' + candidat.compte.prenom}}</option>
-                            </select>
+                            <p-multiSelect *ngIf="time != '12h00 - 13h00'" [ngModel]="selectCandidatMap.get(time)" (onChange)="handleCandidatSelect($event, time, i)" [selectionLimit]="1" [showClear]="true" [options]="groupedFormations" [group]="true"  placeholder="Choisir un candidat" scrollHeight="250px" display="chip" optionLabel="label">
+                                <ng-template let-group pTemplate="group">
+                                    <div class="flex align-items-center">
+                                        <span>{{ group.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-multiSelect>
                         </td>
                         <ng-container *ngIf="time != '12h00 - 13h00'">
-                            <td>{{entretien!?.centre || ''}}</td>
-                            <td>{{entretien?.disponibility?.compte?.name || ''}}</td>
-                            <td>{{entretien?.disponibility?.compte?.prenom || ''}}</td>
-                            <td *ngIf="i == 0">
-                                <select name="interviewer" id="interviewer"
-                                    (change)="handleInterviewerSelect($event, time)">
-                                    <option value="" disabled>Choisir un interviewer</option>
-                                    <option [value]="interviewer" *ngFor="let interviewer of interviewers">
-                                        {{interviewer}}</option>
-                                </select>
-                            </td>
-                            <td class="rowspan" [attr.rowspan]="entretienTimes.length" *ngIf="i == 1">
-                                <div>{{entretien?.interviewer || ''}}</div>
+                            <td>
+                                <p-dropdown [options]="getIntervenant(i)"
+                                    (onChange)="handleInterviewerSelect($event, time)" [showClear]="true"
+                                    [ngModel]="interviewer" placeholder="Choisir un intervenant"></p-dropdown>
                             </td>
                         </ng-container>
-                        <td colspan="3" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
+                        <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
                     </tr>
-
                 </tbody>
             </table>
+            <table id="table">
+                <thead>
+                    <th>Horaire</th>
+                    <th>Intervenant</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let time of entretienTimes; let i = index">
+                        <td>
+                            <p>{{time}}</p>
+                            <p><strong>{{candidatsMap.get(time + 'candidat')}}</strong></p>
+                        </td>
+                        <ng-container *ngIf="time != '12h00 - 13h00'">
+                            <td>
+                                <p><strong>{{candidatsMap.get(time + 'intervenant')}}</strong></p>
+                            </td>
+                        </ng-container>
+                        <td colspan="4" class="pause" *ngIf="time === '12h00 - 13h00'">Pause</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <div class="line"></div>
+            <div class="btn-group">
+                <button class="btn btn-info" (click)="addNote()" [disabled]="loading" type="submit">
+                    Soumettre
+                </button>
+            </div>
         </div>
 
     </div>

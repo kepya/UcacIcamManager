@@ -1,7 +1,8 @@
 import { Site } from './site';
+import { Zone } from "./zone";
 export class Centre {
     id?: number;
-    site_id!: number;
+    siteid!: number;
     nom!: string;
     email?: string;
     contacts!: string;

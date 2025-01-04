@@ -4,6 +4,9 @@
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des admis définitifs</h3>
+            <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
+                Exporter la liste des canditats
+            </button>
         </div>
         <div class="line"></div>
 
@@ -19,12 +22,41 @@
                     </select>
                     <span>entrées</span>
                 </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+
+                <div class="search">
+                    <div class="select-item">
+                        <span class="label">Categories</span>
+                        <select [(ngModel)]="searchOption" (change)="handleCategorieSelect($event)"
+                            class="form form-control">
+                            <option value="centre">Centre</option>
+                            <option value="site">Site</option>
+                            <option value="zone">Zone</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'zone'"
+                            (change)="handleZoneSelect($event)">
+                            <option [value]="">Select zones</option>
+                            <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'site'"
+                            (change)="handleSiteSelect($event)">
+                            <option [value]="site.id" *ngFor="let site of sites">{{site.nom}}</option>
+                        </select>
+
+                        <select class="form form-control" *ngIf="searchOption && searchOption == 'centre'"
+                            (change)="handleCentreSelect($event)">
+                            <option [value]="centre.id" *ngFor="let centre of centres">{{centre.nom}}</option>
+                        </select>
+                    </div>
+
+                    <div class="search_value">
+                        <span>Rechercher</span>
+                        <div>
+                            <input type="text" name="value" id="value" [(ngModel)]="searchValue"
+                                (keyup)="handleSearchValue($event)">
+                            <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -33,8 +65,8 @@
                     <tr>
                         <th>
                             <div>
-                                Numero <i class="icon-sort {{this.sortProperty == 'numero' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'numero'}" (click)="sort('numero')"></i>
+                                Code d'examen <i class="icon-sort {{this.sortProperty == 'code_examen' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'code_examen'}" (click)="sort('code_examen')"></i>
                             </div>
                         </th>
                         <th>
@@ -58,7 +90,7 @@
                         </th>
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
-                        <td>{{candidature.id}}</td>
+                        <td>{{candidature.code_examen}}</td>
                         <td>{{candidature.centre}}</td>
                         <td>{{candidature.compte.name}}</td>
                         <td>{{candidature.compte.prenom}}</td>

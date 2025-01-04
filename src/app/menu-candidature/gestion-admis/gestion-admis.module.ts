@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 
 import { GestionAdmisRoutingModule } from './gestion-admis-routing.module';
 import { GestionAdmisComponent } from './gestion-admis.component';
-
+import { ButtonModule } from 'primeng/button';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +16,11 @@ import { GestionAdmisComponent } from './gestion-admis.component';
   imports: [
     CommonModule,
     GestionAdmisRoutingModule,
-    FormsModule
+    FormsModule,
+    ToastModule,
+    ConfirmPopupModule,
+    ButtonModule,
+    SharedModule
   ]
 })
 export class GestionAdmisModule { }

@@ -1,259 +1,347 @@
-<section class="site-page page-content" *ngIf="!isFormSite else addSite">
-    <h1 class="page-title">Sites</h1>
+<section class="site-page page-content" *ngIf="!isFormSite; else addSite">
+  <h1 class="page-title">Sites</h1>
 
-    <div class="card">
-        <div class="header">
-            <h3 class="title">Liste des sites Ucac-Icam</h3>
-            <button class="btn btn-danger" (click)="viewSite('form')">
-                Ajouter un site
-            </button>
-        </div>
-        <div class="line"></div>
-
-        <div class="table-content">
-            <div class="search-content">
-                <div class="select-page-size">
-                    <span>Voir</span>
-                    <select name="page-size" (change)="handlePageSize($event)" [(ngModel)]="pageSize" id="page-size">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>entrées</span>
-                </div>
-                <div class="search_value">
-                    <span>Rechercher</span>
-                    <div>
-                        <input type="text" name="value" id="value" [(ngModel)]="searchValue"
-                            (keyup)="handleSearchValue($event)">
-                        <i class="fa fa-close pull-right" *ngIf="searchValue" (click)="searchValue = ''"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="table">
-                    <tr>
-                        <th>
-                            <div>
-                                Zone d'appartenance <i
-                                    class="icon-sort {{this.sortProperty == 'zone' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'zone'}" (click)="sort('zone')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Nom <i class="icon-sort {{this.sortProperty == 'nom' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'nom'}" (click)="sort('nom')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Description <i
-                                    class="icon-sort {{this.sortProperty == 'description' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'description'}"
-                                    (click)="sort('description')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                Pays <i class="icon-sort {{this.sortProperty == 'pays' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'pays'}" (click)="sort('pays')"></i>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                #
-                            </div>
-                        </th>
-                    </tr>
-                    <tr *ngFor="let site of sites">
-                        <td>{{site.zone?.nom}}</td>
-                        <td>{{site.nom}}</td>
-                        <td>{{site.description}}</td>
-                        <td>{{site.pays}}</td>
-                        <td>
-                            <button class="btn" (click)="updateSite(site)">
-                                <div>
-                                    <i class="fa-solid fa-pencil"></i>
-                                </div>
-                                <span>
-                                    Modifier
-                                </span>
-                            </button>
-                            <button class="btn mt-2" (click)="deleteSite(site.id || 0)">
-                                <div>
-                                    <i class="fa-solid fa-trash"></i>
-                                </div>
-                                <span>
-                                    Supprimer
-                                </span>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr *ngIf="searchValue && sites.length === 0">
-                        <td colspan="5"><span class="vh-center">
-                                Aucun sites trouvés avec ces lettres dans son nom
-                            </span></td>
-                    </tr>
-                    <tr *ngIf="!searchValue && sites.length === 0">
-                        <td colspan="5"><span class="vh-center">
-                                Aucun sites present dans la base
-                            </span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{sites.length}} entrées affichées</span>
-                <ul class="pagination">
-                    <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
-                        <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"
-                            (click)="previous()">Précedent</a>
-                    </li>
-                    <li class="paginate_button active">
-                        <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0">1</a>
-                    </li>
-                    <li class="paginate_button next disabled" id="datatable-responsive_next" *ngIf="page < nbrOfPage">
-                        <a aria-controls="datatable-responsive" data-dt-idx="2" tabindex="0"
-                            (click)="next()">Suivant</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="card">
+    <div class="header">
+      <h3 class="title">Liste des sites Ucac-Icam</h3>
+      <button class="btn btn-danger" (click)="viewSite('form')">
+        Ajouter un site
+      </button>
     </div>
+    <div class="line"></div>
 
+    <div class="table-content">
+      <div class="search-content">
+        <div class="select-page-size">
+          <span>Voir</span>
+          <select
+            name="page-size"
+            (change)="handlePageSize($event)"
+            [(ngModel)]="pageSize"
+            id="page-size"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entrées</span>
+        </div>
+        <div class="search_value">
+          <span>Rechercher</span>
+          <div>
+            <input
+              type="text"
+              name="value"
+              id="value"
+              [(ngModel)]="searchValue"
+              (keyup)="handleSearchValue($event)"
+            />
+            <i
+              class="fa fa-close pull-right"
+              *ngIf="searchValue"
+              (click)="searchValue = ''"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table id="table">
+          <tr>
+            <th>
+              <div>
+                Zone d'appartenance
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'zone' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'zone' }"
+                  (click)="sort('zone')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Nom
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'nom' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'nom' }"
+                  (click)="sort('nom')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Description
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'description' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'description' }"
+                  (click)="sort('description')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>
+                Pays
+                <i
+                  class="icon-sort {{
+                    this.sortProperty == 'pays' ? sortIcon : downUpIcon
+                  }}"
+                  [ngClass]="{ bold: this.sortProperty == 'pays' }"
+                  (click)="sort('pays')"
+                ></i>
+              </div>
+            </th>
+            <th>
+              <div>#</div>
+            </th>
+          </tr>
+          <tr *ngFor="let site of sites">
+            <td>{{ site.zone?.nom }}</td>
+            <td>{{ site.nom }}</td>
+            <td>{{ site.description }}</td>
+            <td>{{ site.pays }}</td>
+            <td>
+              <button class="btn" (click)="updateSite(site)">
+                <div>
+                  <i class="fa-solid fa-pencil"></i>
+                </div>
+                <span> Modifier </span>
+              </button>
+              <button class="btn mt-2" (click)="confirm($event, site.id || 0)">
+                <div>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+                <span> Supprimer </span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="searchValue && sites.length === 0">
+            <td colspan="5">
+              <span class="vh-center">
+                Aucun site trouvé avec ces lettres dans son nom
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!searchValue && sites.length === 0">
+            <td colspan="5">
+              <span class="vh-center"> Aucun site présent dans la base </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="pagination_content">
+        <span
+          >Page {{ page }} sur {{ nbrOfPage }}, avec {{ sites.length }} entrées
+          affichées</span
+        >
+        <ul class="pagination">
+          <li
+            class="paginate_button previous disabled"
+            id="datatable-responsive_previous"
+            *ngIf="page > 1"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="0"
+              tabindex="0"
+              (click)="previous()"
+              >Précedent</a
+            >
+          </li>
+          <li class="paginate_button active">
+            <a aria-controls="datatable-responsive" data-dt-idx="1" tabindex="0"
+              >1</a
+            >
+          </li>
+          <li
+            class="paginate_button next disabled"
+            id="datatable-responsive_next"
+            *ngIf="page < nbrOfPage"
+          >
+            <a
+              aria-controls="datatable-responsive"
+              data-dt-idx="2"
+              tabindex="0"
+              (click)="next()"
+              >Suivant</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
 <ng-template #addSite>
-    <section class="site-page page-content">
-        <h1 class="page-title"><img (click)="viewSite()" class="icon" src="/assets/icons/undo-outline.svg" alt=""
-                srcset=""> sites <i class="pi pi-angle-right"></i> Ajouter une site</h1>
-        <div class="card">
-            <div class="header">
-                <h3 class="title">Liste des sites Ucac-Icam</h3>
-                <button class="btn btn-danger" (click)="viewSite('form')">
-                    Ajouter une site
-                </button>
-            </div>
-            <div class="line"></div>
-            <form class="form" [formGroup]="formSite" (ngSubmit)="createOrUpdateSite()">
-                <div class="header">
-                    Veullez remplir les champs suivants
-                    <div class="line"></div>
-                </div>
-                <div class="main">
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Zone d'appartenance *</label>
-                            <select formControlName="zone_id" [ngClass]="{required: formSite.get('zone_id')!.invalid}">
-                                <option value="">Zone d'appartenance</option>
-                                <option [value]="zone.id" *ngFor="let zone of zones">{{zone.nom}}</option>
-                            </select>
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['zone_id'].errors">
-                            <div *ngIf="formSiteControl['zone_id'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Nom *</label>
-                            <input type="text" formControlName="nom"
-                                [ngClass]="{required: formSite.get('nom')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['nom'].errors">
-                            <div *ngIf="formSiteControl['nom'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSiteControl['nom'].errors['minlength']">
-                                Nom doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Description *</label>
-                            <textarea formControlName="description" id="" rows="4"
-                                [ngClass]="{required: formSite.get('description')!.invalid}"></textarea>
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['description'].errors">
-                            <div *ngIf="formSiteControl['description'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSiteControl['description'].errors['minlength']">
-                                Description doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Message de paiement *</label>
-                            <textarea formControlName="msgPaiement" id="" rows="4"
-                                [ngClass]="{required: formSite.get('msgPaiement')!.invalid}"></textarea>
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['msgPaiement'].errors">
-                            <div *ngIf="formSiteControl['msgPaiement'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSiteControl['msgPaiement'].errors['minlength']">
-                                Description doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Pays *</label>
-                            <input type="text" formControlName="pays"
-                                [ngClass]="{required: formSite.get('pays')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['pays'].errors">
-                            <div *ngIf="formSiteControl['pays'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSiteControl['pays'].errors['minlength']">
-                                Pays doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="">Indicatif *</label>
-                            <input type="text" formControlName="indicatif"
-                                [ngClass]="{required: formSite.get('indicatif')!.invalid}">
-                        </div>
-                        <div class="alert" *ngIf="formSiteControl['indicatif'].errors">
-                            <div *ngIf="formSiteControl['indicatif'].errors['required']">
-                                Veuillez s'il vous plait entrer une
-                                valeur
-                            </div>
-                            <div *ngIf="formSiteControl['indicatif'].errors['minlength']">
-                                Pays doit avoir au minimun 4 charactères
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="footer">
-                    <div class="line"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-info" [disabled]="formSite.invalid" type="submit">
-                            Soumettre
-                        </button>
-
-                        <button class="btn btn-danger" (click)="formSite.reset()">
-                            Renitialiser
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-
+  <section class="site-page page-content">
+    <h1 class="page-title">
+      <img
+        (click)="viewSite()"
+        class="icon"
+        src="/assets/icons/undo-outline.svg"
+        alt=""
+        srcset=""
+      />
+      sites <i class="pi pi-angle-right"></i>
+      {{
+        site?.zoneid || 0 > 0
+          ? "Modification des
+            informations d'un site"
+          : "Ajouter un site"
+      }}
+    </h1>
+    <div class="card">
+      <form
+        class="form"
+        [formGroup]="formSite"
+        (ngSubmit)="createOrUpdateSite()"
+      >
+        <div class="header">
+          Veuillez remplir les champs suivants
+          <div class="line"></div>
         </div>
-    </section>
+        <div class="main" style="height: 25em">
+          <div class="row">
+            <div class="form-group">
+              <label for="">Zone d'appartenance *</label>
+              <select
+                formControlName="zone_id"
+                [ngClass]="{ required: formSite.get('zone_id')!.invalid }"
+              >
+                <option value="">Zone d'appartenance</option>
+                <option [value]="zone.id" *ngFor="let zone of zones">
+                  {{ zone.nom }}
+                </option>
+              </select>
+            </div>
+            <div class="alert" *ngIf="formSiteControl['zone_id'].errors">
+              <div *ngIf="formSiteControl['zone_id'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Nom *</label>
+              <input
+                type="text"
+                formControlName="nom"
+                [ngClass]="{ required: formSite.get('nom')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSiteControl['nom'].errors">
+              <div *ngIf="formSiteControl['nom'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSiteControl['nom'].errors['minlength']">
+                Nom doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Description *</label>
+              <textarea
+                formControlName="description"
+                id=""
+                rows="4"
+                [ngClass]="{ required: formSite.get('description')!.invalid }"
+              ></textarea>
+            </div>
+            <div class="alert" *ngIf="formSiteControl['description'].errors">
+              <div *ngIf="formSiteControl['description'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSiteControl['description'].errors['minlength']">
+                Description doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Message de paiement *</label>
+              <textarea
+                formControlName="msgPaiement"
+                id=""
+                rows="4"
+                [ngClass]="{ required: formSite.get('msgPaiement')!.invalid }"
+              ></textarea>
+            </div>
+            <div class="alert" *ngIf="formSiteControl['msgPaiement'].errors">
+              <div *ngIf="formSiteControl['msgPaiement'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSiteControl['msgPaiement'].errors['minlength']">
+                Description doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Pays *</label>
+              <input
+                type="text"
+                formControlName="pays"
+                [ngClass]="{ required: formSite.get('pays')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSiteControl['pays'].errors">
+              <div *ngIf="formSiteControl['pays'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSiteControl['pays'].errors['minlength']">
+                Pays doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="">Indicatif *</label>
+              <input
+                type="text"
+                formControlName="indicatif"
+                [ngClass]="{ required: formSite.get('indicatif')!.invalid }"
+              />
+            </div>
+            <div class="alert" *ngIf="formSiteControl['indicatif'].errors">
+              <div *ngIf="formSiteControl['indicatif'].errors['required']">
+                Veuillez s'il vous plait entrer une valeur
+              </div>
+              <div *ngIf="formSiteControl['indicatif'].errors['minlength']">
+                Pays doit avoir au minimun 4 charactères
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="line"></div>
+          <div class="btn-group">
+            <button
+              class="btn btn-info"
+              [disabled]="formSite.invalid"
+              type="submit"
+            >
+              Soumettre
+            </button>
+
+            <button
+              class="btn btn-danger"
+              type="reset"
+              (click)="formSite.reset()"
+            >
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
 </ng-template>
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

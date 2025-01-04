@@ -1,0 +1,133 @@
+<section class="complementary-information-form-container">
+  <div class="grid">
+    <div class="col-12 md:col-8 lg:col-8">
+      <div class="block-part d-flex flex bg-white my-4 pt-4 pr-4">
+        <div class="vertical-bar">
+          <div class="losange"></div>
+        </div>
+        <div>
+          <h5 class="text-2xl title mb-2 underline">Paiement</h5>
+          <p class="line-height-3 mb-3">
+            Dans la section 'Paiement', veuillez renseigner les informations
+            nécessaires pour finaliser votre inscription et effectuer le
+            paiement requis
+          </p>
+          <p-badge value="Rappel :" styleClass="w-auto" severity="danger"></p-badge>
+          <!-- <h6 class="font-bold text-base mb-2 mt-2 ">{{prerequis[0].title}}</h6>
+          <ul class="list-disc ml-3">
+            <li class="line-height-3" *ngFor="let p of prerequis[0].data">{{p}}</li>
+          </ul> -->
+          <p class="line-height-3 text-sm mt-2 font-medium">
+            {{ site?.msgPaiement }}
+          </p>
+        </div>
+      </div>
+      <form [formGroup]="form" class="formgrid grid" (ngSubmit)="submit()">
+        <div class="field col-12 md:col-6">
+          <label for="reference_paiement">Code de paiement (*)</label>
+          <input id="reference_paiement" placeholder="{{ placeholderReferencePaiement }}" type="text" pInputText
+            (ngModelChange)="checkCode()" formControlName="reference_paiement" class="w-full" [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['reference_paiement'].errors &&
+                formControls['reference_paiement'].touched,
+              'border-green-700': formControls['reference_paiement'].valid
+            }" />
+          <div *ngIf="
+              !codeIsValid &&
+              !formControls['reference_paiement'].errors &&
+              !dateIsValid
+            ">
+            <small class="text-red-500">Le code {{ form.get("reference_paiement")?.value }} n'est pas
+              valide !!! Le code entré n'est pas compatible . Veuillez vérifier
+              la date et votre code de transaction et réessayer</small>
+          </div>
+          <div *ngIf="formControls['reference_paiement'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['reference_paiement'].errors['required']">Code de paiement
+              requis</small>
+            <small class="text-red-500" *ngIf="formControls['reference_paiement'].errors['invalidFormat']">
+              Format invalide. Veuillez vérifier le code reçu sur votre numéro
+              de téléphone et réessayer
+            </small>
+          </div>
+          <div *ngIf="formControls['reference_paiement'].valid && codeIsValid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6" *ngIf="
+           site?.nom === 'Cameroun' ||
+           site?.indicatif === '+237' ||
+           site?.nom === 'République du Congo' ||
+           site?.indicatif === '+242' ||
+           site?.nom === 'Gabon' ||
+           site?.indicatif === '+241' ||
+           site?.nom === 'Tchad' ||
+           site?.indicatif === '+235'
+          ">
+          <label for="date_paiement">Date de paiement (*)</label>
+          <input id="date_paiement" type="date" (ngModelChange)="checkCode()"
+            max="{{ todayDate | date : 'yyyy-MM-dd' }}" pInputText formControlName="date_paiement" class="w-full"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                formControls['date_paiement'].errors &&
+                formControls['date_paiement'].touched,
+              'border-green-700': formControls['date_paiement'].valid
+            }" />
+          <div *ngIf="formControls['date_paiement'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['date_paiement'].errors['required']">Date de paiement
+              requis</small>
+            <small *ngIf="formControls['date_paiement'].errors['max']">
+              La date de transaction ne doit pas être supérieure au
+              {{ todayDate | date : "yyyy-MM-dd" }}
+            </small>
+          </div>
+          <div *ngIf="formControls['date_paiement'].valid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <label class="block" for="telephone">Numéro de téléphone(*)</label>
+          <input (ngModelChange)="onInputChange($event)" id="telephone" type="tel" pInputText formControlName="telephone" class="w-full" [ngClass]="{
+            'ng-invalid ng-dirty':
+              formControls['telephone'].errors &&
+              formControls['telephone'].touched,
+            'border-green-700': formControls['telephone'].valid
+          }" />
+          <div *ngIf="formControls['telephone'].errors" class="mt-2">
+            <small class="text-red-500" *ngIf="formControls['telephone'].errors['required']">Le numéro de téléphone
+              requis</small>
+            <small class="text-red-500"
+              *ngIf="formControls['telephone'].errors['minLength'] || formControls['telephone'].errors['minlength']">Le
+              numéro de téléphone
+              incorrect</small>
+          </div>
+          <div *ngIf="!numberIsValid" class="mt-2">
+            <small class="text-red-500"
+              >Le numéro de téléphone est invalide.<br />{{
+                site?.nom === "Cameroun" || site?.indicatif === "+237"
+                  ? "Numéro Orange requise."
+                  : ""
+              }}</small
+            >
+          </div>
+          <div *ngIf="formControls['telephone'].valid && numberIsValid" class="mt-2">
+            <small class="text-green-700">C'est bon!</small>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-12 text-right">
+          <button type="button" (click)="previous()" pButton pRipple label="Precedent" raised="true" severity="warning"
+            class="bg-primary mr-3 shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"></button>
+
+          <button [disabled]="form.invalid || !numberIsValid || !codeIsValid" type="submit" pButton pRipple
+            label="Continuer" raised="true" severity="warning"
+            class="bg-green-500 shadow-2 w-max ml-auto text-white p-button-severity p-button-text p-button-raised"></button>
+        </div>
+      </form>
+    </div>
+    <div class="vh-center col-12 md:col-4 lg:col-4">
+      <uci-filling-progression [step]="step"></uci-filling-progression>
+    </div>
+  </div>
+</section>

@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -19,7 +19,7 @@ registerLocaleData(localeFr, 'fr');
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,9 +28,9 @@ registerLocaleData(localeFr, 'fr');
     HttpClientModule,
     SharedModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
   ],
-  providers: [MessageService, AuthGuard, { provide: LOCALE_ID, useValue: 'fr' }, httpInterceptorProviders],
+  providers: [MessageService, ConfirmationService, AuthGuard, { provide: LOCALE_ID, useValue: 'fr' }, httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
