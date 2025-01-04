@@ -1,0 +1,72 @@
+name: Déploiement via SSH
+
+on:
+  push:
+    branches:
+      - prod 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configurer SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          SSH_HOST: ${{ secrets.SSH_HOST_PROD }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME_PROD }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          
+      - name: Cloner le repository
+        uses: actions/checkout@v3
+        
+      - name: Tester la connexion SSH
+        env:
+            SSH_USERNAME: ${{ secrets.SSH_USERNAME_PROD }}
+            SSH_HOST: ${{ secrets.SSH_HOST_PROD }}
+            
+        run: |
+          echo "Test de connexion SSH à $SSH_HOST avec l'utilisateur $SSH_USERNAME"
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no "$SSH_USERNAME@$SSH_HOST" "echo Connexion réussie"
+        
+      - name: Vérifier la présence du Dockerfile
+        run: |
+           echo "Liste des fichiers dans le répertoire courant :"
+             ls -l
+            if [ ! -f Dockerfile ]; then
+              echo "Erreur : Dockerfile introuvable !" >&2
+              exit 1
+            fi
+      - name: Construire l'image Docker
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+         echo $DOCKER_USERNAME
+         docker build . -t "$DOCKER_USERNAME"/frontiui:latest 
+      - name: Publier l'image Docker
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+         docker push "$DOCKER_USERNAME"/frontiui:latest 
+      - name:  Déployer sur le serveur VPS
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SSH_HOST_PROD }}
+          username: ${{ secrets.SSH_USERNAME_PROD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          script: |
+            echo "Déploiement en cours..."
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull "${{ secrets.DOCKER_USERNAME }}"/frontiui:latest
+            docker stop frontiui
+            docker rm -f frontiui 
+            docker image prune
+            docker run -d --name frontiui --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 80:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/frontiui:latest
+         
+        
