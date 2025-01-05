@@ -46,14 +46,14 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
          echo $DOCKER_USERNAME
-         docker build . -t "$DOCKER_USERNAME"/frontiui:latest 
+         docker build . -t "$DOCKER_USERNAME"/ucacicamanager2:latest 
       - name: Publier l'image Docker
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-         docker push "$DOCKER_USERNAME"/frontiui:latest 
+         docker push "$DOCKER_USERNAME"/ucacicamanager2:latest 
       - name:  Déployer sur le serveur VPS
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -63,10 +63,10 @@ jobs:
           script: |
             echo "Déploiement en cours..."
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull "${{ secrets.DOCKER_USERNAME }}"/frontiui:latest
-            docker stop frontiui
-            docker rm -f frontiui 
+            docker pull "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
+            docker stop ucacicamanager2
+            docker rm -f ucacicamanager2 
             docker image prune
-            docker run -d --name frontiui --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 80:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/frontiui:latest
+            docker run -d --name frontiui --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 82:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
          
         
