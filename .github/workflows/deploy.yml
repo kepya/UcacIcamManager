@@ -67,6 +67,6 @@ jobs:
             docker stop manage-concour-website
             docker rm -f manage-concour-website 
             docker image prune
-            docker run -d --name manage-concour-website --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 82:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/manage-concour-website:latest
+            docker run -d --name manage-concour-website --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 82:443  "${{ secrets.DOCKER_USERNAME }}"/manage-concour-website:latest
          
         
