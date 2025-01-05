@@ -67,6 +67,6 @@ jobs:
             docker stop ucacicamanager2
             docker rm -f ucacicamanager2 
             docker image prune
-            docker run -d --name frontiui --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 82:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
+            docker run -d --name ucacicamanager2 --network springmysql-net -v /etc/letsencrypt/archive/inscription.ucac-icam.com:/etc/letsencrypt/archive/inscription.ucac-icam.com -p 82:80 -p 443:443 "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
          
         
