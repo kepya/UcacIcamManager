@@ -64,9 +64,9 @@ jobs:
             echo "Déploiement en cours..."
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
-            docker stop frontiui
-            docker rm -f frontiui 
+            docker stop ucacicamanager2
+            docker rm -f ucacicamanager2 
             docker image prune
-            docker run -d --name frontiui --network springmysql-net -p 85:80 "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
+            docker run -d --name ucacicamanager2 --network springmysql-net -p 85:80 "${{ secrets.DOCKER_USERNAME }}"/ucacicamanager2:latest
          
         
