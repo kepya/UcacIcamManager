@@ -39,7 +39,7 @@ export class CentreExamenPageComponent implements OnInit {
     nom: new FormControl('', [Validators.required]),
     contacts: new FormControl('', [Validators.required]),
     siteid: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.email]),
+    ville: new FormControl('', [Validators.required]),
   });
 
   constructor(private confirmationService: ConfirmationService, private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
@@ -315,7 +315,6 @@ export class CentreExamenPageComponent implements OnInit {
     this.centre = centre;
     this.formCentre.patchValue({
       nom: centre.nom,
-      email: centre.email,
       contacts: centre.contacts,
       ville: centre.ville,
       siteid: centre.siteid
@@ -330,7 +329,7 @@ export class CentreExamenPageComponent implements OnInit {
       delete d.siteid;
       d = { ...d, siteid: parseInt(this.formCentre.value.siteid, 10) };
 
-      this.centreSrv.update({ ...d, site, id: this.centre.id }).subscribe({
+      this.centreSrv.update({ ...d, site, id: this.centre.id , codeCentre: this.centre.codeCentre}).subscribe({
         next: (value) => {
           this.getCentres();
           this.centre = new Centre();

@@ -1,19 +1,27 @@
 <section class="Candidature-page page-content">
-    <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Gestion des admis</h1>
+    <div class="flex align-items-center justify-content-between gap-2">
+        <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Gestion des admis</h1>
+
+        <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
+            <!-- <input type="file" name="" id="" #file hidden> -->
+            Exporter la liste des canditats
+        </button>
+    </div>
 
     <div class="card">
         <div class="header">
             <h3 class="title">Liste des candidatures et notes entretiens
-            <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
+                <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple icon="pi pi-filter"
+                    class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
             </h3>
             <div>
-                <button class="btn btn-danger" (click)="downloadAdmissCandidatureFile()">
-                    <!-- <input type="file" name="" id="" #file hidden> -->
-                    Exporter la liste des canditats
-                </button>
                 &nbsp;
                 <button class="btn btn-primary" (click)="confirm($event)">
                     valider
+                </button>
+                &nbsp;
+                <button class="btn btn-danger" (click)="confirmFail($event)">
+                    Passer en échec
                 </button>
             </div>
         </div>
@@ -70,7 +78,8 @@
 
                         <select class="form form-control" *ngIf="searchOption && searchOption == 'nationalite'"
                             (change)="handleNationalitySelect($event)">
-                            <option [value]="nationalite" *ngFor="let nationalite of nationalites">{{nationalite}}</option>
+                            <option [value]="nationalite" *ngFor="let nationalite of nationalites">{{nationalite}}
+                            </option>
                         </select>
 
                         <select class="form form-control" *ngIf="searchOption && searchOption == 'formation'"
@@ -84,7 +93,9 @@
                             <option value="second">Second</option>
                         </select>
 
-                        <p-calendar  class="ms-2"  (onSelect)="handleDateNaissanceSelect($event)" [(ngModel)]="date_naissance"  *ngIf="searchOption && searchOption == 'date_naissance'"></p-calendar>
+                        <p-calendar class="ms-2" (onSelect)="handleDateNaissanceSelect($event)"
+                            [(ngModel)]="date_naissance"
+                            *ngIf="searchOption && searchOption == 'date_naissance'"></p-calendar>
                     </div>
 
                     <div class="search_value">
@@ -156,24 +167,22 @@
                         </th>
                         <th>
                             <div>
-                                Genre <i
-                                    class="icon-sort {{this.sortProperty == 'genre' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'genre'}"
-                                    (click)="sort('genre')"></i>
+                                Genre <i class="icon-sort {{this.sortProperty == 'genre' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'genre'}" (click)="sort('genre')"></i>
                             </div>
                         </th>
                         <th>
                             <div>
-                                Langue <i
-                                    class="icon-sort {{this.sortProperty == 'langue' ? sortIcon : downUpIcon}}"
-                                    [ngClass]="{bold: this.sortProperty == 'langue'}"
-                                    (click)="sort('langue')"></i>
+                                Langue <i class="icon-sort {{this.sortProperty == 'langue' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'langue'}" (click)="sort('langue')"></i>
                             </div>
                         </th>
                         <th>
                             <div>
-                                Date naissance <i class="icon-sort {{this.sortProperty == 'datenaissance' ? sortIcon : downUpIcon}}"
-                                [ngClass]="{bold: this.sortProperty == 'datenaissance'}" (click)="sort('datenaissance')"></i>
+                                Date naissance <i
+                                    class="icon-sort {{this.sortProperty == 'datenaissance' ? sortIcon : downUpIcon}}"
+                                    [ngClass]="{bold: this.sortProperty == 'datenaissance'}"
+                                    (click)="sort('datenaissance')"></i>
                             </div>
                         </th>
                         <th>
@@ -182,7 +191,7 @@
                                     [ngClass]="{bold: this.sortProperty == 'statut'}" (click)="sort('statut')"></i>
                             </div>
                         </th>
-                        
+
 
                     </tr>
                     <tr *ngFor="let candidature of candidatures">
@@ -213,7 +222,8 @@
                 </table>
             </div>
             <div class="pagination_content">
-                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées, {{totalElement}} éléments au total</span>
+                <span>Page {{page}} sur {{nbrOfPage}}, avec {{candidatures.length}} entrées affichées, {{totalElement}}
+                    éléments au total</span>
                 <ul class="pagination">
                     <li class="paginate_button previous disabled" id="datatable-responsive_previous" *ngIf="page > 1">
                         <a aria-controls="datatable-responsive" data-dt-idx="0" tabindex="0"

@@ -181,6 +181,19 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
+                            <label for="">Date de fin *</label>
+                            <input type="date" formControlName="date_fin" id="" rows="4"
+                                [ngClass]="{required: formSession.get('date_fin')!.invalid}" />
+                        </div>
+                        <div class="alert" *ngIf="formSessionControl['date_fin'].errors">
+                            <div *ngIf="formSessionControl['date_fin'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
                             <label for="">Date limite de dépôt des candidatures *</label>
                             <input type="date" [value]="formSession.get('date_limite')?.value"
                                 formControlName="date_limite" id="" rows="4"

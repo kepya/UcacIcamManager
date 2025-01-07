@@ -1,46 +1,133 @@
 <section class="schedule-interviewer-page calendrier-page page-content">
-    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Plannifications des entretiens</h1>
+  <h1 class="page-title">
+    Entretiens <i class="pi pi-angle-right"></i> Plannifications des entretiens
+  </h1>
+  <div class="page-header">
+    <div class="line"></div>
+  </div>
+    <h1 class="page-title"> Entretiens <i class="pi pi-angle-right"></i> Planification des entretiens</h1>
     <div class="page-header">
         <div class="line"></div>
     </div>
 
-    <div class="card p-block-1">
-        <div class="main">
-            <div class="vh-center gap-1 mb-3">
-                <div class="icon-btn-round  cursor-pointer"  (click)="previousDate(dt1)">
-                    <i class="pi pi-angle-left"></i>
-                </div>
-                <h3 class="active-day">
-                    {{currentDay | date: 'EEEE dd MMMM yyyy': 'fr'}}
-                </h3>
-                <div class="icon-btn-round  cursor-pointer" (click)="nextDate(dt1)">
-                    <i class="pi pi-angle-right"></i>
-                </div>
-            </div>
-            <div class="jurys-plages">
-                <div class="vh-center jurys-plages-title-content">
-                    <h3 class="title">Jury disponible</h3>
-                </div>
-                <div class="grid">
-                    <div class="col-12 md:col-6" *ngFor="let horaire of horaires">
-                        <div class="horaire-card-title">
-                            <h4 class="title text-center">{{horaire}}</h4>
-                        </div>
-                        <div class="horaire-card-content">
-                            <ul class="list-none">
-                                <li class="text-base font-semibold v-center"
-                                    *ngFor="let compte of juriesByDispo.get(horaire)">
-                                    <p-tag value="{{zones.get(compte.idZone)?.nom ?? ''}}"></p-tag> <span
-                                        class="ml-2">{{compte.name}} {{compte.prenom}}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="card p-block-1">
+    <div class="main">
+      <div class="vh-center gap-1 mb-3">
+        <div class="icon-btn-round cursor-pointer" (click)="previousDate(dt1)">
+          <i class="pi pi-angle-left"></i>
         </div>
+        <h3 class="active-day">
+          {{ currentDay | date : "EEEE dd MMMM yyyy" : "fr" }}
+        </h3>
+        <div class="icon-btn-round cursor-pointer" (click)="nextDate(dt1)">
+          <i class="pi pi-angle-right"></i>
+        </div>
+      </div>
+      <div class="jurys-plages">
+        <div class="vh-center jurys-filter flex justify-content-end">
+          <p-dropdown
+            [options]="zonesList"
+            [(ngModel)]="selectedZone"
+            optionLabel="nom"
+            placeholder="Sélectionner une zone"
+            (onChange)="onZoneChange($event)"
+          >
+          </p-dropdown>
+        </div>
+        <div class="vh-center jurys-plages-title-content">
+          <h3 class="title">Jury disponible</h3>
+        </div>
+        <div class="grid">
+          <div class="col-12 md:col-6" *ngFor="let horaire of horaires">
+            <div class="horaire-card-title">
+              <h4 class="title text-center">{{ horaire }}</h4>
+            </div>
+            <div class="horaire-card-content">
+              <ul class="list-none">
+                <li
+                  class="text-base font-semibold v-center"
+                  *ngFor="let compte of juriesByDispo.get(horaire)"
+                >
+                  <p-tag
+                    value="{{ zones.get(compte.idZone)?.nom ?? '' }}"
+                  ></p-tag>
+                  <span class="ml-2"
+                    >{{ compte.name }} {{ compte.prenom }}</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <div class="card mt-3">
+    <p-table
+      #dt1
+      [value]="juriesByDispo.get(activeHoraire) || []"
+      dataKey="id"
+      [rows]="5"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [loading]="loading"
+      [paginator]="true"
+      currentPageReportTemplate="Présente {first} à {last} de {totalRecords} entrées"
+      [globalFilterFields]="['horaire']"
+      groupRowsBy="horaire"
+      sortField="horaire"
+      sortMode="single"
+      rowGroupMode="rowspan"
+    >
+      <ng-template pTemplate="caption">
+        <div class="vh-space-between flex justify-content-between">
+          <div>
+            <h2>Nouvel entretien</h2>
+            <h4 class="text-orange-500">
+              Session de {{ session?.date_examen | date : "MMMM" : "fr" }}
+            </h4>
+          </div>
+          <div>
+            <button
+              pButton
+              label="Reiniatialiser"
+              class="p-button-outlined mr-2"
+              icon="pi pi-filter-slash"
+              (click)="filterGroupedFormations = groupedFormations"
+            ></button>
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-filter-slash"></i>
+              <p-dropdown
+                [tooltipPosition]="'top'"
+                (onChange)="handleFormationSelect($event)"
+                [options]="formations"
+                [filter]="true"
+                [showClear]="true"
+                optionLabel="name"
+                [showClear]="true"
+                placeholder="Filtrer par formation prioritaire"
+              ></p-dropdown>
+            </span>
+          </div>
+        </div>
+        <div class="vh-end flex-wrap">
+          <p-tag
+            severity="danger"
+            value="Plage horaire :"
+            styleClass="tag-style"
+          ></p-tag>
+          <p-tag
+            (click)="showMainDialog()"
+            severity="danger"
+            value="{{ activeHoraire }}"
+            styleClass="tag-style basic-bg cursor-pointer"
+          ></p-tag>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
     <div class="card mt-3">
 
         <p-table #dt1 [value]="(juriesByDispo.get(activeHoraire) || [])" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
@@ -56,7 +143,7 @@
                             | date:'MMMM':'fr'}}</h4>
                     </div>
                     <div>
-                        <button pButton label="Reiniatialiser" class="p-button-outlined mr-2" icon="pi pi-filter-slash"
+                        <button pButton label="Réinitialiser" class="p-button-outlined mr-2" icon="pi pi-filter-slash"
                         (click)="filterGroupedFormations = groupedFormations"></button>
                         <span class=" p-input-icon-left ml-auto">
                             <i class="pi pi-filter-slash"></i>
@@ -77,84 +164,160 @@
 
                     </th>
 
-                    <th style="min-width:10rem">
+          <th style="min-width: 10rem"></th>
 
-                    </th>
-
-                    <th style="min-width:10rem">
-                        <div class="flex align-items-center">
-                            Plage 1
-                            <p-tag severity="danger" [value]="plage1" (click)="showDialog(firstPlages, 1)"
-                                styleClass="ml-2  cursor-pointer"></p-tag>
-                        </div>
-                    </th>
-                    <th style="min-width:10rem">
-                        <div class="flex align-items-center">
-                            Plage 2
-                            <p-tag severity="danger" [value]="plage2" (click)="showDialog(secondPlages, 2 )"
-                                styleClass="ml-2 cursor-pointer"></p-tag>
-                        </div>
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-entretien let-rowIndex="rowIndex" let-rowgroup="rowgroup"
-                let-rowspan="rowspan">
-                <tr>
-                    <td *ngIf="rowgroup" class="available-juries-title" [attr.rowspan]="rowspan">
-                        <div>
-                            Jurys disponible
-                        </div>
-                    </td>
-                    <td>
-                        <p-dropdown [tooltipPosition]="'top'" [options]="getAvalaibleJury(juriesByDispo.get(activeHoraire) || [], activeHoraire)" [filter]="true" [showClear]="true"
-                            optionLabel="name" (onChange)="handleInterviewerSelect($event, rowIndex)" [showClear]="true"
-                            placeholder="Choisir un intervenant" [disabled]="(plage1 == 'Selectionner')" [readonly]="(plage1 == 'Selectionner')" ></p-dropdown>
-                    </td>
-                    <td>
-                        <p-dropdown [tooltipPosition]="'top'" 
-                         scrollHeight="250px" display="chip" optionLabel="label" [options]="filterGroupedFormations" [group]="true"  (onChange)="handleCandidatSelect($event, plage1, rowIndex)"
-                            [filter]="true" [showClear]="true" placeholder="Choisir un candidat" *ngIf="plage1 != 'Selectionner'">
-                            <ng-template let-group pTemplate="group">
-                                <div class="flex align-items-center">
-                                    <span>{{ group.label }}</span>
-                                </div>
-                            </ng-template>
-                        </p-dropdown>
-                    </td>
-                    <td>
-                        <input type="text" [readOnly]="true" [disabled]="true" pInputText  [ngModel]="selectCandidatMap.get(currentDay.getTime() + ' - ' + activeHoraire + ' - ' + rowIndex + ' - ' + plage2)?.label"/>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="3">Aucun jury disponible pour le moment.</td>
-                </tr>
-            </ng-template>
-        </p-table>
-
-        
-        <div class="mt-2 vh-end ">
-            <button pButton pRipple type="button" [disabled]="!canSave" (click)="validate()" label="Valider" class="p-button-raised p-button-success"></button>
+          <th style="min-width: 10rem">
+            <div class="flex align-items-center">
+              Plage 1
+              <p-tag
+                severity="danger"
+                [value]="plage1"
+                (click)="showDialog(firstPlages, 1)"
+                styleClass="ml-2  cursor-pointer"
+              ></p-tag>
             </div>
+          </th>
+          <th style="min-width: 10rem">
+            <div class="flex align-items-center">
+              Plage 2
+              <p-tag
+                severity="danger"
+                [value]="plage2"
+                (click)="showDialog(secondPlages, 2)"
+                styleClass="ml-2 cursor-pointer"
+              ></p-tag>
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template
+        pTemplate="body"
+        let-entretien
+        let-rowIndex="rowIndex"
+        let-rowgroup="rowgroup"
+        let-rowspan="rowspan"
+      >
+        <tr>
+          <td
+            *ngIf="rowgroup"
+            class="available-juries-title"
+            [attr.rowspan]="rowspan"
+          >
+            <div>Jurys disponible</div>
+          </td>
+          <td>
+            <p-dropdown
+              [tooltipPosition]="'top'"
+              [options]="
+                getAvalaibleJury(
+                  juriesByDispo.get(activeHoraire) || [],
+                  activeHoraire
+                )
+              "
+              [filter]="true"
+              [showClear]="true"
+              optionLabel="name"
+              (onChange)="handleInterviewerSelect($event, rowIndex)"
+              [showClear]="true"
+              placeholder="Choisir un intervenant"
+              [disabled]="plage1 == 'Selectionner'"
+              [readonly]="plage1 == 'Selectionner'"
+            ></p-dropdown>
+          </td>
+          <td>
+            <p-dropdown
+              [tooltipPosition]="'top'"
+              scrollHeight="250px"
+              display="chip"
+              optionLabel="label"
+              [options]="filterGroupedFormations"
+              [group]="true"
+              (onChange)="handleCandidatSelect($event, plage1, rowIndex)"
+              [filter]="true"
+              [showClear]="true"
+              placeholder="Choisir un candidat"
+              *ngIf="plage1 != 'Selectionner'"
+            >
+              <ng-template let-group pTemplate="group">
+                <div class="flex align-items-center">
+                  <span>{{ group.label }}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </td>
+          <td>
+            <input
+              type="text"
+              [readOnly]="true"
+              [disabled]="true"
+              pInputText
+              [ngModel]="
+                selectCandidatMap.get(
+                  currentDay.getTime() +
+                    ' - ' +
+                    activeHoraire +
+                    ' - ' +
+                    rowIndex +
+                    ' - ' +
+                    plage2
+                )?.label
+              "
+            />
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3">Aucun jury disponible pour le moment.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div class="mt-2 vh-end">
+      <button
+        pButton
+        pRipple
+        type="button"
+        [disabled]="!canSave"
+        (click)="validate()"
+        label="Valider"
+        class="p-button-raised p-button-success"
+      ></button>
     </div>
-</section>
+  </div>
 
+  <!-- src/app/components/user-table/user-table.component.html -->
+<!-- </section> -->
 
-<p-dialog header="Sélection de la plage" [closable]="true" [(visible)]="visible" [modal]="true" [maximizable]="true"
-    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    <div class="w-full plage-interview-dialog">
-        <div class="mb-4 mt-5">
-            <label class="block text-900 font-medium mb-2">Plages</label>
-            <div class="flex flex-wrap gap-3" *ngIf="!visibleMainPlage">
-                <p-tag styleClass="cursor-pointer tag-style basic-bg" [value]="p" (click)="selectPlage(p)"
-                    *ngFor="let p of selectPlages"></p-tag>
-            </div>
-            <div class="flex flex-wrap gap-3" *ngIf="visibleMainPlage">
-                <p-tag styleClass="cursor-pointer tag-style basic-bg" [value]="p" (click)="selectMainPlage(p)"
-                    *ngFor="let p of horaires"></p-tag>
-            </div>
-        </div>
+<p-dialog
+  header="Sélection de la plage"
+  [closable]="true"
+  [(visible)]="visible"
+  [modal]="true"
+  [maximizable]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="w-full plage-interview-dialog">
+    <div class="mb-4 mt-5">
+      <label class="block text-900 font-medium mb-2">Plages</label>
+      <div class="flex flex-wrap gap-3" *ngIf="!visibleMainPlage">
+        <p-tag
+          styleClass="cursor-pointer tag-style basic-bg"
+          [value]="p"
+          (click)="selectPlage(p)"
+          *ngFor="let p of selectPlages"
+        ></p-tag>
+      </div>
+      <div class="flex flex-wrap gap-3" *ngIf="visibleMainPlage">
+        <p-tag
+          styleClass="cursor-pointer tag-style basic-bg"
+          [value]="p"
+          (click)="selectMainPlage(p)"
+          *ngFor="let p of horaires"
+        ></p-tag>
+      </div>
     </div>
+  </div>
 </p-dialog>
-

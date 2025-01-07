@@ -24,7 +24,7 @@
                                 | date:'MMMM':'fr'}}</h4>
                         </div>
                         <div>
-                            <button pButton label="Reiniatialiser" class="p-button-outlined mr-2"
+                            <button pButton label="Réinitialiser" class="p-button-outlined mr-2"
                                 icon="pi pi-filter-slash" (click)="commonService.clear(dt1)"></button>
                             <span class="ml-2 p-input-icon-left ml-auto">
                                 <i class="pi pi-search"></i>
@@ -109,8 +109,8 @@
                         </td>
                         <td class="flex d-flex">
                             <button type="button" *ngIf="!isJury" severity="danger" class="p-button-sm p-button-raised p-button-danger" pButton pRipple icon="pi pi-trash" (click)="confirm($event,entretien.id || 0)"></button>
-                            <button type="button"   *ngIf="!entretien.done  && isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToPlanificationPage(entretien)"></button>
-                            <button type="button"   *ngIf="entretien.done  && !isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(entretien)"></button>
+                            <button type="button" *ngIf="!entretien.done  && isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToPlanificationPage(entretien)"></button>
+                            <button type="button" *ngIf="entretien.done  && !isJury" class="ml-2 p-button-sm p-button-raised " pButton pRipple icon="pi pi-arrow-right" (click)="goToNoteSumaryPage(entretien)"></button>
                         </td>
                     </tr>
                 </ng-template>

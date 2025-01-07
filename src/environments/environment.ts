@@ -9,8 +9,8 @@ export const environment = {
   interviewPath: ':8082/',
   accountPath: ':8081/',
   administrationPath: ':8080/',
-  apiUrl: 'http://51.178.136.105',
-  path: 'http://172.18.0.',
+  apiUrl: 'https://inscription.ucac-icam.com',
+  path: 'https://inscription.ucac-icam.com',
   sessionTTL: 15,
 };
 

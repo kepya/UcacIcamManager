@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 
 
 @NgModule({
@@ -12,6 +15,9 @@ import { LoginComponent } from './login.component';
   ],
   imports: [
     CommonModule,
+    ButtonModule,
+    PasswordModule,
+    InputTextModule,
     LoginRoutingModule,
     FormsModule,
     ReactiveFormsModule

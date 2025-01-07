@@ -90,6 +90,11 @@ const routes: Routes = [
     loadChildren: () => import('./menu-roles/jury-member/jury-member.module').then(s => s.JuryMemberModule),
   },
   {
+    path: 'role_comptable',
+    data: { title: `Role Comptable` },
+    loadChildren: () => import('./menu-roles/comptable/comptable.module').then(s => s.ComptableModule),
+  },
+  {
     path: 'calendrier_entretiens',
     data: { title: `Entretien` },
     loadChildren: () => import('./menu-entretien/calendrier-entretien/calendrier-entretien.module').then(s => s.CalendrierEntretienModule),

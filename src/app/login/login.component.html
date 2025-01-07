@@ -1,75 +1,53 @@
-<section class="login-container">
-    <section class="content">
-        <img src="/assets/images/image-removebg-preview_1.png" class="left_absolute_img" alt="" loading="lazy"
-            srcset="">
-        <img src="/assets/images/image-removebg-preview_2.png" class="rigth_absolute_img" alt="" loading="lazy"
-            srcset="">
-        <span class="time">{{date |date : "H:mm:ss | YYYY-MM-dd"}}</span>
-        <div class="card">
-            <div class="illustration">
-                <img src="/assets/images/auth/signin.svg" alt="" loading="lazy" srcset="">
-            </div>
-            <div class="card__content">
-                <div class="header">
-                    <img src="assets/logos/LogoUcacIcamjpg.jpg" style="width: -webkit-fill-available;">
-                    <h4 class="mb-15 wow fadeInUp title" data-wow-delay=".2s" style="color: #c0262d;">Se connecter</h4>
-                    <div>&nbsp;</div>
+<div class="flex h-screen">
+    <div class="bg-orange-200 hidden md:flex w-full md:w-4 justify-center items-center">
+        <img src="/assets/images/auth/signin.svg" class="w-10 mx-auto" alt="" loading="lazy" srcset="">
+    </div>
+    <div class=" w-full lg:w-8 flex justify-center items-center">
+        <div class="surface-card p-8 shadow-2 border-round w-full flex flex-column justify-content-center">
+            <div class="w-full md:w-8 mx-auto">
+                <!-- <div class="text-center mb-5">
+                    <img src="assets/logos/LogoUcacIcamjpg.jpg" alt="UCAC ICAM Logo" height="80" />
+
+                    <div class="text-900 text-3xl font-medium mb-3">Bienvenue chez UCAC-ICAM !</div>
+                    <span class="text-600 font-medium">Connectez-vous à votre compte</span>
+                </div> -->
+
+                <div class="mb-5">
+                    <div class="text-center">
+                        <img src="assets/logos/LogoUcacIcamjpg.jpg" alt="UCAC ICAM Logo" class="mx-auto mb-5" height="80" />
+                    </div>
+                    
+                    <div>
+                        <small class="text-600">Ravi de vous revoir ! 👋</small>
+                    <p class="text-900 text-xl md:text-3xl font-medium my-0">Connectez-vous à votre compte</p>
+                    </div>
                 </div>
-                <form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
-                    <div *ngIf="showMsgError" style="color: #c0262d;">
-                        {{msgError}}
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <input type="email" name="username" id="username" class="form-input col-12"
-                                placeholder="Email" formControlName="username" [ngClass]="{
-                                    'is-invalid':
-                                    loginControls['username'].errors &&
-                                    loginControls['username'].touched,
-                                    'is-valid': loginControls['username'].valid
-                                }">
 
-                            <div *ngIf="loginControls['username'].errors && loginControls['username'].touched"
-                                class="invalid-feedback">
-                                <div *ngIf="loginControls['username'].errors['required']">
-                                    Email requis
-                                </div>
-                                <div *ngIf="loginControls['username'].errors['email']">
-                                    L'email doit être conforme
-                                </div>
-                            </div>
-                        </div>
-                        <div>&nbsp;</div>
-                        <div class="form-group">
-                            <!--<label for="email">Email</label>-->
-                            <input type="password" class="form-input col-12" placeholder="Mot de passe" name="password"
-                                id="password" formControlName="password" [ngClass]="{
-                                    'is-invalid':
-                                    loginControls['password'].errors &&
-                                    loginControls['password'].touched,
-                                    'is-valid': loginControls['password'].valid
-                                }">
-
-                            <div *ngIf="loginControls['password'].errors && loginControls['password'].touched"
-                                class="invalid-feedback">
-                                <div *ngIf="loginControls['password'].errors['required']">
-                                    Password requis
-                                </div>
-                                <div *ngIf="loginControls['password'].errors['minlength']">
-                                    La password doit avoir au minimun 3
-                                    charactères
-                                </div>
-                            </div>
-                        </div>
-                        <div>&nbsp;</div>
-                        <div class="form-button">
-                            <button type="submit" [disabled]="loginForm.invalid || isLoading"
-                                class="btn btn-primary radius-10">Se
-                                connecter </button>
-                        </div>
+                <form [formGroup]="loginForm" (ngSubmit)="login()" class="p-fluid">
+                    <div class="field">
+                        <label for="email" class="font-medium text-900">Email</label>
+                        <input id="email" type="email" pInputText formControlName="username" class="w-full"
+                            placeholder="Entrez votre adresse mail" />
+                        <small
+                            *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)"
+                            class="text-red-500">Email is required and must be valid.</small>
                     </div>
+                    <div class="field">
+                        <label for="password" class="font-medium text-900">Mot de passe</label>
+                        <input id="password" type="password" pPassword formControlName="password" class="w-full"
+                            placeholder="Entrez votre mot de passe" />
+                        <small
+                            *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+                            class="text-red-500">Password is required.</small>
+                    </div>
+
+                    <button pButton pRipple type="submit" label="Connectez-vous" [disabled]="loginForm.invalid"
+                        class="w-full mt-3 bg-orange-500 border-orange-500 hover:bg-orange-600 hover:border-orange-600 "></button>
                 </form>
+                <div class="flex align-items-center justify-content-start mt-3">
+                    <a href="#" class="font-medium text-orange-500 text-sm cursor-pointer">Mot de passe oublié ?</a>
+                </div>
             </div>
         </div>
-    </section>
-</section>
+    </div>
+</div>

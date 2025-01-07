@@ -7,6 +7,8 @@ import { Candidature } from 'src/app/shared/models/compte';
 import { Entretien, NoteParcours, NoteResponse } from 'src/app/shared/models/note';
 import { NoteParcoursService } from 'src/app/shared/services/note-parcours.service';
 import { NoteService } from 'src/app/shared/services/note.service';
+import { Location } from '@angular/common';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-define-note-interview',
@@ -31,6 +33,7 @@ export class DefineNoteInterviewComponent implements OnInit {
   ];
 
   hasBourse: boolean = false;
+  noteIsAlreadyValidated: boolean = false;
 
   timeout: boolean = false;
   comment!: string;
@@ -55,8 +58,8 @@ export class DefineNoteInterviewComponent implements OnInit {
 
   formations: NoteParcours[] = [];
 
-  constructor(private messageService: MessageService, private noteService: NoteService,
-    private noteParcoursService: NoteParcoursService, private route: ActivatedRoute,
+  constructor(private messageService: MessageService, private noteService: NoteService, private location: Location,
+    private noteParcoursService: NoteParcoursService, private route: ActivatedRoute,private commonService: CommonService, 
     private confirmationService: ConfirmationService, private candidatService: CandidatureService) { }
 
   ngOnInit() {
@@ -72,11 +75,16 @@ export class DefineNoteInterviewComponent implements OnInit {
         this.totalSeconds--;
         this.minutesLeft = Math.floor(this.totalSeconds / 60);
         this.secondsLeft = this.totalSeconds % 60;
+
+        if (this.minutesLeft == 5 && this.secondsLeft == 0) {
+          this.messageService.add({ severity: 'warning', summary: '5 min restantes', detail: 'Il vous reste 5 min réglementaires pour finaliser avec cet entretien.' });
+        }
       } else {
         if (this.twentyMinuteEnd) {
           this.interviewerIsFinish = true;
           this.validateNotation();
         } else {
+          this.messageService.add({ severity: 'info', summary: '5 min additionnelles', detail: 'Vous avez 5 min additionnelles pour finaliser avec cet entretien.' });
           this.twentyMinuteEnd = true;
           this.totalSeconds = 5 * 60;
           this.startTimer();
@@ -95,7 +103,7 @@ export class DefineNoteInterviewComponent implements OnInit {
   confirm(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Êtes vous sures de vouloir continuer ?',
+      message: 'Êtes-vous sûr de vouloir continuer ?',
       icon: 'pi pi-question',
       acceptLabel: 'Oui',
       rejectLabel: 'Non',
@@ -110,12 +118,15 @@ export class DefineNoteInterviewComponent implements OnInit {
 
   addNote() {
     this.timeout = true;
+    let validateNote = 0;
 
     for (let index = 0; index < this.formations.length; index++) {
       let note = this.formations[index];
       note.note = (note.note == 0 ? 4 : note.note);
       this.noteParcoursService.create(note).subscribe({
         next: (result: NoteParcours) => {
+          validateNote = validateNote + 1;
+          this.noteIsAlreadyValidated = true;
           this.messageService.add({ severity: 'success', summary: "Assignation de note", detail: 'Assignation de note effectuée avec success' });
         },
         error: (err) => {
@@ -124,17 +135,24 @@ export class DefineNoteInterviewComponent implements OnInit {
         }
       });
     }
+
+
     this.updateNote();
     this.updateCandidatAccount();
+
+    if (validateNote >= this.formations.length) {
+      this.location.back();
+    }
+
   }
 
   updateNote() {
     this.noteService.update({
       id: this.note?.id || 0,
-      "compteid": this.note.compteid,
-      "candidatureid": this.note.candidatureid,
-      "debut_entretien": this.note.debut_entretien,
-      "fin_entretien": this.note.fin_entretien,
+      "compteid": this.note?.compteid,
+      "candidatureid": this.note?.candidatureid,
+      "debut_entretien": this.note?.debut_entretien,
+      "fin_entretien": this.note?.fin_entretien,
       "commentaires": this.comment,
       noteL: 0,
       noteOP: 0,
@@ -166,10 +184,18 @@ export class DefineNoteInterviewComponent implements OnInit {
       if (hasError) {
         this.messageService.add({ severity: 'error', summary: 'Note manquant', detail: 'Veuillez selectionner les notes pour chaque formation.' });
       } else {
-        this.addNote();
+        if (this.noteIsAlreadyValidated) {
+          this.messageService.add({ severity: 'error', summary: 'Notes déjà définies', detail: 'Vous avez déjà entré les notes de ce candidat.' });
+        } else {
+          this.addNote();
+        }
       }
     } else {
-      this.addNote();
+      if (this.noteIsAlreadyValidated) {
+        this.messageService.add({ severity: 'error', summary: 'Notes déjà définies', detail: 'Vous avez déjà entré les notes de ce candidat.' });
+      } else {
+        this.addNote();
+      }
     }
   }
 
@@ -250,8 +276,8 @@ export class DefineNoteInterviewComponent implements OnInit {
             centre: v.candidature?.centre || '',
             jury: v.compte?.name + ' ' + v.compte?.prenom,
             candidature: v.candidature as unknown as Candidature,
-            debut_entretien: new Date(v.debut_entretien),
-            fin_entretien: new Date(v.fin_entretien),
+            debut_entretien: this.commonService.formatDate1(new Date(v.debut_entretien)) ,
+            fin_entretien: this.commonService.formatDate1(new Date(v.fin_entretien)),
           };
         });
       },

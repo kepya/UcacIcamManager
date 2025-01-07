@@ -145,6 +145,7 @@ export class AddCandidatureComponent implements OnInit {
   public session: Session = {
     id: 0,
     nom: "",
+    date_fin: new Date(),
     date_debut: new Date(),
     date_limite: new Date(),
     date_examen: new Date(),

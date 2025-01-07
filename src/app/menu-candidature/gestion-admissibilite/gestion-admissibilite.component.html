@@ -1,5 +1,11 @@
 <section class="Candidature-page page-content">
-    <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Gestion d'admissibilité</h1>
+    <div class="flex align-items-center justify-content-between gap-2">
+        <h1 class="page-title"> Candidatures <i class="pi pi-angle-right"></i> Gestion d'admissibilité</h1>
+
+        <button class="btn btn-danger" (click)="downloadAdmissibleCandidatureFile()">
+            Exporter la liste des canditats
+        </button>
+    </div>
 
     <div class="card">
         <div class="header">
@@ -7,12 +13,13 @@
                 <button pButton (click)="showDialog()" style="width: 32px;height: 32px;" pRipple  icon="pi pi-filter"  class="p-button-warning p-button-rounded p-button-raised p-button-text"></button>
             </h3>
             <div>
-                <button class="btn btn-danger" (click)="downloadAdmissibleCandidatureFile()">
-                    Exporter la liste des canditats
-                </button>
                 &nbsp;
                 <button class="btn btn-primary" (click)="confirm($event)">
                     valider
+                </button>
+                &nbsp;
+                <button class="btn btn-danger" (click)="confirmFail($event)">
+                    Passer en échec
                 </button>
             </div>
         </div>
