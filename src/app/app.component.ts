@@ -12,6 +12,8 @@ import { PrimeNGConfig } from 'primeng/api';
 import { filter, map } from 'rxjs';
 import { AuthService } from './shared/services/auth.service';
 import { BaseUrlService } from './shared/services/base-url.service';
+import { PasswordresetComponent } from './login/passwordreset/passwordreset.component';
+import { ValidatetokenComponent } from './login/passwordreset/validatetoken/validatetoken.component';
 
 @Component({
   selector: 'app-root',
@@ -70,7 +72,11 @@ export class AppComponent implements OnInit {
   }
 
   onLoadPage(component: any) {
-    if (component instanceof LoginComponent) {
+    if (
+        component instanceof LoginComponent ||
+        component instanceof PasswordresetComponent || 
+        component instanceof ValidatetokenComponent
+      ) {
       this.isLoginPage = true;
     } else {
       this.isLoginPage = false;

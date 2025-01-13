@@ -58,4 +58,19 @@ export class CompteService {
   public delete(idCompte: number): Observable<void> {
     return this.http.delete<void>(this.url + 'delete/' + idCompte);
   }
+
+  public sendPasswordResetEmail(email: string): Observable<void> {
+    return this.http.get<void>(this.url + 'resetpass/' + email);
+  }
+
+  public validateToken(email: string, token: string): Observable<void> {
+    return this.http.get<void>(this.url + 'validateToken/' + email + '/' + token);
+  }
+
+  public resetPassword(email: string, password: string, token: string): Observable<any> {
+    const url = this.url + 'resetPassword';
+    const body = { email, password, token };
+
+    return this.http.post(url, body);
+  }
 }
