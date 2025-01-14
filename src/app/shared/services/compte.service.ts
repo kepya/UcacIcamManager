@@ -60,7 +60,8 @@ export class CompteService {
   }
 
   public sendPasswordResetEmail(email: string): Observable<void> {
-    return this.http.get<void>(this.url + 'resetpass/' + email);
+    const space = "BackOffice";
+    return this.http.get<void>(this.url + 'resetpass/' + email + '/' + space);
   }
 
   public validateToken(email: string, token: string): Observable<void> {
