@@ -40,6 +40,7 @@ export class CentreExamenPageComponent implements OnInit {
     contacts: new FormControl('', [Validators.required]),
     siteid: new FormControl('', [Validators.required]),
     ville: new FormControl('', [Validators.required]),
+    codeCentre: new FormControl('', [Validators.required]),
   });
 
   constructor(private confirmationService: ConfirmationService, private centreSrv: CentreExamenService, private storageService: StorageService, private siteSrv: SiteService, private messageService: MessageService) { }
@@ -317,6 +318,7 @@ export class CentreExamenPageComponent implements OnInit {
       nom: centre.nom,
       contacts: centre.contacts,
       ville: centre.ville,
+      codeCentre: centre?.codeCentre,
       siteid: centre.siteid
     });
   }
@@ -339,7 +341,7 @@ export class CentreExamenPageComponent implements OnInit {
           this.isFormCentre = false;
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de modification`, detail: err?.error?.message ?? err?.message });
 
           console.log("Error: ", err);
         }
@@ -359,7 +361,7 @@ export class CentreExamenPageComponent implements OnInit {
           this.isFormCentre = false;
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err.message });
+          this.messageService.add({ severity: 'error', summary: `Erreur de creation`, detail: err?.error?.message ?? err?.message  });
 
           console.log("Error: ", err);
         }
@@ -375,7 +377,7 @@ export class CentreExamenPageComponent implements OnInit {
       },
       error: (err) => {
         console.log("Error: ", err);
-        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err.message });
+        this.messageService.add({ severity: 'error', summary: `Erreur de suppression`, detail: err?.error?.message ?? err?.message });
       }
     })
   }

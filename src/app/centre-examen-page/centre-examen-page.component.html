@@ -195,6 +195,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Code du centre *</label>
+                            <input type="text" formControlName="codeCentre"
+                                [ngClass]="{required: formCentre.get('codeCentre')!.invalid}">
+                        </div>
+                        <div class="alert" *ngIf="formCentreControl['codeCentre'].errors">
+                            <div *ngIf="formCentreControl['codeCentre'].errors['required']">
+                                Veuillez s'il vous plait entrer une
+                                valeur
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="footer">
