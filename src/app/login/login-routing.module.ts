@@ -7,9 +7,13 @@ const routes: Routes = [
     path: '',
     component: LoginComponent
   },
-  {
+  /*{
     path: '**',
     component: LoginComponent
+  },*/
+  { 
+    path: 'passwordreset', 
+    loadChildren: () => import('./passwordreset/passwordreset.module').then(m => m.PasswordresetModule) 
   }
 ];
 

@@ -25,6 +25,12 @@ export class LoginComponent implements OnInit {
   date = new Date();
   counterSubscription!: Subscription;
 
+  displayModal: boolean = false; // Contrôle du modal
+  email: string = ''; // Champ email
+  emailInvalid: boolean = true; // État de la validation de l'email
+  emailTouched: boolean = false; // Indique si l'email a été touché
+  emailSent: boolean = false; // Indique si le mail a été envoyé avec succès
+
   loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -92,6 +98,42 @@ export class LoginComponent implements OnInit {
         }
       }
     })
+  }
+
+  showModal() {
+    this.displayModal = true;
+    this.resetForm();
+  }
+
+  closeModal() {
+    this.displayModal = false;
+    this.resetForm();
+  }
+
+  validateEmail() {
+    this.emailTouched = true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Validation regex email
+    this.emailInvalid = !emailRegex.test(this.email);
+  }
+
+  sendEmail() {
+    if (!this.emailInvalid) {
+      this.compteService.sendPasswordResetEmail(this.email).subscribe({
+        next: () => {
+          this.emailSent = true; // Afficher le message de succès
+        },
+        error: () => {
+          alert("Une erreur s'est produite lors de l'envoi de l'email.");
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.email = '';
+    this.emailInvalid = true;
+    this.emailTouched = false;
+    this.emailSent = false;
   }
 
 
