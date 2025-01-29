@@ -122,8 +122,13 @@ export class LoginComponent implements OnInit {
         next: () => {
           this.emailSent = true; // Afficher le message de succès
         },
-        error: () => {
-          alert("Une erreur s'est produite lors de l'envoi de l'email.");
+        error: (error) => {
+          console.log(error);
+          if (error.status === 404) {
+            alert("L'adresse e-mail fournie est invalide ou n'existe pas.");
+          } else {
+            alert("Une erreur s'est produite lors de l'envoi de l'email.");
+          }
         }
       });
     }
